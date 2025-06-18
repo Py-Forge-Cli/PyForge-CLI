@@ -206,8 +206,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Roadmap
 
+### Version 0.2.0 - Database File Support
+- [ ] **MDF/MDB to Parquet Conversion** (In Planning)
+  - Microsoft SQL Server Database Files (.mdf)
+  - Microsoft Access Database Files (.mdb, .accdb)
+  - Multi-table batch conversion with progress tracking
+  - Excel reports with conversion summaries and sample data
+  - See `tasks/prd-mdf-mdb-converter.md` for detailed requirements
+
+### Future Versions
 - [ ] CSV to Parquet conversion
-- [ ] DBF file support
+- [ ] DBF file support  
 - [ ] Excel file support
 - [ ] JSON processing
 - [ ] Data validation and cleaning
