@@ -101,7 +101,8 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
     ARGUMENTS:
         INPUT_FILE      Path to the input file to convert
         OUTPUT_FILE     Path for the output file (optional)
-                       If not provided, uses input filename with new extension
+                       If not provided, creates output in same directory as input
+                       with same filename but different extension
     
     \b
     PDF CONVERSION OPTIONS:
@@ -118,11 +119,14 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
     
     \b
     EXAMPLES:
-        # Basic conversion (PDF to text)
+        # Basic conversion (creates document.txt in same directory)
         cortexpy convert document.pdf
         
         # Convert with custom output filename
         cortexpy convert report.pdf extracted_text.txt
+        
+        # Convert file in subdirectory (creates subdir/file.txt)
+        cortexpy convert path/to/document.pdf
         
         # Convert only first 5 pages
         cortexpy convert document.pdf --pages "1-5"
@@ -158,7 +162,11 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
     
     # Determine output file path
     if not output_file:
+        # Generate output file in same directory as input with new extension
         output_file = input_file.with_suffix(f'.{output_format}')
+        
+        if verbose:
+            console.print(f"[dim]Auto-generated output file: {output_file}[/dim]")
     
     # Check if output file exists
     if output_file.exists() and not force:

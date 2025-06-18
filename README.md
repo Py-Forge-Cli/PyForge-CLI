@@ -80,8 +80,11 @@ cortexpy validate document.pdf
 ### Basic PDF Conversion
 
 ```bash
-# Convert PDF to text
+# Convert PDF to text (creates report.txt in same directory)
 cortexpy convert report.pdf
+
+# Convert with custom output path
+cortexpy convert report.pdf /path/to/output.txt
 
 # Convert with verbose output
 cortexpy convert report.pdf --verbose
