@@ -269,14 +269,21 @@ class MDBConverter(StringDatabaseConverter):
                             self.conversion_stats.append(self.string_converter.stats)
                             
                             # Record successful conversion
+                            record_count = len(string_df)
                             converted_files.append({
                                 'table': table_name,
-                                'records': len(string_df),
+                                'records': record_count,
                                 'file': output_file,
                                 'size_mb': output_file.stat().st_size / 1024 / 1024
                             })
                             
-                            console.print(f"✓ {table_name}: {len(string_df):,} records → {output_file.name}")
+                            console.print(f"✓ {table_name}: {record_count:,} records → {output_file.name}")
+                            
+                            # Memory cleanup for large datasets
+                            del df
+                            del string_df
+                            import gc
+                            gc.collect()
                             
                         except Exception as e:
                             console.print(f"❌ Failed to convert {table_name}: {e}")

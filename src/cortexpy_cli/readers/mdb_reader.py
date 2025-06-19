@@ -285,8 +285,16 @@ class MDBTableDiscovery:
         import pandas_access as mdb
         
         try:
-            # Read entire table (pandas-access limitation - no row limiting)
-            df = mdb.read_table(self._connection, table_name)
+            # Try to read entire table (pandas-access limitation - no row limiting)
+            try:
+                df = mdb.read_table(self._connection, table_name)
+            except Exception as e:
+                if "Integer column has NA values" in str(e):
+                    self.logger.warning(f"Integer NA values detected in {table_name}, using fallback for table info")
+                    df = self._read_table_as_objects(table_name)
+                else:
+                    raise e
+                    
             record_count = len(df)
             
             # Build column information
@@ -361,12 +369,100 @@ class MDBTableDiscovery:
         
         import pandas_access as mdb
         
-        df = mdb.read_table(self._connection, table_name)
+        try:
+            # Try to read the table normally first
+            df = mdb.read_table(self._connection, table_name)
+        except Exception as e:
+            if "Integer column has NA values" in str(e):
+                # Handle the integer NA values issue by forcing all columns to object type
+                self.logger.warning(f"Integer NA values detected in {table_name}, reading as object types")
+                try:
+                    # Read with custom approach to handle mixed types
+                    df = self._read_table_as_objects(table_name)
+                except Exception as e2:
+                    self.logger.error(f"Failed to read table {table_name} even with object conversion: {e2}")
+                    raise e2
+            else:
+                raise e
         
         if limit and len(df) > limit:
             df = df.head(limit)
         
         return df
+    
+    def _read_table_as_objects(self, table_name: str) -> pd.DataFrame:
+        """
+        Read table with all columns as object type to handle mixed data types.
+        This is a fallback method for tables with integer columns containing NA values.
+        """
+        import pandas_access as mdb
+        
+        # Use the underlying mdb-export tool directly with custom parameters
+        # This bypasses pandas type inference issues
+        try:
+            # First, get the raw data from mdb-export
+            import subprocess
+            import tempfile
+            import csv
+            
+            # Export to CSV first, then read with object types
+            with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False) as temp_file:
+                # Use mdb-export to export the table to CSV
+                result = subprocess.run([
+                    'mdb-export', 
+                    str(self._connection), 
+                    table_name
+                ], capture_output=True, text=True, check=True)
+                
+                # Write the CSV data to temp file
+                temp_file.write(result.stdout)
+                temp_file.flush()
+                
+                # Read the CSV with all columns as objects
+                df = pd.read_csv(temp_file.name, dtype=str, na_values=[''], keep_default_na=False)
+                
+                # Clean up
+                import os
+                os.unlink(temp_file.name)
+                
+                return df
+                
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            self.logger.warning(f"mdb-export fallback failed for {table_name}: {e}")
+            
+            # Final fallback: try pandas-access with chunking
+            try:
+                # Read the data in smaller chunks to identify problematic rows
+                df_chunks = []
+                chunk_size = 1000
+                offset = 0
+                
+                while True:
+                    try:
+                        # This is a simplified approach - just read and convert to strings
+                        chunk_df = mdb.read_table(self._connection, table_name)
+                        if offset > 0:
+                            break  # pandas-access doesn't support chunking, so break after first read
+                        
+                        # Convert all columns to strings immediately
+                        for col in chunk_df.columns:
+                            chunk_df[col] = chunk_df[col].astype(str)
+                        
+                        df_chunks.append(chunk_df)
+                        break  # Exit after successful read
+                        
+                    except Exception as chunk_e:
+                        self.logger.error(f"Chunked read failed for {table_name}: {chunk_e}")
+                        raise chunk_e
+                
+                if df_chunks:
+                    return pd.concat(df_chunks, ignore_index=True)
+                else:
+                    raise ValueError(f"No data could be read from {table_name}")
+                    
+            except Exception as final_e:
+                self.logger.error(f"All fallback methods failed for {table_name}: {final_e}")
+                raise final_e
     
     def get_database_summary(self) -> Dict[str, Any]:
         """Get comprehensive database summary"""
