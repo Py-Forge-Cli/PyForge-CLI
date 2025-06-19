@@ -34,7 +34,7 @@ classifiers = [
     "Topic :: Database :: Database Engines/Servers",
     "Topic :: Office/Business",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: System :: Archiving :: Conversion",
+    "Topic :: System :: Archiving",
     "Topic :: Text Processing :: Markup",
     "Topic :: Utilities",
 ]
