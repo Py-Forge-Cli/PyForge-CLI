@@ -1,0 +1,48 @@
+# Include the README
+include README.md
+
+# Include the license file
+include LICENSE
+
+# Include the changelog
+include CHANGELOG.md
+
+# Include documentation files
+include CONTRIBUTING.md
+include SECURITY.md
+include CODE_OF_CONDUCT.md
+
+# Include project configuration files
+include pyproject.toml
+include requirements-dev.txt
+
+# Include test data
+recursive-include tests *.py
+recursive-include tests/data *
+recursive-include tests/fixtures *
+
+# Include source package
+recursive-include src *.py
+
+# Include documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+
+# Exclude development and build artifacts
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .pytest_cache
+global-exclude .mypy_cache
+global-exclude .ruff_cache
+global-exclude *.egg-info
+global-exclude .git*
+global-exclude .DS_Store
+global-exclude .coverage
+global-exclude htmlcov
+prune dist
+prune build
+prune .tox
+prune .venv
+prune .env

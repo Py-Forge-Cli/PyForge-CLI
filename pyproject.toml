@@ -10,22 +10,32 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "Santosh Dandey", email = "dd.santosh@gmail.com"},
 ]
-keywords = ["cli", "data", "conversion", "pdf", "csv", "parquet"]
+keywords = ["cli", "data", "conversion", "pdf", "csv", "parquet", "excel", "database", "mdb", "dbf", "synthetic-data"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
     "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Database :: Database Engines/Servers",
+    "Topic :: Office/Business",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Text Processing",
+    "Topic :: System :: Archiving :: Conversion",
+    "Topic :: Text Processing :: Markup",
     "Topic :: Utilities",
 ]
 
@@ -43,7 +53,7 @@ dependencies = [
     "openpyxl>=3.1.5",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -51,18 +61,32 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+]
+docs = [
+    "mkdocs>=1.4.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocs-mermaid2-plugin>=0.6.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/pyforge-cli"
-Repository = "https://github.com/yourusername/pyforge-cli"
-Issues = "https://github.com/yourusername/pyforge-cli/issues"
+Homepage = "https://github.com/Py-Forge-Cli/PyForge-CLI"
+Repository = "https://github.com/Py-Forge-Cli/PyForge-CLI"
+Issues = "https://github.com/Py-Forge-Cli/PyForge-CLI/issues"
+Documentation = "https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/docs"
+Changelog = "https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/CHANGELOG.md"
 
 [project.scripts]
-pyforge = "cortexpy_cli.main:cli"
+pyforge = "pyforge_cli.main:cli"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/cortexpy_cli"]
+packages = ["src/pyforge_cli"]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -126,7 +150,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=cortexpy_cli",
+    "--cov=pyforge_cli",
     "--cov-report=term-missing",
     "--cov-report=html",
     "--cov-report=xml",
