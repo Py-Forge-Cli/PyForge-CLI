@@ -30,8 +30,9 @@ def cli(ctx, verbose):
     \b
     CURRENTLY SUPPORTED FORMATS:
         • PDF to Text conversion with advanced options
+        • MDB/ACCDB (Microsoft Access) to Parquet conversion
+        • DBF (dBase) to Parquet conversion
         • File metadata extraction and validation
-        • Page range selection for PDF processing
     
     \b
     QUICK START:
@@ -42,17 +43,18 @@ def cli(ctx, verbose):
     
     \b
     EXAMPLES:
-        # Basic conversion
+        # PDF conversion
         cortexpy convert report.pdf
-        
-        # Convert specific pages with custom output
         cortexpy convert document.pdf output.txt --pages "1-10" --metadata
         
-        # Get detailed file information
-        cortexpy info document.pdf --format json
+        # Database conversion
+        cortexpy convert database.mdb --format parquet
+        cortexpy convert data.dbf output_dir/ --format parquet --compression gzip
+        cortexpy convert secure.accdb --password "secret" --tables "customers,orders"
         
-        # Validate multiple files
-        find . -name "*.pdf" -exec cortexpy validate {} \\;
+        # File information and validation
+        cortexpy info document.pdf --format json
+        cortexpy validate database.mdb
     
     \b
     PLUGIN SYSTEM:
@@ -77,18 +79,28 @@ def cli(ctx, verbose):
                 required=False,
                 metavar='[OUTPUT_FILE]')
 @click.option('--format', '-f', 'output_format', 
-              type=click.Choice(['txt'], case_sensitive=False),
+              type=click.Choice(['txt', 'parquet'], case_sensitive=False),
               default='txt',
-              help='Output format. Currently supported: txt (default)')
+              help='Output format. Supported: txt (default), parquet')
 @click.option('--pages', '-p', 'page_range',
               metavar='RANGE',
-              help='Page range to convert. Examples: "1-5", "1-", "-10", "3"')
+              help='Page range to convert (PDF only). Examples: "1-5", "1-", "-10", "3"')
 @click.option('--metadata', '-m', is_flag=True,
-              help='Include page metadata and markers in output text')
+              help='Include page metadata and markers in output text (PDF only)')
+@click.option('--password', 
+              metavar='PASSWORD',
+              help='Password for protected database files (MDB/ACCDB only)')
+@click.option('--tables', '-t',
+              metavar='TABLE_LIST',
+              help='Comma-separated list of tables to convert (database only)')
+@click.option('--compression', '-c',
+              type=click.Choice(['snappy', 'gzip', 'none'], case_sensitive=False),
+              default='snappy',
+              help='Parquet compression format (default: snappy)')
 @click.option('--force', is_flag=True,
               help='Overwrite existing output file without confirmation')
 @click.pass_context
-def convert(ctx, input_file, output_file, output_format, page_range, metadata, force):
+def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force):
     """Convert files between different formats.
     
     \b
@@ -139,13 +151,24 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
         
         # Convert with verbose progress
         cortexpy convert document.pdf --verbose
+        
+        # Database conversion examples
+        cortexpy convert database.mdb --format parquet
+        cortexpy convert data.dbf output_dir/ --format parquet --compression gzip
+        cortexpy convert secure.accdb --password "secret" --tables "customers,orders"
     
     \b
     OUTPUT:
+        PDF CONVERSION:
         • Creates text file with extracted content
         • Shows progress bar for large files
-        • Displays conversion summary with file sizes
         • Reports number of pages processed
+        
+        DATABASE CONVERSION:
+        • Creates directory with Parquet files (one per table)
+        • Shows 6-stage progress with real-time metrics
+        • Generates Excel report with conversion summary
+        • All data converted to string format for Phase 1
     
     \b
     NOTES:
@@ -160,17 +183,30 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
         console.print(f"[dim]Input file: {input_file}[/dim]")
         console.print(f"[dim]Output format: {output_format}[/dim]")
     
-    # Determine output file path
+    # Determine output path
+    input_ext = input_file.suffix.lower()
+    is_database = input_ext in ['.mdb', '.accdb', '.dbf']
+    
     if not output_file:
-        # Generate output file in same directory as input with new extension
-        output_file = input_file.with_suffix(f'.{output_format}')
+        if is_database and output_format == 'parquet':
+            # For database conversions, create output directory
+            output_file = input_file.parent / f"{input_file.stem}_parquet"
+        else:
+            # Generate output file in same directory as input with new extension
+            output_file = input_file.with_suffix(f'.{output_format}')
         
         if verbose:
-            console.print(f"[dim]Auto-generated output file: {output_file}[/dim]")
+            if is_database:
+                console.print(f"[dim]Auto-generated output directory: {output_file}[/dim]")
+            else:
+                console.print(f"[dim]Auto-generated output file: {output_file}[/dim]")
     
-    # Check if output file exists
+    # Check if output path exists
     if output_file.exists() and not force:
-        console.print(f"[yellow]Output file {output_file} already exists. Use --force to overwrite.[/yellow]")
+        if is_database:
+            console.print(f"[yellow]Output directory {output_file} already exists. Use --force to overwrite.[/yellow]")
+        else:
+            console.print(f"[yellow]Output file {output_file} already exists. Use --force to overwrite.[/yellow]")
         return
     
     # Get converter from registry
@@ -190,10 +226,20 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, f
     
     # Prepare conversion options
     options = {}
+    
+    # PDF-specific options
     if page_range:
         options['page_range'] = page_range
     if metadata:
         options['include_metadata'] = True
+    
+    # Database-specific options
+    if password:
+        options['password'] = password
+    if tables:
+        options['tables'] = [t.strip() for t in tables.split(',')]
+    if compression:
+        options['compression'] = compression
     
     # Perform conversion
     success = converter.convert(input_file, output_file, **options)

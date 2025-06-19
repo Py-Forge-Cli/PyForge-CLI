@@ -24,6 +24,10 @@ class MDBConverter(StringDatabaseConverter):
         self.discovery: Optional[MDBTableDiscovery] = None
         self.password: Optional[str] = None
         
+        # Set supported formats for registry compatibility
+        self.supported_inputs = {'.mdb', '.accdb'}
+        self.supported_outputs = {'.parquet'}
+        
     def get_supported_formats(self) -> List[str]:
         """Get list of supported input formats"""
         return ['.mdb', '.accdb']
@@ -115,16 +119,17 @@ class MDBConverter(StringDatabaseConverter):
         except Exception as e:
             self.logger.warning(f"Error closing MDB connection: {e}")
     
-    def validate_input(self, input_path: Path) -> tuple[bool, str]:
+    def validate_input(self, input_path: Path) -> bool:
         """Validate MDB input file"""
         # Check file extension
         if input_path.suffix.lower() not in ['.mdb', '.accdb']:
-            return False, f"File must be .mdb or .accdb, got {input_path.suffix}"
+            return False
         
         # Use detector for validation
         from ..detectors.database_detector import DatabaseFileDetector
         detector = DatabaseFileDetector()
-        return detector.validate_file_access(input_path)
+        is_valid, _ = detector.validate_file_access(input_path)
+        return is_valid
     
     def convert_with_progress(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """

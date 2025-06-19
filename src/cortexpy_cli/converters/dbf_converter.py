@@ -23,6 +23,10 @@ class DBFConverter(StringDatabaseConverter):
         super().__init__()
         self.discovery: Optional[DBFTableDiscovery] = None
         
+        # Set supported formats for registry compatibility
+        self.supported_inputs = {'.dbf'}
+        self.supported_outputs = {'.parquet'}
+        
     def get_supported_formats(self) -> List[str]:
         """Get list of supported input formats"""
         return ['.dbf']
@@ -120,16 +124,17 @@ class DBFConverter(StringDatabaseConverter):
         except Exception as e:
             self.logger.warning(f"Error closing DBF connection: {e}")
     
-    def validate_input(self, input_path: Path) -> tuple[bool, str]:
+    def validate_input(self, input_path: Path) -> bool:
         """Validate DBF input file"""
         # Check file extension
         if input_path.suffix.lower() != '.dbf':
-            return False, f"File must be .dbf, got {input_path.suffix}"
+            return False
         
         # Use detector for validation
         from ..detectors.database_detector import DatabaseFileDetector
         detector = DatabaseFileDetector()
-        return detector.validate_file_access(input_path)
+        is_valid, _ = detector.validate_file_access(input_path)
+        return is_valid
     
     def convert_with_progress(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """

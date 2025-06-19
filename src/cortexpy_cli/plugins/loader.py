@@ -17,12 +17,22 @@ class PluginLoader:
     
     def load_builtin_converters(self) -> None:
         """Load built-in converters from the converters package."""
+        # Load PDF converter
         try:
             from ..converters import PDFConverter
             registry.register('pdf', PDFConverter)
             self.loaded_plugins.append('pdf')
         except ImportError as e:
             print(f"Warning: Could not load PDF converter: {e}")
+        
+        # Load database converters
+        try:
+            from ..converters import MDBConverter, DBFConverter
+            registry.register('mdb', MDBConverter)
+            registry.register('dbf', DBFConverter)
+            self.loaded_plugins.extend(['mdb', 'dbf'])
+        except ImportError as e:
+            print(f"Warning: Could not load database converters: {e}")
     
     def load_from_entry_points(self) -> None:
         """Load converters from setuptools entry points."""
