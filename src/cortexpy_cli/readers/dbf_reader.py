@@ -50,6 +50,7 @@ class DBFTableDiscovery:
         self.logger = logging.getLogger(__name__)
         self.table_info: Optional[DBFTableInfo] = None
         self._dbf_file = None
+        self._detected_encoding: Optional[str] = None
         
         # DBF version signatures
         self.version_map = {
@@ -93,7 +94,7 @@ class DBFTableDiscovery:
     
     def connect(self, file_path: Union[str, Path]) -> bool:
         """
-        Connect to DBF file and analyze structure.
+        Connect to DBF file and analyze structure with robust upfront encoding detection.
         
         Args:
             file_path: Path to DBF file
@@ -112,13 +113,13 @@ class DBFTableDiscovery:
         self.logger.info(f"Analyzing DBF file: {file_path}")
         
         try:
-            # Try dbfread library first
-            from dbfread import DBF
+            # Step 1: Detect optimal encoding before any conversion attempts
+            optimal_encoding = self._detect_optimal_encoding(file_path)
             
-            # Attempt to open with encoding detection
-            self._dbf_file = self._open_with_encoding_detection(file_path)
+            # Step 2: Open with the detected encoding
+            self._dbf_file = self._open_with_detected_encoding(file_path, optimal_encoding)
             
-            # Analyze the file structure
+            # Step 3: Analyze the file structure
             self.table_info = self._analyze_dbf_structure(file_path)
             
             self.logger.info(f"✓ Connected to DBF: {self.table_info.record_count} records, {self.table_info.field_count} fields")
@@ -127,6 +128,166 @@ class DBFTableDiscovery:
         except Exception as e:
             self.logger.error(f"Failed to connect to DBF file: {e}")
             raise ConnectionError(f"Cannot open DBF file: {e}")
+    
+    def _detect_optimal_encoding(self, file_path: Path) -> str:
+        """
+        Robustly detect the optimal encoding for the DBF file by testing 
+        comprehensive sample reading before any conversion begins.
+        """
+        from dbfread import DBF
+        
+        # Comprehensive encoding candidates with business data priorities
+        encoding_candidates = [
+            ('cp1252', 'Windows-1252 (Western European)'),
+            ('iso-8859-1', 'ISO 8859-1 (Latin-1)'), 
+            ('latin1', 'Latin-1'),
+            ('cp850', 'IBM Code Page 850'),
+            ('cp1251', 'Windows-1251 (Cyrillic)'),
+            ('cp1250', 'Windows-1250 (Central European)'),
+            ('utf-8', 'UTF-8'),
+            ('ascii', 'ASCII'),
+        ]
+        
+        best_encoding = None
+        best_score = -1
+        best_info = None
+        
+        self.logger.info(f"Detecting optimal encoding for {file_path.name}...")
+        
+        for encoding, description in encoding_candidates:
+            try:
+                self.logger.debug(f"Testing encoding: {encoding} ({description})")
+                
+                # Test encoding comprehensively
+                score, sample_size, errors = self._test_encoding_thoroughly(file_path, encoding)
+                
+                self.logger.debug(f"Encoding {encoding}: score={score}, samples={sample_size}, errors={errors}")
+                
+                if score > best_score:
+                    best_score = score
+                    best_encoding = encoding
+                    best_info = {
+                        'encoding': encoding,
+                        'description': description,
+                        'score': score,
+                        'sample_size': sample_size,
+                        'errors': errors
+                    }
+                    
+                    # Early exit if we find a perfect or very high score with no errors
+                    if score >= 100 and errors == 0:
+                        self.logger.info(f"✅ Perfect encoding found: {encoding}, stopping search")
+                        break
+                    
+            except Exception as e:
+                self.logger.debug(f"Encoding {encoding} failed completely: {e}")
+                continue
+        
+        if best_encoding is None:
+            raise ConnectionError(f"Could not find any working encoding for {file_path}")
+        
+        # Log the detection results
+        self.logger.info(f"✓ Optimal encoding detected: {best_info['encoding']} ({best_info['description']})")
+        self.logger.info(f"  Score: {best_info['score']}, Samples: {best_info['sample_size']}, Errors: {best_info['errors']}")
+        
+        self._detected_encoding = best_encoding
+        return best_encoding
+    
+    def _test_encoding_thoroughly(self, file_path: Path, encoding: str) -> tuple[int, int, int]:
+        """
+        Thoroughly test an encoding by reading multiple samples from different 
+        parts of the file and scoring the results.
+        
+        Returns:
+            (score, sample_size, error_count): Higher score means better encoding
+        """
+        from dbfread import DBF
+        
+        try:
+            dbf = DBF(str(file_path), encoding=encoding)
+            
+            # Test 1: Can we read field names?
+            field_names = dbf.field_names
+            if not field_names:
+                return 0, 0, 0
+            
+            # Test 2: Sample reading from different parts of the file
+            # Limit sample size for large files to avoid timeout
+            max_sample = 50 if len(dbf) > 100000 else 100
+            sample_size = min(max_sample, len(dbf))
+            sample_indices = []
+            
+            if len(dbf) > 0:
+                # Sample from beginning, middle, and end
+                sample_indices.extend([0, 1, 2])  # Beginning
+                if len(dbf) > 10:
+                    mid = len(dbf) // 2
+                    sample_indices.extend([mid-1, mid, mid+1])  # Middle
+                if len(dbf) > 20:
+                    sample_indices.extend([len(dbf)-3, len(dbf)-2, len(dbf)-1])  # End
+                
+                # Add random samples (limited for large files)
+                import random
+                max_additional = 10 if len(dbf) > 100000 else 20
+                additional_samples = min(sample_size - len(sample_indices), max_additional)
+                if additional_samples > 0 and len(dbf) > len(sample_indices):
+                    max_samples = min(additional_samples, len(dbf) - len(sample_indices))
+                    random_indices = random.sample(range(len(dbf)), max_samples)
+                    sample_indices.extend(random_indices)
+            
+            # Read and validate samples
+            successful_reads = 0
+            error_count = 0
+            total_chars = 0
+            
+            for i, record in enumerate(dbf):
+                if i not in sample_indices:
+                    continue
+                    
+                try:
+                    # Test all string fields in the record
+                    for field_name, value in record.items():
+                        if isinstance(value, str):
+                            # Count characters successfully decoded
+                            total_chars += len(value)
+                            # Try to encode/decode to verify integrity
+                            value.encode('utf-8')
+                    
+                    successful_reads += 1
+                    
+                except (UnicodeDecodeError, UnicodeError, UnicodeEncodeError):
+                    error_count += 1
+                except Exception:
+                    error_count += 1
+            
+            # Calculate score based on success rate and character count
+            if len(sample_indices) == 0:
+                return 0, 0, 0
+                
+            success_rate = successful_reads / len(sample_indices)
+            char_bonus = min(total_chars / 1000, 10)  # Bonus for more readable text
+            score = int((success_rate * 100) + char_bonus)
+            
+            return score, successful_reads, error_count
+            
+        except Exception:
+            return 0, 0, 0
+    
+    def _open_with_detected_encoding(self, file_path: Path, encoding: str):
+        """Open DBF file with the pre-detected optimal encoding"""
+        from dbfread import DBF
+        
+        try:
+            self.logger.debug(f"Opening DBF with detected encoding: {encoding}")
+            dbf = DBF(str(file_path), encoding=encoding)
+            
+            # Validate by reading field names
+            _ = dbf.field_names
+            
+            return dbf
+            
+        except Exception as e:
+            raise ConnectionError(f"Failed to open DBF with detected encoding {encoding}: {e}")
     
     def _open_with_encoding_detection(self, file_path: Path):
         """Open DBF file with automatic encoding detection"""
@@ -282,8 +443,11 @@ class DBFTableDiscovery:
             raise ConnectionError("Not connected to DBF file")
         
         try:
-            # Re-open the DBF file for reading data
-            dbf_file = self._open_with_encoding_detection(self.table_info.file_path)
+            # Use the detected encoding if available, otherwise fallback to detection
+            if self._detected_encoding:
+                dbf_file = self._open_with_detected_encoding(self.table_info.file_path, self._detected_encoding)
+            else:
+                dbf_file = self._open_with_encoding_detection(self.table_info.file_path)
             
             # Read records with error handling
             records = []
