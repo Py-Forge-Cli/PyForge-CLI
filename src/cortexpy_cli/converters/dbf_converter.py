@@ -204,7 +204,6 @@ class DBFConverter(StringDatabaseConverter):
                 info_table.add_row("Table Name", table_info['name'])
                 info_table.add_row("Records", f"{table_info['record_count']:,}")
                 info_table.add_row("Fields", str(table_info['column_count']))
-                info_table.add_row("File Size", f"{table_info['estimated_size'] / 1024 / 1024:.1f} MB")
                 info_table.add_row("Version", table_info['version'])
                 info_table.add_row("Encoding", table_info['encoding'])
                 

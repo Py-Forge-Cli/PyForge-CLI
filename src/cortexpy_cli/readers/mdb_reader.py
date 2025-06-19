@@ -10,6 +10,22 @@ from typing import List, Dict, Any, Optional, Tuple, Union
 from dataclasses import dataclass
 import pandas as pd
 
+# Apply NumPy 2.0 compatibility patches globally for pandas-access
+try:
+    import numpy as np
+    if hasattr(np, '__version__') and np.__version__.startswith('2.'):
+        # Add deprecated aliases back for pandas-access compatibility
+        if not hasattr(np, 'float_'):
+            np.float_ = np.float64
+        if not hasattr(np, 'int_'):
+            np.int_ = np.int64
+        if not hasattr(np, 'complex_'):
+            np.complex_ = np.complex128
+        if not hasattr(np, 'bool_'):
+            np.bool_ = bool  # Use Python's bool instead of np.bool_
+except ImportError:
+    pass
+
 from ..detectors.database_detector import DatabaseInfo, DatabaseType
 
 
@@ -45,6 +61,7 @@ class MDBTableDiscovery:
         self.logger = logging.getLogger(__name__)
         self.connection_info: Optional[MDBConnectionInfo] = None
         self._connection = None
+        self._numpy_patched = False
         
         # System tables to filter out
         self.system_tables = {
@@ -108,6 +125,12 @@ class MDBTableDiscovery:
         
         raise ConnectionError(f"Failed to connect to MDB file: {file_path}")
     
+    def _patch_numpy_compatibility(self) -> None:
+        """NumPy compatibility patches are now applied globally at module level"""
+        # This method is kept for backwards compatibility but does nothing
+        # since patches are applied globally at import time
+        pass
+    
     def _connect_pyodbc(self, file_path: Path, password: Optional[str] = None) -> bool:
         """Connect using pyodbc (Windows only)"""
         try:
@@ -131,6 +154,9 @@ class MDBTableDiscovery:
     def _connect_pandas_access(self, file_path: Path, password: Optional[str] = None) -> bool:
         """Connect using pandas-access (cross-platform)"""
         try:
+            # Fix NumPy 2.0 compatibility for pandas-access
+            self._patch_numpy_compatibility()
+            
             import pandas_access as mdb
             
             if password:
@@ -253,15 +279,15 @@ class MDBTableDiscovery:
     
     def _get_table_info_pandas_access(self, table_name: str) -> TableInfo:
         """Get table info using pandas-access"""
+        # Apply NumPy compatibility patch
+        self._patch_numpy_compatibility()
+        
         import pandas_access as mdb
         
         try:
-            # Read table to get info (read just a few rows for efficiency)
-            df = mdb.read_table(self._connection, table_name, rows=5)
-            
-            # For full count, we need to read the entire table (limitation of pandas-access)
-            full_df = mdb.read_table(self._connection, table_name)
-            record_count = len(full_df)
+            # Read entire table (pandas-access limitation - no row limiting)
+            df = mdb.read_table(self._connection, table_name)
+            record_count = len(df)
             
             # Build column information
             columns = []
@@ -330,6 +356,9 @@ class MDBTableDiscovery:
     
     def _read_table_pandas_access(self, table_name: str, limit: Optional[int] = None) -> pd.DataFrame:
         """Read table using pandas-access"""
+        # Apply NumPy compatibility patch
+        self._patch_numpy_compatibility()
+        
         import pandas_access as mdb
         
         df = mdb.read_table(self._connection, table_name)

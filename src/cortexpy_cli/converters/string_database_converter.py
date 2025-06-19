@@ -47,8 +47,8 @@ class StringTypeConverter:
     """
     
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.stats = ConversionStats()
-        self.logger = logging.getLogger(__name__)
     
     def convert_value(self, value: Any, source_type: Optional[str] = None) -> str:
         """
@@ -276,6 +276,7 @@ class StringDatabaseConverter(BaseConverter):
     
     def __init__(self):
         super().__init__()
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.string_converter = StringTypeConverter()
         self.database_info: Optional[DatabaseInfo] = None
         self.conversion_stats: List[ConversionStats] = []

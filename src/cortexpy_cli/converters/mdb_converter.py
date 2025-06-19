@@ -198,29 +198,24 @@ class MDBConverter(StringDatabaseConverter):
                 # Stage 5: Show table overview
                 console.print(f"\n📈 [bold blue]Stage 4:[/bold blue] Table Overview:")
                 
-                # Create summary table
+                # Create summary table (without estimated size)
                 summary_table = Table(title="Database Tables Summary")
                 summary_table.add_column("Table Name", style="cyan")
                 summary_table.add_column("Records", justify="right", style="green")
                 summary_table.add_column("Columns", justify="right", style="blue")
-                summary_table.add_column("Est. Size", justify="right", style="yellow")
                 
                 for info in table_infos:
-                    size_mb = info['estimated_size'] / 1024 / 1024
                     summary_table.add_row(
                         info['name'],
                         f"{info['record_count']:,}",
-                        str(info['column_count']),
-                        f"{size_mb:.1f} MB"
+                        str(info['column_count'])
                     )
                 
                 # Add totals row
-                total_size_mb = total_size / 1024 / 1024
                 summary_table.add_row(
                     "[bold]TOTAL[/bold]",
                     f"[bold]{total_records:,}[/bold]",
-                    "-",
-                    f"[bold]{total_size_mb:.1f} MB[/bold]"
+                    "-"
                 )
                 
                 console.print(summary_table)
@@ -290,7 +285,7 @@ class MDBConverter(StringDatabaseConverter):
                     # Complete progress
                     progress.update(overall_task, completed=len(tables))
                 
-                # Stage 6: Final summary
+                # Stage 6: Final summary and Excel report generation
                 if converted_files:
                     console.print(f"\n📑 [bold blue]Stage 6:[/bold blue] Conversion Summary:")
                     
@@ -307,6 +302,16 @@ class MDBConverter(StringDatabaseConverter):
                     console.print("\nOutput files:")
                     for file_info in converted_files:
                         console.print(f"  • {file_info['file'].name} ({file_info['records']:,} records)")
+                    
+                    # Generate Excel report
+                    console.print(f"\n📊 [bold blue]Generating Excel Report...[/bold blue]")
+                    try:
+                        excel_path = self._generate_excel_report(
+                            input_path, output_path, table_infos, converted_files, connection
+                        )
+                        console.print(f"✅ Excel report created: {excel_path.name}")
+                    except Exception as e:
+                        console.print(f"⚠️ [yellow]Warning: Could not generate Excel report: {e}[/yellow]")
                 else:
                     console.print("⚠️ [yellow]No tables were successfully converted[/yellow]")
                 
@@ -319,6 +324,97 @@ class MDBConverter(StringDatabaseConverter):
             console.print(f"❌ [red]Conversion failed:[/red] {e}")
             self.logger.error(f"MDB conversion failed: {e}")
             return False
+    
+    def _generate_excel_report(
+        self, 
+        input_path: Path, 
+        output_path: Path, 
+        table_infos: List[Dict[str, Any]], 
+        converted_files: List[Dict[str, Any]], 
+        connection: Any
+    ) -> Path:
+        """
+        Generate Excel report with summary and sample data from each table.
+        
+        Returns:
+            Path to the generated Excel file
+        """
+        import pandas as pd
+        from datetime import datetime
+        
+        # Create Excel file path
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        excel_filename = f"{input_path.stem}_conversion_report_{timestamp}.xlsx"
+        excel_path = output_path / excel_filename
+        
+        with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
+            # 1. Summary Sheet
+            summary_data = {
+                'Property': [
+                    'Source File',
+                    'Conversion Date',
+                    'Total Tables',
+                    'Total Records',
+                    'Output Directory',
+                    'Conversion Status'
+                ],
+                'Value': [
+                    str(input_path),
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    len(converted_files),
+                    sum(f['records'] for f in converted_files),
+                    str(output_path),
+                    'Completed Successfully'
+                ]
+            }
+            
+            summary_df = pd.DataFrame(summary_data)
+            summary_df.to_excel(writer, sheet_name='Summary', index=False)
+            
+            # Table details in summary
+            table_summary_data = {
+                'Table Name': [f['table'] for f in converted_files],
+                'Records': [f['records'] for f in converted_files],
+                'Output File': [f['file'].name for f in converted_files],
+                'Size (MB)': [f['size_mb'] for f in converted_files]
+            }
+            
+            table_summary_df = pd.DataFrame(table_summary_data)
+            # Add table summary starting from row 10
+            table_summary_df.to_excel(
+                writer, 
+                sheet_name='Summary', 
+                startrow=9, 
+                index=False
+            )
+            
+            # 2. Sample data from each table (first 10 records)
+            for table_name in [f['table'] for f in converted_files]:
+                try:
+                    # Read the full table data
+                    df = self._read_table(connection, table_name)
+                    
+                    # Take first 10 records for sample
+                    sample_df = df.head(10)
+                    
+                    # Convert to strings (same as our conversion process)
+                    string_sample = self.string_converter.convert_dataframe(sample_df)
+                    
+                    # Write to Excel sheet (sheet name max 31 chars)
+                    sheet_name = table_name[:31] if len(table_name) > 31 else table_name
+                    string_sample.to_excel(writer, sheet_name=sheet_name, index=False)
+                    
+                except Exception as e:
+                    self.logger.warning(f"Could not create sample sheet for {table_name}: {e}")
+                    
+                    # Create error sheet
+                    error_df = pd.DataFrame({
+                        'Error': [f'Could not read sample data: {e}']
+                    })
+                    sheet_name = f"{table_name[:25]}_ERROR" if len(table_name) > 25 else f"{table_name}_ERROR"
+                    error_df.to_excel(writer, sheet_name=sheet_name, index=False)
+        
+        return excel_path
     
     def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """Standard convert method - delegates to progress version"""
