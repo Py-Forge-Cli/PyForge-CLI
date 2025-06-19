@@ -1,4 +1,4 @@
-"""Main CLI entry point for CortexPy CLI."""
+"""Main CLI entry point for PyForge CLI."""
 
 import click
 from pathlib import Path
@@ -14,12 +14,12 @@ console = Console()
 
 
 @click.group()
-@click.version_option(version=__version__, prog_name="cortexpy")
+@click.version_option(version=__version__, prog_name="pyforge")
 @click.option('--verbose', '-v', is_flag=True, 
               help='Enable verbose output with detailed progress information')
 @click.pass_context
 def cli(ctx, verbose):
-    """CortexPy CLI - A powerful data format conversion tool.
+    """PyForge CLI - A powerful data format conversion and synthetic data generation tool.
     
     \b
     DESCRIPTION:
@@ -30,38 +30,44 @@ def cli(ctx, verbose):
     \b
     CURRENTLY SUPPORTED FORMATS:
         • PDF to Text conversion with advanced options
+        • Excel (.xlsx) to Parquet conversion with multi-sheet support
         • MDB/ACCDB (Microsoft Access) to Parquet conversion
         • DBF (dBase) to Parquet conversion
         • File metadata extraction and validation
     
     \b
     QUICK START:
-        cortexpy formats                    # List all supported formats
-        cortexpy convert document.pdf       # Convert PDF to text
-        cortexpy info document.pdf          # Show file metadata
-        cortexpy validate document.pdf      # Check if file is valid
+        pyforge formats                    # List all supported formats
+        pyforge convert document.pdf       # Convert PDF to text
+        pyforge info document.pdf          # Show file metadata
+        pyforge validate document.pdf      # Check if file is valid
     
     \b
     EXAMPLES:
         # PDF conversion
-        cortexpy convert report.pdf
-        cortexpy convert document.pdf output.txt --pages "1-10" --metadata
+        pyforge convert report.pdf
+        pyforge convert document.pdf output.txt --pages "1-10" --metadata
+        
+        # Excel conversion
+        pyforge convert data.xlsx --format parquet
+        pyforge convert workbook.xlsx --format parquet --combine
+        pyforge convert report.xlsx --format parquet --separate
         
         # Database conversion
-        cortexpy convert database.mdb --format parquet
-        cortexpy convert data.dbf output_dir/ --format parquet --compression gzip
-        cortexpy convert secure.accdb --password "secret" --tables "customers,orders"
+        pyforge convert database.mdb --format parquet
+        pyforge convert data.dbf output_dir/ --format parquet --compression gzip
+        pyforge convert secure.accdb --password "secret" --tables "customers,orders"
         
         # File information and validation
-        cortexpy info document.pdf --format json
-        cortexpy validate database.mdb
+        pyforge info document.pdf --format json
+        pyforge validate database.mdb
     
     \b
     PLUGIN SYSTEM:
         The tool supports plugins for adding new format converters.
         See documentation for creating custom converters.
     
-    For detailed help on any command, use: cortexpy COMMAND --help
+    For detailed help on any command, use: pyforge COMMAND --help
     """
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
@@ -99,8 +105,12 @@ def cli(ctx, verbose):
               help='Parquet compression format (default: snappy)')
 @click.option('--force', is_flag=True,
               help='Overwrite existing output file without confirmation')
+@click.option('--combine', is_flag=True,
+              help='Force combination of matching sheets into single parquet (Excel only)')
+@click.option('--separate', is_flag=True,
+              help='Keep all sheets as separate parquet files (Excel only)')
 @click.pass_context
-def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force):
+def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force, combine, separate):
     """Convert files between different formats.
     
     \b
@@ -152,6 +162,11 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         # Convert with verbose progress
         cortexpy convert document.pdf --verbose
         
+        # Excel conversion examples
+        cortexpy convert data.xlsx --format parquet
+        cortexpy convert workbook.xlsx --format parquet --combine
+        cortexpy convert report.xlsx --format parquet --separate
+        
         # Database conversion examples
         cortexpy convert database.mdb --format parquet
         cortexpy convert data.dbf output_dir/ --format parquet --compression gzip
@@ -163,6 +178,13 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         • Creates text file with extracted content
         • Shows progress bar for large files
         • Reports number of pages processed
+        
+        EXCEL CONVERSION:
+        • Analyzes multi-sheet workbooks with column signature detection
+        • Interactive prompts for handling matching/different sheet structures
+        • Converts all data to string format with proper precision
+        • Formula values extracted and converted (warns user)
+        • Progress tracking with sheet-by-sheet processing
         
         DATABASE CONVERSION:
         • Creates directory with Parquet files (one per table)
@@ -186,24 +208,25 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
     # Determine output path
     input_ext = input_file.suffix.lower()
     is_database = input_ext in ['.mdb', '.accdb', '.dbf']
+    is_excel = input_ext == '.xlsx'
     
     if not output_file:
-        if is_database and output_format == 'parquet':
-            # For database conversions, create output directory
+        if (is_database or is_excel) and output_format == 'parquet':
+            # For database and Excel conversions, create output directory
             output_file = input_file.parent / f"{input_file.stem}_parquet"
         else:
             # Generate output file in same directory as input with new extension
             output_file = input_file.with_suffix(f'.{output_format}')
         
         if verbose:
-            if is_database:
+            if is_database or is_excel:
                 console.print(f"[dim]Auto-generated output directory: {output_file}[/dim]")
             else:
                 console.print(f"[dim]Auto-generated output file: {output_file}[/dim]")
     
     # Check if output path exists
     if output_file.exists() and not force:
-        if is_database:
+        if is_database or is_excel:
             console.print(f"[yellow]Output directory {output_file} already exists. Use --force to overwrite.[/yellow]")
         else:
             console.print(f"[yellow]Output file {output_file} already exists. Use --force to overwrite.[/yellow]")
@@ -240,6 +263,12 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         options['tables'] = [t.strip() for t in tables.split(',')]
     if compression:
         options['compression'] = compression
+    
+    # Excel-specific options
+    if combine:
+        options['combine'] = True
+    if separate:
+        options['separate'] = True
     
     # Perform conversion
     success = converter.convert(input_file, output_file, **options)

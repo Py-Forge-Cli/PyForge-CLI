@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "cortexpy-cli"
-version = "0.1.0"
-description = "A powerful CLI tool for data format conversion and manipulation"
+name = "pyforge-cli"
+version = "0.2.0"
+description = "A powerful CLI tool for data format conversion and synthetic data generation"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
@@ -54,12 +54,12 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/cortexpy-cli"
-Repository = "https://github.com/yourusername/cortexpy-cli"
-Issues = "https://github.com/yourusername/cortexpy-cli/issues"
+Homepage = "https://github.com/yourusername/pyforge-cli"
+Repository = "https://github.com/yourusername/pyforge-cli"
+Issues = "https://github.com/yourusername/pyforge-cli/issues"
 
 [project.scripts]
-cortexpy = "cortexpy_cli.main:cli"
+pyforge = "cortexpy_cli.main:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cortexpy_cli"]

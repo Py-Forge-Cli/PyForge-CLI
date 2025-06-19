@@ -33,6 +33,14 @@ class PluginLoader:
             self.loaded_plugins.extend(['mdb', 'dbf'])
         except ImportError as e:
             print(f"Warning: Could not load database converters: {e}")
+        
+        # Load Excel converter
+        try:
+            from ..converters.excel_converter import ExcelConverter
+            registry.register('excel', ExcelConverter)
+            self.loaded_plugins.append('excel')
+        except ImportError as e:
+            print(f"Warning: Could not load Excel converter: {e}")
     
     def load_from_entry_points(self) -> None:
         """Load converters from setuptools entry points."""

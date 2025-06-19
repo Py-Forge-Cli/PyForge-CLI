@@ -1,4 +1,4 @@
-"""Plugin system for CortexPy CLI."""
+"""Plugin system for PyForge CLI."""
 
 from .registry import ConverterRegistry, registry
 from .loader import PluginLoader, plugin_loader

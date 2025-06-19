@@ -1,14 +1,16 @@
-# CortexPy CLI
+# PyForge CLI
 
 A powerful command-line tool for data format conversion and manipulation, built with Python and Click.
 
 ## Features
 
 - **PDF to Text Conversion**: Extract text from PDF documents with advanced options
+- **Excel to Parquet Conversion**: Convert Excel files (.xlsx) to Parquet format with multi-sheet support
+- **Database File Conversion**: Convert Microsoft Access (.mdb/.accdb) and DBF files to Parquet
 - **Rich CLI Interface**: Beautiful terminal output with progress bars and tables
+- **Intelligent Processing**: Automatic encoding detection, table discovery, and column matching
 - **Extensible Architecture**: Plugin-based system for adding new format converters
 - **Metadata Extraction**: Get detailed information about your files
-- **Page Range Support**: Convert specific page ranges from PDF documents
 - **Cross-platform**: Works on Windows, macOS, and Linux
 
 ## Installation
@@ -16,23 +18,35 @@ A powerful command-line tool for data format conversion and manipulation, built 
 ### From PyPI
 
 ```bash
-pip install cortexpy-cli
+pip install pyforge-cli
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/yourusername/cortexpy-cli.git
-cd cortexpy-cli
+git clone https://github.com/yourusername/pyforge-cli.git
+cd pyforge-cli
 make install
 ```
 
 ### Development Installation
 
 ```bash
-git clone https://github.com/yourusername/cortexpy-cli.git
-cd cortexpy-cli
+git clone https://github.com/yourusername/pyforge-cli.git
+cd pyforge-cli
 make setup-dev
+```
+
+### System Dependencies
+
+For MDB/Access file support on non-Windows systems:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install mdbtools
+
+# macOS
+brew install mdbtools
 ```
 
 ## Quick Start
@@ -41,38 +55,68 @@ make setup-dev
 
 ```bash
 # Convert entire PDF
-cortexpy convert document.pdf
+pyforge convert document.pdf
 
 # Convert to specific output file
-cortexpy convert document.pdf output.txt
+pyforge convert document.pdf output.txt
 
 # Convert specific page range
-cortexpy convert document.pdf --pages "1-5"
+pyforge convert document.pdf --pages "1-5"
 
 # Include page metadata
-cortexpy convert document.pdf --metadata
+pyforge convert document.pdf --metadata
+```
+
+### Convert Excel to Parquet
+
+```bash
+# Convert Excel file to Parquet
+pyforge convert data.xlsx
+
+# Convert with specific compression
+pyforge convert data.xlsx --compression gzip
+
+# Convert specific sheets only
+pyforge convert data.xlsx --sheets "Sheet1,Sheet3"
+```
+
+### Convert Database Files
+
+```bash
+# Convert Access database to Parquet
+pyforge convert database.mdb
+
+# Convert DBF file with encoding detection
+pyforge convert data.dbf
+
+# Convert with custom output directory
+pyforge convert database.accdb output_folder/
 ```
 
 ### Get File Information
 
 ```bash
 # Display file metadata as table
-cortexpy info document.pdf
+pyforge info document.pdf
+
+# Get Excel file information
+pyforge info spreadsheet.xlsx
 
 # Output metadata as JSON
-cortexpy info document.pdf --format json
+pyforge info database.mdb --format json
 ```
 
 ### List Supported Formats
 
 ```bash
-cortexpy formats
+pyforge formats
 ```
 
 ### Validate Files
 
 ```bash
-cortexpy validate document.pdf
+pyforge validate document.pdf
+pyforge validate data.xlsx
 ```
 
 ## Usage Examples
@@ -81,42 +125,80 @@ cortexpy validate document.pdf
 
 ```bash
 # Convert PDF to text (creates report.txt in same directory)
-cortexpy convert report.pdf
+pyforge convert report.pdf
 
 # Convert with custom output path
-cortexpy convert report.pdf /path/to/output.txt
+pyforge convert report.pdf /path/to/output.txt
 
 # Convert with verbose output
-cortexpy convert report.pdf --verbose
+pyforge convert report.pdf --verbose
 
 # Force overwrite existing file
-cortexpy convert report.pdf output.txt --force
+pyforge convert report.pdf output.txt --force
 ```
 
 ### Advanced PDF Options
 
 ```bash
 # Convert pages 1-10
-cortexpy convert document.pdf --pages "1-10"
+pyforge convert document.pdf --pages "1-10"
 
 # Convert from page 5 to end
-cortexpy convert document.pdf --pages "5-"
+pyforge convert document.pdf --pages "5-"
 
 # Convert up to page 10
-cortexpy convert document.pdf --pages "-10"
+pyforge convert document.pdf --pages "-10"
 
 # Include page markers in output
-cortexpy convert document.pdf --metadata
+pyforge convert document.pdf --metadata
+```
+
+### Excel Conversion Examples
+
+```bash
+# Convert Excel with all sheets
+pyforge convert sales_data.xlsx
+
+# Interactive mode - prompts for sheet selection
+pyforge convert multi_sheet.xlsx --interactive
+
+# Convert sheets with matching columns into single file
+pyforge convert monthly_reports.xlsx --merge-sheets
+
+# Generate summary report
+pyforge convert data.xlsx --summary
+```
+
+### Database Conversion Examples
+
+```bash
+# Convert Access database (all tables)
+pyforge convert company.mdb
+
+# Convert with progress tracking
+pyforge convert large_database.accdb --verbose
+
+# Convert DBF with specific encoding
+pyforge convert legacy.dbf --encoding cp1252
+
+# Batch convert all DBF files in directory
+for file in *.dbf; do pyforge convert "$file"; done
 ```
 
 ### File Information
 
 ```bash
 # Show file metadata
-cortexpy info document.pdf
+pyforge info document.pdf
+
+# Excel file details (sheets, row counts)
+pyforge info spreadsheet.xlsx
+
+# Database file information (tables, record counts)
+pyforge info database.mdb
 
 # Export metadata as JSON
-cortexpy info document.pdf --format json > metadata.json
+pyforge info document.pdf --format json > metadata.json
 ```
 
 ## Supported Formats
@@ -124,8 +206,10 @@ cortexpy info document.pdf --format json > metadata.json
 | Input Format | Output Formats | Status |
 |-------------|----------------|---------|
 | PDF (.pdf)  | Text (.txt)    | ✅ Available |
+| Excel (.xlsx) | Parquet (.parquet) | ✅ Available |
+| Access (.mdb/.accdb) | Parquet (.parquet) | ✅ Available |
+| DBF (.dbf)  | Parquet (.parquet) | ✅ Available |
 | CSV (.csv)  | Parquet (.parquet) | 🚧 Coming Soon |
-| DBF (.dbf)  | CSV (.csv), JSON (.json) | 🚧 Coming Soon |
 
 ## Development
 
@@ -133,8 +217,8 @@ cortexpy info document.pdf --format json > metadata.json
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cortexpy-cli.git
-cd cortexpy-cli
+git clone https://github.com/yourusername/pyforge-cli.git
+cd pyforge-cli
 
 # Set up development environment
 make setup-dev
@@ -169,18 +253,27 @@ make clean            # Clean build artifacts
 ### Project Structure
 
 ```text
-cortexpy-cli/
+pyforge-cli/
 ├── src/cortexpy_cli/
 │   ├── __init__.py
-│   ├── main.py              # CLI entry point
-│   └── converters/
-│       ├── __init__.py
-│       ├── base.py          # Base converter class
-│       └── pdf_converter.py # PDF conversion logic
-├── tests/                   # Test files
-├── pyproject.toml          # Project configuration
-├── Makefile               # Development commands
-└── README.md              # This file
+│   ├── main.py                  # CLI entry point
+│   ├── converters/
+│   │   ├── __init__.py
+│   │   ├── base.py             # Base converter class
+│   │   ├── converter_factory.py # Factory pattern implementation
+│   │   ├── pdf_converter.py    # PDF to text conversion
+│   │   ├── excel_converter.py  # Excel to Parquet conversion
+│   │   ├── mdb_converter.py    # MDB/ACCDB to Parquet conversion
+│   │   └── dbf_converter.py    # DBF to Parquet conversion
+│   ├── plugins/
+│   │   └── loader.py           # Plugin loading system
+│   └── utils/
+│       ├── file_utils.py       # File type detection
+│       └── cli_utils.py        # CLI formatting utilities
+├── tests/                      # Test files
+├── pyproject.toml             # Project configuration
+├── Makefile                   # Development commands
+└── README.md                  # This file
 ```
 
 ## Requirements
@@ -189,6 +282,11 @@ cortexpy-cli/
 - PyMuPDF (for PDF processing)
 - Click (for CLI interface)
 - Rich (for beautiful terminal output)
+- Pandas & PyArrow (for data processing and Parquet support)
+- pandas-access (for MDB file support)
+- dbfread (for DBF file support)
+- openpyxl (for Excel file support)
+- chardet (for encoding detection)
 
 ## Contributing
 
@@ -206,23 +304,37 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Roadmap
 
-### Version 0.2.0 - Database File Support
-- [ ] **MDF/MDB to Parquet Conversion** (In Planning)
-  - Microsoft SQL Server Database Files (.mdf)
-  - Microsoft Access Database Files (.mdb, .accdb)
-  - Multi-table batch conversion with progress tracking
-  - Excel reports with conversion summaries and sample data
-  - See `tasks/prd-mdf-mdb-converter.md` for detailed requirements
+### Version 0.2.0 - Database & Spreadsheet Support (Completed)
+- ✅ **Excel to Parquet Conversion**
+  - Multi-sheet support with intelligent detection
+  - Interactive sheet selection mode
+  - Column matching for combined output
+  - Progress tracking and summary reports
+- ✅ **MDB/ACCDB to Parquet Conversion**
+  - Microsoft Access database support (.mdb, .accdb)
+  - Automatic table discovery
+  - Cross-platform compatibility (Windows/Linux/macOS)
+  - Excel summary reports with sample data
+- ✅ **DBF to Parquet Conversion**
+  - Automatic encoding detection
+  - Support for various DBF formats
+  - Robust error handling for corrupted files
 
-### Future Versions
-- [ ] CSV to Parquet conversion
-- [ ] DBF file support  
-- [ ] Excel file support
-- [ ] JSON processing
-- [ ] Data validation and cleaning
-- [ ] Batch processing
+### Version 0.3.0 - Enhanced Features (Planned)
+- [ ] CSV to Parquet conversion with schema inference
+- [ ] JSON processing and flattening
+- [ ] Data validation and cleaning options
+- [ ] Batch processing with pattern matching
 - [ ] Configuration file support
-- [ ] Plugin system for custom converters
+- [ ] REST API wrapper for notebook integration
+- [ ] Data type preservation options (beyond string conversion)
+
+### Version 0.4.0 - Advanced Features (Future)
+- [ ] SQL query support for database files
+- [ ] Data transformation pipelines
+- [ ] Cloud storage integration (S3, Azure Blob)
+- [ ] Incremental/delta conversions
+- [ ] Custom plugin development SDK
 
 ## Support
 
@@ -233,6 +345,17 @@ If you encounter any issues or have questions:
 3. Create a [new issue](https://github.com/yourusername/cortexpy-cli/issues/new)
 
 ## Changelog
+
+### 0.2.0 (Current Release)
+
+- ✅ Excel to Parquet conversion with multi-sheet support
+- ✅ MDB/ACCDB to Parquet conversion with cross-platform support
+- ✅ DBF to Parquet conversion with encoding detection
+- ✅ Interactive mode for Excel sheet selection
+- ✅ Automatic table discovery for database files
+- ✅ Progress tracking with rich terminal UI
+- ✅ Excel summary reports for batch conversions
+- ✅ Robust error handling and recovery
 
 ### 0.1.0 (Initial Release)
 
