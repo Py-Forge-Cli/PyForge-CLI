@@ -1,5 +1,28 @@
 """Format converters package."""
 
-from .pdf_converter import PDFConverter
+from .base import BaseConverter
+from .string_database_converter import StringTypeConverter, StringDatabaseConverter
 
-__all__ = ["PDFConverter"]
+# Database converters
+from .mdb_converter import MDBConverter
+from .dbf_converter import DBFConverter
+
+# Conditionally import PDF converter (requires fitz)
+try:
+    from .pdf_converter import PDFConverter
+    __all__ = [
+        "BaseConverter", 
+        "StringTypeConverter", 
+        "StringDatabaseConverter",
+        "MDBConverter",
+        "DBFConverter", 
+        "PDFConverter"
+    ]
+except ImportError:
+    __all__ = [
+        "BaseConverter", 
+        "StringTypeConverter", 
+        "StringDatabaseConverter",
+        "MDBConverter",
+        "DBFConverter"
+    ]

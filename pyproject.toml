@@ -35,6 +35,11 @@ dependencies = [
     "tqdm>=4.64.0",
     "PyMuPDF>=1.23.0",
     "pathlib-mate>=1.0.0",
+    "pyarrow>=17.0.0",
+    "pandas>=2.0.3",
+    "chardet>=5.2.0",
+    "pandas-access>=0.0.1",
+    "dbfread>=2.0.7",
 ]
 
 [dependency-groups]
