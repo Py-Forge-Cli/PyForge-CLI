@@ -132,17 +132,24 @@ class DBFTableDiscovery:
         """Open DBF file with automatic encoding detection"""
         from dbfread import DBF
         
-        # Common DBF encodings to try
-        encodings = ['ascii', 'cp850', 'cp1252', 'iso-8859-1', 'utf-8']
+        # Common DBF encodings to try, prioritizing Windows encodings for business data
+        encodings = ['cp1252', 'iso-8859-1', 'latin1', 'cp850', 'utf-8', 'ascii']
         
         for encoding in encodings:
             try:
                 dbf = DBF(str(file_path), encoding=encoding)
-                # Test by reading field names
+                # Test by reading field names and first few records
                 _ = dbf.field_names
+                # Test reading first record to ensure data is readable
+                test_count = 0
+                for record in dbf:
+                    test_count += 1
+                    if test_count >= 3:  # Test first 3 records
+                        break
                 self.logger.debug(f"Successfully opened DBF with encoding: {encoding}")
-                return dbf
-            except (UnicodeDecodeError, UnicodeError):
+                return DBF(str(file_path), encoding=encoding)  # Return fresh instance
+            except (UnicodeDecodeError, UnicodeError) as e:
+                self.logger.debug(f"Unicode error with encoding {encoding}: {e}")
                 continue
             except Exception as e:
                 self.logger.debug(f"Failed to open with encoding {encoding}: {e}")
@@ -278,15 +285,44 @@ class DBFTableDiscovery:
             # Re-open the DBF file for reading data
             dbf_file = self._open_with_encoding_detection(self.table_info.file_path)
             
-            # Read records
+            # Read records with error handling
             records = []
+            error_count = 0
             for i, record in enumerate(dbf_file):
                 if limit and i >= limit:
                     break
-                records.append(record)
+                try:
+                    # Ensure all values are handled properly
+                    clean_record = {}
+                    for key, value in record.items():
+                        if isinstance(value, str):
+                            # Handle potential encoding issues in string values
+                            clean_record[key] = value
+                        else:
+                            clean_record[key] = value
+                    records.append(clean_record)
+                except (UnicodeDecodeError, UnicodeError) as ue:
+                    error_count += 1
+                    self.logger.warning(f"Unicode error in record {i}: {ue}")
+                    # Skip problematic records or try to clean them
+                    if error_count > 100:  # Too many errors
+                        raise ue
+                    continue
+                except Exception as re:
+                    error_count += 1
+                    self.logger.warning(f"Error in record {i}: {re}")
+                    if error_count > 100:  # Too many errors
+                        raise re
+                    continue
+            
+            if not records:
+                raise ValueError("No readable records found in DBF file")
             
             # Convert to DataFrame
             df = pd.DataFrame(records)
+            
+            if error_count > 0:
+                self.logger.warning(f"Skipped {error_count} problematic records due to encoding issues")
             
             self.logger.debug(f"Read {len(df)} records from DBF file")
             return df
