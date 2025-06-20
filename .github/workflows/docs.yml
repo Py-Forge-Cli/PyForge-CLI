@@ -64,17 +64,9 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
-    steps:
-      - name: Debug deployment environment
-        run: |
-          echo "Current environment: ${{ github.environment }}"
-          echo "Pages URL: ${{ steps.deployment.outputs.page_url || 'Not set' }}"
-          
+    steps:          
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
