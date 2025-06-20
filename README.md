@@ -4,7 +4,7 @@ A powerful command-line tool for data format conversion and manipulation, built 
 
 ## 📖 Documentation
 
-**[📚 Complete Documentation](https://py-forge-cli.github.io/PyForge-CLI/)** | **[🚀 Quick Start](https://py-forge-cli.github.io/PyForge-CLI/getting-started/quick-start/)** | **[📦 Installation Guide](https://py-forge-cli.github.io/PyForge-CLI/getting-started/installation/)** | **[🔧 CLI Reference](https://py-forge-cli.github.io/PyForge-CLI/reference/cli-reference/)**
+**[📚 Complete Documentation](https://py-forge-cli.github.io/PyForge-CLI/)** | **[🚀 Quick Start](https://py-forge-cli.github.io/PyForge-CLI/getting-started/quick-start)** | **[📦 Installation Guide](https://py-forge-cli.github.io/PyForge-CLI/getting-started/installation)** | **[🔧 CLI Reference](https://py-forge-cli.github.io/PyForge-CLI/reference/cli-reference)**
 
 <div align="center">
   <a href="https://pypi.org/project/pyforge-cli/">
