@@ -33,6 +33,7 @@ def cli(ctx, verbose):
         • Excel (.xlsx) to Parquet conversion with multi-sheet support
         • MDB/ACCDB (Microsoft Access) to Parquet conversion
         • DBF (dBase) to Parquet conversion
+        • CSV (.csv, .tsv, .txt) to Parquet conversion with auto-detection
         • File metadata extraction and validation
     
     \b
@@ -57,6 +58,11 @@ def cli(ctx, verbose):
         pyforge convert database.mdb --format parquet
         pyforge convert data.dbf output_dir/ --format parquet --compression gzip
         pyforge convert secure.accdb --password "secret" --tables "customers,orders"
+        
+        # CSV conversion
+        pyforge convert data.csv --format parquet
+        pyforge convert sales_data.csv output.parquet --compression gzip --verbose
+        pyforge convert international.tsv --format parquet --force
         
         # File information and validation
         pyforge info document.pdf --format json
