@@ -1,12 +1,13 @@
-# CortexPy CLI - Makefile for development and deployment
+# PyForge CLI - Makefile for development and deployment
 
 # Variables
 PYTHON := python
 UV := uv
-PACKAGE_NAME := cortexpy-cli
+PACKAGE_NAME := pyforge-cli
 SRC_DIR := src
 TEST_DIR := tests
 DIST_DIR := dist
+DOCS_DIR := docs
 
 # Colors for output
 BLUE := \033[36m
@@ -15,10 +16,10 @@ YELLOW := \033[33m
 RED := \033[31m
 RESET := \033[0m
 
-.PHONY: help install install-dev clean test lint format type-check build publish publish-test dev setup-dev pre-commit docs all
+.PHONY: help install install-dev clean test lint format type-check build publish publish-test dev setup-dev pre-commit docs docs-install docs-serve docs-build docs-deploy docs-clean all
 
 help: ## Show this help message
-	@echo "$(BLUE)CortexPy CLI - Available commands:$(RESET)"
+	@echo "$(BLUE)PyForge CLI - Available commands:$(RESET)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-20s$(RESET) %s\n", $$1, $$2}'
 
@@ -100,7 +101,7 @@ build: clean ## Build distribution packages
 # Publishing
 check-version: ## Check if version is set correctly
 	@echo "$(BLUE)Checking version...$(RESET)"
-	@$(PYTHON) -c "from src.cortexpy_cli import __version__; print(f'Current version: {__version__}')"
+	@$(PYTHON) -c "from src.pyforge_cli import __version__; print(f'Current version: {__version__}')"
 
 publish-test: build ## Publish to Test PyPI
 	@echo "$(BLUE)Publishing to Test PyPI...$(RESET)"
@@ -126,22 +127,63 @@ publish: build ## Publish to PyPI (production)
 # Development
 dev: install-dev ## Install in development mode and run CLI
 	@echo "$(BLUE)Package installed in development mode$(RESET)"
-	@echo "$(YELLOW)You can now use: cortexpy --help$(RESET)"
+	@echo "$(YELLOW)You can now use: pyforge --help$(RESET)"
 
 run-example: ## Run example conversion (requires sample PDF)
 	@echo "$(BLUE)Running example conversion...$(RESET)"
 	@if [ -f "example.pdf" ]; then \
-		$(UV) run cortexpy convert example.pdf --verbose; \
+		$(UV) run pyforge convert example.pdf --verbose; \
 	else \
 		echo "$(YELLOW)No example.pdf found. Create one to test the conversion.$(RESET)"; \
 	fi
 
 # Documentation
-docs: ## Generate documentation
-	@echo "$(BLUE)Documentation available in docs/ directory$(RESET)"
-	@echo "$(GREEN)✓ docs/USAGE.md - Complete usage guide$(RESET)"
-	@echo "$(GREEN)✓ README.md - Project overview$(RESET)"
-	@echo "$(YELLOW)Use 'cortexpy COMMAND --help' for detailed command help$(RESET)"
+docs-install: ## Install documentation dependencies
+	@echo "$(BLUE)Installing documentation dependencies...$(RESET)"
+	@if command -v mkdocs >/dev/null 2>&1; then \
+		echo "$(GREEN)✓ MkDocs already installed$(RESET)"; \
+	else \
+		echo "$(YELLOW)Installing MkDocs and dependencies...$(RESET)"; \
+		$(PYTHON) -m pip install mkdocs==1.6.1 mkdocs-material==9.6.14 pymdown-extensions==10.15; \
+	fi
+	@echo "$(GREEN)Documentation dependencies ready!$(RESET)"
+
+docs-serve: docs-install ## Serve documentation locally with live reload
+	@echo "$(BLUE)Starting documentation server...$(RESET)"
+	@echo "$(YELLOW)📖 Documentation will be available at: http://127.0.0.1:8000$(RESET)"
+	@echo "$(YELLOW)📝 Files will auto-reload when you make changes$(RESET)"
+	@echo "$(YELLOW)🛑 Press Ctrl+C to stop the server$(RESET)"
+	@echo ""
+	@if [ -f mkdocs.yml ]; then \
+		mkdocs serve; \
+	else \
+		echo "$(RED)❌ mkdocs.yml not found in current directory$(RESET)"; \
+		exit 1; \
+	fi
+
+docs-build: docs-install ## Build documentation static site
+	@echo "$(BLUE)Building documentation...$(RESET)"
+	@if [ -f mkdocs.yml ]; then \
+		mkdocs build --clean --strict; \
+		echo "$(GREEN)✓ Documentation built in site/ directory$(RESET)"; \
+		echo "$(YELLOW)📁 Open site/index.html in your browser to view$(RESET)"; \
+	else \
+		echo "$(RED)❌ mkdocs.yml not found in current directory$(RESET)"; \
+		exit 1; \
+	fi
+
+docs-deploy: docs-build ## Deploy documentation to GitHub Pages
+	@echo "$(BLUE)Deploying documentation to GitHub Pages...$(RESET)"
+	@echo "$(YELLOW)ℹ️  This will be handled by GitHub Actions$(RESET)"
+	@echo "$(YELLOW)🚀 Push to main branch to trigger automatic deployment$(RESET)"
+	@echo "$(GREEN)📖 Live site: https://py-forge-cli.github.io/PyForge-CLI/$(RESET)"
+
+docs-clean: ## Clean documentation build files
+	@echo "$(BLUE)Cleaning documentation build files...$(RESET)"
+	@rm -rf site/
+	@echo "$(GREEN)✓ Documentation build files cleaned$(RESET)"
+
+docs: docs-serve ## Alias for docs-serve (default docs command)
 
 # CI/CD helpers
 ci-install: ## Install dependencies for CI
@@ -157,7 +199,7 @@ ci-lint: ## Run linting for CI
 
 # Utility commands
 version: ## Show current version
-	@$(PYTHON) -c "from src.cortexpy_cli import __version__; print(__version__)"
+	@$(PYTHON) -c "from src.pyforge_cli import __version__; print(__version__)"
 
 info: ## Show package info
 	@echo "$(BLUE)Package Information:$(RESET)"
