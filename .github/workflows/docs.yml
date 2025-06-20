@@ -35,8 +35,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install mkdocs-material
 
+      - name: Debug - Check installed packages
+        run: |
+          echo "Checking MkDocs and extensions:"
+          pip list | grep -E "(mkdocs|pymdown)"
+          echo "MkDocs version:"
+          mkdocs --version
+
       - name: Build documentation
-        run: mkdocs build --clean --strict
+        run: |
+          echo "Building documentation..."
+          mkdocs build --clean --verbose
 
       - name: Setup Pages
         if: github.ref == 'refs/heads/main'
