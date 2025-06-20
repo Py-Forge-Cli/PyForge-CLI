@@ -4,6 +4,7 @@ site_url: https://py-forge-cli.github.io/PyForge-CLI/
 repo_url: https://github.com/Py-Forge-Cli/PyForge-CLI
 repo_name: Py-Forge-Cli/PyForge-CLI
 edit_uri: edit/main/docs/
+use_directory_urls: true
 
 theme:
   name: material
