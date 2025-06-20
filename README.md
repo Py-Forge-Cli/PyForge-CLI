@@ -2,6 +2,25 @@
 
 A powerful command-line tool for data format conversion and manipulation, built with Python and Click.
 
+## 📖 Documentation
+
+**[📚 Complete Documentation](https://py-forge-cli.github.io/PyForge-CLI/)** | **[🚀 Quick Start](https://py-forge-cli.github.io/PyForge-CLI/getting-started/quick-start/)** | **[📦 Installation Guide](https://py-forge-cli.github.io/PyForge-CLI/getting-started/installation/)** | **[🔧 CLI Reference](https://py-forge-cli.github.io/PyForge-CLI/reference/cli-reference/)**
+
+<div align="center">
+  <a href="https://pypi.org/project/pyforge-cli/">
+    <img src="https://img.shields.io/pypi/v/pyforge-cli.svg" alt="PyPI version">
+  </a>
+  <a href="https://pypi.org/project/pyforge-cli/">
+    <img src="https://img.shields.io/pypi/pyversions/pyforge-cli.svg" alt="Python versions">
+  </a>
+  <a href="https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Py-Forge-Cli/PyForge-CLI.svg" alt="License">
+  </a>
+  <a href="https://github.com/Py-Forge-Cli/PyForge-CLI/actions">
+    <img src="https://github.com/Py-Forge-Cli/PyForge-CLI/workflows/CI/badge.svg" alt="CI Status">
+  </a>
+</div>
+
 ## Features
 
 - **PDF to Text Conversion**: Extract text from PDF documents with advanced options
@@ -24,17 +43,17 @@ pip install pyforge-cli
 ### From Source
 
 ```bash
-git clone https://github.com/yourusername/pyforge-cli.git
-cd pyforge-cli
-make install
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
+pip install -e .
 ```
 
 ### Development Installation
 
 ```bash
-git clone https://github.com/yourusername/pyforge-cli.git
-cd pyforge-cli
-make setup-dev
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
+pip install -e ".[dev,test]"
 ```
 
 ### System Dependencies
@@ -217,63 +236,62 @@ pyforge info document.pdf --format json > metadata.json
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/pyforge-cli.git
-cd pyforge-cli
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
 
 # Set up development environment
-make setup-dev
+pip install -e ".[dev,test]"
 
 # Run tests
-make test
+pytest
 
 # Format code
-make format
+black src tests
 
 # Run all checks
-make pre-commit
+ruff check src tests
 ```
 
-### Available Make Commands
+### Development Commands
 
 ```bash
-make help              # Show all available commands
-make install          # Install package
-make install-dev      # Install with development dependencies
-make test             # Run tests
-make test-cov         # Run tests with coverage
-make lint             # Run linting
-make format           # Format code
-make type-check       # Run type checking
-make build            # Build distribution packages
-make publish-test     # Publish to Test PyPI
-make publish          # Publish to PyPI
-make clean            # Clean build artifacts
+# Testing
+pytest                                    # Run tests
+pytest --cov=pyforge_cli                 # Run tests with coverage
+
+# Code Quality
+black src tests                          # Format code
+ruff check src tests                     # Run linting
+mypy src                                 # Type checking
+
+# Building
+python -m build                          # Build distribution packages
+twine upload dist/*                      # Publish to PyPI
 ```
 
 ### Project Structure
 
 ```text
-pyforge-cli/
-├── src/cortexpy_cli/
+PyForge-CLI/
+├── src/pyforge_cli/            # Main package
 │   ├── __init__.py
-│   ├── main.py                  # CLI entry point
-│   ├── converters/
+│   ├── main.py                 # CLI entry point
+│   ├── converters/             # Format converters
 │   │   ├── __init__.py
-│   │   ├── base.py             # Base converter class
-│   │   ├── converter_factory.py # Factory pattern implementation
-│   │   ├── pdf_converter.py    # PDF to text conversion
-│   │   ├── excel_converter.py  # Excel to Parquet conversion
-│   │   ├── mdb_converter.py    # MDB/ACCDB to Parquet conversion
-│   │   └── dbf_converter.py    # DBF to Parquet conversion
-│   ├── plugins/
-│   │   └── loader.py           # Plugin loading system
-│   └── utils/
-│       ├── file_utils.py       # File type detection
-│       └── cli_utils.py        # CLI formatting utilities
-├── tests/                      # Test files
-├── pyproject.toml             # Project configuration
-├── Makefile                   # Development commands
-└── README.md                  # This file
+│   │   ├── base.py            # Base converter class
+│   │   ├── pdf_converter.py   # PDF to text conversion
+│   │   ├── excel_converter.py # Excel to Parquet conversion
+│   │   ├── mdb_converter.py   # MDB/ACCDB to Parquet conversion
+│   │   └── dbf_converter.py   # DBF to Parquet conversion
+│   ├── plugins/               # Plugin system
+│   │   └── loader.py          # Plugin loading
+│   └── utils/                 # Utilities
+│       ├── file_utils.py      # File operations
+│       └── cli_utils.py       # CLI helpers
+├── docs/                      # Documentation source
+├── tests/                     # Test files
+├── pyproject.toml            # Project configuration
+└── README.md                 # This file
 ```
 
 ## Requirements
@@ -293,7 +311,7 @@ pyforge-cli/
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Run tests and linting (`make pre-commit`)
+4. Run tests and linting (`pytest && ruff check src tests`)
 5. Commit your changes (`git commit -m 'Add amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
@@ -340,17 +358,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 
-1. Check the [documentation](https://github.com/yourusername/cortexpy-cli/wiki)
-2. Search [existing issues](https://github.com/yourusername/cortexpy-cli/issues)
-3. Create a [new issue](https://github.com/yourusername/cortexpy-cli/issues/new)
+1. Check the [📚 Complete Documentation](https://py-forge-cli.github.io/PyForge-CLI/)
+2. Search [existing issues](https://github.com/Py-Forge-Cli/PyForge-CLI/issues)
+3. Create a [new issue](https://github.com/Py-Forge-Cli/PyForge-CLI/issues/new)
+4. Join the [discussion](https://github.com/Py-Forge-Cli/PyForge-CLI/discussions)
 
 ## Changelog
 
 ### 0.2.1 (Current Release)
 
-- Fixed GitHub Actions workflow for automated PyPI publishing
-- Updated CI/CD pipeline to use API token authentication
-- Improved package distribution automation
+- ✅ **Complete Documentation Site**: Comprehensive GitHub Pages documentation
+- ✅ **Fixed CI/CD**: GitHub Actions workflow for automated PyPI publishing  
+- ✅ **Improved Distribution**: API token authentication and automation
+- ✅ **Better Navigation**: Fixed broken links and improved project structure
 
 ### 0.2.0 (Current Release)
 
