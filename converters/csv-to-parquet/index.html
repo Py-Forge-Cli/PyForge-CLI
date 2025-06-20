@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://py-forge-cli.github.io/PyForge-CLI/converters/dbf-files/">
+        <link rel="canonical" href="https://py-forge-cli.github.io/PyForge-CLI/converters/csv-to-parquet/">
       
       
-        <link rel="prev" href="../database-files/">
+        <link rel="prev" href="../excel-to-parquet/">
       
       
-        <link rel="next" href="../../reference/">
+        <link rel="next" href="../database-files/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>DBF Files - PyForge CLI Documentation</title>
+        <title>CSV to Parquet - PyForge CLI Documentation</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dbf-file-conversion" class="md-skip">
+        <a href="#csv-to-parquet-conversion" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DBF Files
+              CSV to Parquet
             
           </span>
         </div>
@@ -556,52 +556,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../csv-to-parquet/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    CSV to Parquet
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../database-files/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    MDB/ACCDB Files
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -619,7 +573,7 @@
   
   
   <span class="md-ellipsis">
-    DBF Files
+    CSV to Parquet
     
   </span>
   
@@ -632,7 +586,7 @@
   
   
   <span class="md-ellipsis">
-    DBF Files
+    CSV to Parquet
     
   </span>
   
@@ -658,15 +612,6 @@
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-dbf-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supported DBF Formats
     </span>
   </a>
   
@@ -706,28 +651,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#encoding-handling" class="md-nav__link">
+  <a href="#auto-detection-features" class="md-nav__link">
     <span class="md-ellipsis">
-      Encoding Handling
+      Auto-Detection Features
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Encoding Handling">
+    <nav class="md-nav" aria-label="Auto-Detection Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#automatic-detection" class="md-nav__link">
+  <a href="#delimiter-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      Automatic Detection
+      Delimiter Detection
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#encoding-support" class="md-nav__link">
+  <a href="#encoding-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      Encoding Support
+      Encoding Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Header Detection
     </span>
   </a>
   
@@ -749,18 +703,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#processing-options" class="md-nav__link">
+  <a href="#compression-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Processing Options
+      Compression Options
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#compression-and-output" class="md-nav__link">
+  <a href="#processing-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Compression and Output
+      Processing Options
     </span>
   </a>
   
@@ -777,6 +731,39 @@
       Data Type Handling
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-format-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Format Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Format Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -881,6 +868,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#business-data-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Data Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#international-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      International Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#legacy-system-migration" class="md-nav__link">
     <span class="md-ellipsis">
       Legacy System Migration
@@ -890,27 +895,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#geographic-data-processing" class="md-nav__link">
+  <a href="#data-analysis-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      Geographic Data Processing
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#historical-data-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      Historical Data Recovery
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#international-data-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      International Data Handling
+      Data Analysis Pipeline
     </span>
   </a>
   
@@ -941,15 +928,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-quality-assessment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Data Quality Assessment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#spark-integration" class="md-nav__link">
     <span class="md-ellipsis">
       Spark Integration
@@ -974,18 +952,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#common-problems" class="md-nav__link">
+  <a href="#common-solutions" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Problems
+      Common Solutions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#debug-mode" class="md-nav__link">
+  <a href="#debug-information" class="md-nav__link">
     <span class="md-ellipsis">
-      Debug Mode
+      Debug Information
     </span>
   </a>
   
@@ -1006,39 +984,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#legacy-system-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Legacy System Notes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Legacy System Notes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dbase-variants" class="md-nav__link">
-    <span class="md-ellipsis">
-      dBASE Variants
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#historical-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      Historical Context
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#character-encoding-reference" class="md-nav__link">
     <span class="md-ellipsis">
       Character Encoding Reference
@@ -1051,6 +996,52 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDB/ACCDB Files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbf-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DBF Files
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1487,15 +1478,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-dbf-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supported DBF Formats
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Usage
@@ -1529,28 +1511,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#encoding-handling" class="md-nav__link">
+  <a href="#auto-detection-features" class="md-nav__link">
     <span class="md-ellipsis">
-      Encoding Handling
+      Auto-Detection Features
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Encoding Handling">
+    <nav class="md-nav" aria-label="Auto-Detection Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#automatic-detection" class="md-nav__link">
+  <a href="#delimiter-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      Automatic Detection
+      Delimiter Detection
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#encoding-support" class="md-nav__link">
+  <a href="#encoding-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      Encoding Support
+      Encoding Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#header-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Header Detection
     </span>
   </a>
   
@@ -1572,18 +1563,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#processing-options" class="md-nav__link">
+  <a href="#compression-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Processing Options
+      Compression Options
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#compression-and-output" class="md-nav__link">
+  <a href="#processing-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Compression and Output
+      Processing Options
     </span>
   </a>
   
@@ -1600,6 +1591,39 @@
       Data Type Handling
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-format-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Format Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Format Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1704,6 +1728,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#business-data-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Data Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#international-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      International Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#legacy-system-migration" class="md-nav__link">
     <span class="md-ellipsis">
       Legacy System Migration
@@ -1713,27 +1755,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#geographic-data-processing" class="md-nav__link">
+  <a href="#data-analysis-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      Geographic Data Processing
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#historical-data-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      Historical Data Recovery
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#international-data-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      International Data Handling
+      Data Analysis Pipeline
     </span>
   </a>
   
@@ -1764,15 +1788,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-quality-assessment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Data Quality Assessment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#spark-integration" class="md-nav__link">
     <span class="md-ellipsis">
       Spark Integration
@@ -1797,18 +1812,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#common-problems" class="md-nav__link">
+  <a href="#common-solutions" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Problems
+      Common Solutions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#debug-mode" class="md-nav__link">
+  <a href="#debug-information" class="md-nav__link">
     <span class="md-ellipsis">
-      Debug Mode
+      Debug Information
     </span>
   </a>
   
@@ -1825,39 +1840,6 @@
       Best Practices
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#legacy-system-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Legacy System Notes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Legacy System Notes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dbase-variants" class="md-nav__link">
-    <span class="md-ellipsis">
-      dBASE Variants
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#historical-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      Historical Context
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1889,461 +1871,396 @@
   
 
 
-<h1 id="dbf-file-conversion">DBF File Conversion<a class="headerlink" href="#dbf-file-conversion" title="Permanent link">&para;</a></h1>
-<p>Convert dBASE files (.dbf) to efficient Parquet format with automatic encoding detection and robust error handling for legacy database files.</p>
+<h1 id="csv-to-parquet-conversion">CSV to Parquet Conversion<a class="headerlink" href="#csv-to-parquet-conversion" title="Permanent link">&para;</a></h1>
+<p>Convert CSV, TSV, and delimited text files to efficient Parquet format with automatic delimiter and encoding detection.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>PyForge CLI provides comprehensive DBF file conversion with:</p>
+<p>PyForge CLI provides intelligent CSV to Parquet conversion with:</p>
 <ul>
-<li><strong>Automatic encoding detection</strong> for international character sets</li>
-<li><strong>Multiple DBF format support</strong> (dBASE III, IV, 5.0, Visual FoxPro)</li>
-<li><strong>Robust error handling</strong> for corrupted or incomplete files</li>
-<li><strong>Character encoding preservation</strong> with UTF-8 output</li>
-<li><strong>Memory-efficient processing</strong> for large DBF files</li>
-<li><strong>Data type optimization</strong> for modern analytics</li>
+<li><strong>Automatic delimiter detection</strong> (comma, semicolon, tab, pipe)</li>
+<li><strong>Encoding auto-detection</strong> (UTF-8, Latin-1, Windows-1252, UTF-16)</li>
+<li><strong>Header detection</strong> and flexible handling</li>
+<li><strong>String-based conversion</strong> for data consistency</li>
+<li><strong>Progress tracking</strong> with detailed reports</li>
+<li><strong>Compression options</strong> for optimal storage</li>
 </ul>
-<h2 id="supported-dbf-formats">Supported DBF Formats<a class="headerlink" href="#supported-dbf-formats" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Version</th>
-<th>Extension</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>dBASE III</strong></td>
-<td>3.0</td>
-<td><code>.dbf</code></td>
-<td>Classic format, widely supported</td>
-</tr>
-<tr>
-<td><strong>dBASE IV</strong></td>
-<td>4.0</td>
-<td><code>.dbf</code></td>
-<td>Enhanced field types</td>
-</tr>
-<tr>
-<td><strong>dBASE 5.0</strong></td>
-<td>5.0</td>
-<td><code>.dbf</code></td>
-<td>Extended capabilities</td>
-</tr>
-<tr>
-<td><strong>Visual FoxPro</strong></td>
-<td>6.0-9.0</td>
-<td><code>.dbf</code></td>
-<td>Microsoft variant</td>
-</tr>
-<tr>
-<td><strong>Clipper</strong></td>
-<td>Various</td>
-<td><code>.dbf</code></td>
-<td>CA-Clipper format</td>
-</tr>
-</tbody>
-</table>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <h3 id="simple-conversion">Simple Conversion<a class="headerlink" href="#simple-conversion" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Convert DBF file to Parquet</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Convert CSV file to Parquet</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Output: data.parquet</span>
 </span></code></pre></div>
 <h3 id="with-custom-output">With Custom Output<a class="headerlink" href="#with-custom-output" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Specify output file</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>legacy_data.dbf<span class="w"> </span>modern_data.parquet
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>sales_data.csv<span class="w"> </span>reports/sales.parquet
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Convert to directory</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>historical.dbf<span class="w"> </span>processed/
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Convert to specific directory</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>dataset.csv<span class="w"> </span>processed/
 </span></code></pre></div>
-<h2 id="encoding-handling">Encoding Handling<a class="headerlink" href="#encoding-handling" title="Permanent link">&para;</a></h2>
-<p>PyForge automatically detects and handles various character encodings:</p>
-<h3 id="automatic-detection">Automatic Detection<a class="headerlink" href="#automatic-detection" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Automatic encoding detection (always enabled)</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>international.dbf
+<h2 id="auto-detection-features">Auto-Detection Features<a class="headerlink" href="#auto-detection-features" title="Permanent link">&para;</a></h2>
+<h3 id="delimiter-detection">Delimiter Detection<a class="headerlink" href="#delimiter-detection" title="Permanent link">&para;</a></h3>
+<p>PyForge automatically detects common delimiters:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Comma-separated (default)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Shows processing information in verbose mode</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.dbf<span class="w"> </span>--verbose
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Info: Processing DBF file with automatic encoding detection</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Automatically detects semicolon</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>european_data.csv
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Automatically detects tab-separated</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.tsv
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Automatically detects pipe-separated</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>legacy_data.txt
 </span></code></pre></div>
-<h3 id="encoding-support">Encoding Support<a class="headerlink" href="#encoding-support" title="Permanent link">&para;</a></h3>
-<p>PyForge automatically handles common DBF encodings:
-- <strong>DOS</strong>: cp437, cp850 (legacy DOS systems)
-- <strong>Windows</strong>: cp1252 (Windows Latin-1)<br />
-- <strong>International</strong>: iso-8859-1, iso-8859-2 (European)
-- <strong>Cyrillic</strong>: cp866, cp1251 (Russian/Eastern European)
-- <strong>Modern</strong>: utf-8 (Unicode standard)</p>
+<p><strong>Supported Delimiters:</strong>
+- <strong>Comma (,)</strong>: Standard CSV format
+- <strong>Semicolon (;)</strong>: European CSV format
+- <strong>Tab (\t)</strong>: TSV format
+- <strong>Pipe (|)</strong>: Legacy database exports</p>
+<h3 id="encoding-detection">Encoding Detection<a class="headerlink" href="#encoding-detection" title="Permanent link">&para;</a></h3>
+<p>Automatic encoding detection handles international data:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># UTF-8 files (default)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>modern_data.csv
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Latin-1/ISO-8859-1 encoded files</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>european_legacy.csv
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Windows-1252 encoded files</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>windows_export.csv
+</span></code></pre></div>
+<p><strong>Supported Encodings:</strong>
+- <strong>UTF-8</strong>: Modern standard encoding
+- <strong>Latin-1 (ISO-8859-1)</strong>: Western European
+- <strong>Windows-1252</strong>: Windows default encoding
+- <strong>UTF-16</strong>: Unicode with BOM</p>
+<h3 id="header-detection">Header Detection<a class="headerlink" href="#header-detection" title="Permanent link">&para;</a></h3>
+<p>Smart header detection:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Files with headers (automatically detected)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data_with_headers.csv
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Files without headers (auto-generates column names)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>raw_data.csv
+</span></code></pre></div>
 <h2 id="advanced-options">Advanced Options<a class="headerlink" href="#advanced-options" title="Permanent link">&para;</a></h2>
+<h3 id="compression-options">Compression Options<a class="headerlink" href="#compression-options" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Use GZIP compression (recommended for storage)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--compression<span class="w"> </span>gzip
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Use Snappy compression (default, faster)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--compression<span class="w"> </span>snappy
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># No compression</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--compression<span class="w"> </span>none
+</span></code></pre></div>
 <h3 id="processing-options">Processing Options<a class="headerlink" href="#processing-options" title="Permanent link">&para;</a></h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Standard Conversion</label><label for="__tabbed_1_2">Custom Compression</label><label for="__tabbed_1_3">Force Overwrite</label><label for="__tabbed_1_4">Verbose Output</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Basic conversion with auto-detection</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Use different compression</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf<span class="w"> </span>--compression<span class="w"> </span>gzip
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Overwrite existing output</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf<span class="w"> </span>--force
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Detailed processing information</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf<span class="w"> </span>--verbose
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h3 id="compression-and-output">Compression and Output<a class="headerlink" href="#compression-and-output" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Use compression for smaller files</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large_file.dbf<span class="w"> </span>--compression<span class="w"> </span>gzip
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Force overwrite existing output</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf<span class="w"> </span>--force
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Custom chunk size for memory management</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>huge_file.dbf<span class="w"> </span>--chunk-size<span class="w"> </span><span class="m">50000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Force overwrite existing files</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>output.parquet<span class="w"> </span>--force
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verbose output with detailed processing info</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--verbose
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Specify output format explicitly</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--format<span class="w"> </span>parquet
 </span></code></pre></div>
 <h2 id="data-type-handling">Data Type Handling<a class="headerlink" href="#data-type-handling" title="Permanent link">&para;</a></h2>
-<p>PyForge converts all DBF data to string format for maximum compatibility:</p>
+<p>PyForge converts all CSV data to string format for maximum compatibility:</p>
 <table>
 <thead>
 <tr>
-<th>DBF Type</th>
-<th>DBF Code</th>
+<th>CSV Content</th>
 <th>Parquet Type</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Character</strong></td>
-<td>C</td>
+<td><strong>Numbers</strong></td>
 <td>string</td>
-<td>Text fields, UTF-8 encoded</td>
+<td>Decimal precision preserved as text</td>
 </tr>
 <tr>
-<td><strong>Numeric</strong></td>
-<td>N</td>
+<td><strong>Dates</strong></td>
 <td>string</td>
-<td>Decimal precision preserved, no trailing zeros</td>
+<td>Date format preserved as-is</td>
 </tr>
 <tr>
-<td><strong>Date</strong></td>
-<td>D</td>
+<td><strong>Text</strong></td>
 <td>string</td>
-<td>ISO 8601 format (YYYY-MM-DD)</td>
+<td>UTF-8 encoded</td>
 </tr>
 <tr>
-<td><strong>Logical</strong></td>
-<td>L</td>
+<td><strong>Mixed Types</strong></td>
 <td>string</td>
-<td>"true" or "false" lowercase strings</td>
+<td>No data type inference conflicts</td>
 </tr>
 <tr>
-<td><strong>Memo</strong></td>
-<td>M</td>
+<td><strong>Empty Values</strong></td>
 <td>string</td>
-<td>Large text fields</td>
+<td>Preserved as empty strings</td>
 </tr>
 <tr>
-<td><strong>Float</strong></td>
-<td>F</td>
+<td><strong>Special Characters</strong></td>
 <td>string</td>
-<td>Floating point values as decimal strings</td>
-</tr>
-<tr>
-<td><strong>Currency</strong></td>
-<td>Y</td>
-<td>string</td>
-<td>Monetary values as decimal strings</td>
-</tr>
-<tr>
-<td><strong>DateTime</strong></td>
-<td>T</td>
-<td>string</td>
-<td>ISO 8601 format (YYYY-MM-DDTHH:MM:SS)</td>
-</tr>
-<tr>
-<td><strong>Integer</strong></td>
-<td>I</td>
-<td>string</td>
-<td>Integer values preserved as strings</td>
-</tr>
-<tr>
-<td><strong>Double</strong></td>
-<td>B</td>
-<td>string</td>
-<td>Double precision values as decimal strings</td>
+<td>International characters supported</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">String-Based Conversion</p>
-<p>PyForge CLI currently uses a string-based conversion approach to ensure consistent behavior across all database formats (Excel, MDB, DBF). While this preserves data integrity and precision, you may need to cast types in your analysis tools (pandas, Spark, etc.) if you require native numeric or datetime types.</p>
+<p>PyForge CLI uses a string-based conversion approach to ensure consistent behavior across all data formats (Excel, MDB, DBF, CSV). While this preserves data integrity and precision, you may need to cast types in your analysis tools (pandas, Spark, etc.) if you require native numeric or datetime types.</p>
 </div>
+<h2 id="file-format-support">File Format Support<a class="headerlink" href="#file-format-support" title="Permanent link">&para;</a></h2>
+<h3 id="input-formats">Input Formats<a class="headerlink" href="#input-formats" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Description</th>
+<th>Auto-Detection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>.csv</code></strong></td>
+<td>Comma-Separated Values</td>
+<td>✅ Full support</td>
+</tr>
+<tr>
+<td><strong><code>.tsv</code></strong></td>
+<td>Tab-Separated Values</td>
+<td>✅ Full support</td>
+</tr>
+<tr>
+<td><strong><code>.txt</code></strong></td>
+<td>Delimited text files</td>
+<td>✅ Full support</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-format">Output Format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Parquet</strong>: Columnar storage with compression and efficient analytics support</li>
+</ul>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h3>
 <p><strong>Encoding Problems</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># PyForge automatically detects encoding</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># If conversion fails, check verbose output for encoding issues</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.dbf<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># PyForge automatically detects encoding</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># If issues occur, check verbose output</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>problematic.csv<span class="w"> </span>--verbose
+</span></code></pre></div></p>
+<p><strong>Delimiter Detection Issues</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check file content and delimiter detection</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pyforge<span class="w"> </span>info<span class="w"> </span>suspicious.csv
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Use verbose mode to see detection details</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.csv<span class="w"> </span>--verbose
 </span></code></pre></div></p>
 <p><strong>Large Files</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Use compression to save space</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large.dbf<span class="w"> </span>--compression<span class="w"> </span>gzip
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Use compression for large files</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>huge_dataset.csv<span class="w"> </span>--compression<span class="w"> </span>gzip
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Monitor progress with verbose output</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>huge.dbf<span class="w"> </span>--verbose
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large_file.csv<span class="w"> </span>--verbose
 </span></code></pre></div></p>
-<p><strong>File Corruption</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Use verbose mode to see detailed error information</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>problematic.dbf<span class="w"> </span>--verbose
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Force overwrite if needed</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.dbf<span class="w"> </span>--force
+<p><strong>Mixed Encodings</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Auto-detection handles most cases</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>mixed_encoding.csv<span class="w"> </span>--verbose
 </span></code></pre></div></p>
 <h2 id="validation-and-inspection">Validation and Inspection<a class="headerlink" href="#validation-and-inspection" title="Permanent link">&para;</a></h2>
 <h3 id="pre-conversion-analysis">Pre-conversion Analysis<a class="headerlink" href="#pre-conversion-analysis" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Inspect DBF file structure</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pyforge<span class="w"> </span>info<span class="w"> </span>legacy_data.dbf
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Inspect CSV file structure</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pyforge<span class="w"> </span>info<span class="w"> </span>dataset.csv
 </span></code></pre></div>
 <p>Shows:
-- Number of records
-- Field definitions and types
-- File size and format version
-- Detected encoding
-- Last modification date</p>
+- File size and estimated row count
+- Detected encoding and confidence
+- Detected delimiter and quote character
+- Header detection status
+- File modification date</p>
 <h3 id="file-validation">File Validation<a class="headerlink" href="#file-validation" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check file integrity</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>pyforge<span class="w"> </span>validate<span class="w"> </span>suspicious.dbf
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Detailed validation with encoding check</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>pyforge<span class="w"> </span>validate<span class="w"> </span>file.dbf<span class="w"> </span>--check-encoding<span class="w"> </span>--verbose
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Validate CSV file before conversion</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>pyforge<span class="w"> </span>validate<span class="w"> </span>dataset.csv
 </span></code></pre></div>
 <h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
 <h3 id="large-file-processing">Large File Processing<a class="headerlink" href="#large-file-processing" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Optimize for large DBF files</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>massive.dbf<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--compression<span class="w"> </span>snappy<span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Optimize for large CSV files</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>massive_dataset.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--compression<span class="w"> </span>gzip<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--verbose
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Monitor memory usage and processing time</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>big_file.csv<span class="w"> </span>--verbose
 </span></code></pre></div>
 <h3 id="batch-processing">Batch Processing<a class="headerlink" href="#batch-processing" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Convert multiple DBF files</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">for</span><span class="w"> </span>dbf_file<span class="w"> </span><span class="k">in</span><span class="w"> </span>data/*.dbf<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Converting: </span><span class="nv">$dbf_file</span><span class="s2">&quot;</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>pyforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dbf_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Convert multiple CSV files</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">for</span><span class="w"> </span>csv_file<span class="w"> </span><span class="k">in</span><span class="w"> </span>data/*.csv<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Converting: </span><span class="nv">$csv_file</span><span class="s2">&quot;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>pyforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$csv_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">      </span>--compression<span class="w"> </span>gzip<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">      </span>--verbose
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">done</span>
 </span></code></pre></div>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<h3 id="legacy-system-migration">Legacy System Migration<a class="headerlink" href="#legacy-system-migration" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Convert old accounting system files</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>accounts.dbf<span class="w"> </span><span class="se">\</span>
+<h3 id="business-data-processing">Business Data Processing<a class="headerlink" href="#business-data-processing" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Convert sales data with automatic detection</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;Q4_Sales_Report.csv&quot;</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--compression<span class="w"> </span>gzip<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>--verbose
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Output includes automatic encoding detection and conversion details</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Output includes detection details and conversion summary</span>
 </span></code></pre></div>
-<h3 id="geographic-data-processing">Geographic Data Processing<a class="headerlink" href="#geographic-data-processing" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Convert GIS shapefile DBF components</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>shapefile_attributes.dbf<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--compression<span class="w"> </span>snappy
+<h3 id="international-data">International Data<a class="headerlink" href="#international-data" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Handle European CSV with semicolon delimiters</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>european_sales.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--verbose
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Automatic encoding detection maintains data integrity</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Automatic detection handles:</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># - Semicolon delimiters</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># - European encoding (Latin-1/Windows-1252)</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># - International characters</span>
 </span></code></pre></div>
-<h3 id="historical-data-recovery">Historical Data Recovery<a class="headerlink" href="#historical-data-recovery" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Recover data from potentially corrupted files</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>old_backup.dbf<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>--verbose<span class="w"> </span><span class="se">\</span>
+<h3 id="legacy-system-migration">Legacy System Migration<a class="headerlink" href="#legacy-system-migration" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Convert old database exports</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>legacy_export.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>--compression<span class="w"> </span>gzip<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span>--force
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Review verbose output for data quality assessment</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Handles various delimiters and encodings automatically</span>
 </span></code></pre></div>
-<h3 id="international-data-handling">International Data Handling<a class="headerlink" href="#international-data-handling" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Handle international character sets (automatic detection)</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>european_data.dbf<span class="w"> </span>--verbose
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>russian_data.dbf<span class="w"> </span>--verbose<span class="w">  </span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>japanese_data.dbf<span class="w"> </span>--verbose
+<h3 id="data-analysis-pipeline">Data Analysis Pipeline<a class="headerlink" href="#data-analysis-pipeline" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Convert for analysis workflow</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>raw_data.csv<span class="w"> </span>processed_data.parquet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--compression<span class="w"> </span>snappy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>--verbose
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Result: Efficient Parquet file ready for pandas/Spark</span>
 </span></code></pre></div>
 <h2 id="integration-examples">Integration Examples<a class="headerlink" href="#integration-examples" title="Permanent link">&para;</a></h2>
 <h3 id="pythonpandas">Python/Pandas<a class="headerlink" href="#pythonpandas" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Read converted DBF data</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Read converted parquet file (all columns are strings)</span>
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;converted_data.parquet&#39;</span><span class="p">)</span>
 </span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
 </span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Convert string columns to appropriate types</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">convert_dbf_types</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">convert_csv_types</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 </span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>        <span class="c1"># Clean string data (remove padding spaces)</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>        <span class="c1"># Try to convert to numeric (will stay string if not possible)</span>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
-</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>        <span class="c1"># Try to convert to datetime (will stay string if not possible)</span>
-</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
-</span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>            <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-19-19"><a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>                <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-</span><span id="__span-19-20"><a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>            <span class="k">except</span><span class="p">:</span>
-</span><span id="__span-19-21"><a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>                <span class="k">pass</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>        <span class="c1"># Try to convert to numeric (will stay string if not possible)</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>        <span class="c1"># Try to convert to datetime (will stay string if not possible)</span>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>            <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>                <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>            <span class="k">except</span><span class="p">:</span>
+</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>                <span class="k">pass</span>
+</span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>    <span class="k">return</span> <span class="n">df</span>
+</span><span id="__span-19-19"><a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+</span><span id="__span-19-20"><a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="c1"># Apply type conversion</span>
+</span><span id="__span-19-21"><a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="n">df</span> <span class="o">=</span> <span class="n">convert_csv_types</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </span><span id="__span-19-22"><a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>
-</span><span id="__span-19-23"><a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>        <span class="c1"># Convert boolean strings</span>
-</span><span id="__span-19-24"><a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
-</span><span id="__span-19-25"><a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>            <span class="n">bool_mask</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">])</span>
-</span><span id="__span-19-26"><a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>            <span class="k">if</span> <span class="n">bool_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-</span><span id="__span-19-27"><a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bool_mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bool_mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
-</span><span id="__span-19-28"><a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>    <span class="k">return</span> <span class="n">df</span>
-</span><span id="__span-19-29"><a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>
-</span><span id="__span-19-30"><a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a><span class="c1"># Apply type conversion</span>
-</span><span id="__span-19-31"><a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a><span class="n">df</span> <span class="o">=</span> <span class="n">convert_dbf_types</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span id="__span-19-32"><a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>
-</span><span id="__span-19-33"><a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a><span class="c1"># Data analysis with proper types</span>
-</span><span id="__span-19-34"><a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-19-35"><a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columns: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-19-36"><a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data types after conversion:</span><span class="se">\n</span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-19-37"><a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>
-</span><span id="__span-19-38"><a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a><span class="c1"># Now you can perform numeric operations on converted columns</span>
-</span><span id="__span-19-39"><a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a><span class="n">numeric_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="s1">&#39;float64&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
-</span><span id="__span-19-40"><a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-19-41"><a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Numeric summary:</span><span class="se">\n</span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="data-quality-assessment">Data Quality Assessment<a class="headerlink" href="#data-quality-assessment" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check for encoding issues</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_encoding_quality</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>        <span class="c1"># Check for replacement characters</span>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;�&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encoding issues in column: </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="k">return</span> <span class="n">issues</span>
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
-</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1"># Usage after conversion</span>
-</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">&#39;converted_file.parquet&#39;</span><span class="p">)</span>
-</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="n">quality_issues</span> <span class="o">=</span> <span class="n">check_encoding_quality</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="k">if</span> <span class="n">quality_issues</span><span class="p">:</span>
-</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Potential encoding problems:&quot;</span><span class="p">)</span>
-</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>    <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">quality_issues</span><span class="p">:</span>
-</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-19-23"><a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a><span class="c1"># Now you can perform analysis with proper types</span>
+</span><span id="__span-19-24"><a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-19-25"><a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columns: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-19-26"><a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data types after conversion:</span><span class="se">\n</span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="spark-integration">Spark Integration<a class="headerlink" href="#spark-integration" title="Permanent link">&para;</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">trim</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;DBFData&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1"># Read converted parquet file</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;converted_data.parquet&#39;</span><span class="p">)</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="c1"># Clean typical DBF data issues</span>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># Remove padding from string columns</span>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="n">string_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">fields</span> 
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>                 <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">dataType</span><span class="o">.</span><span class="n">typeName</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;string&#39;</span><span class="p">]</span>
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">string_columns</span><span class="p">:</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="n">trim</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">col_name</span><span class="p">)))</span>
-</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
-</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="c1"># Show results</span>
-</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">col</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;CSVData&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Read converted parquet file (all columns are strings)</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;converted_data.parquet&#39;</span><span class="p">)</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Convert specific columns to appropriate types</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="n">df_typed</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="n">col</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">())</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>    <span class="n">col</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">DoubleType</span><span class="p">())</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">),</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    <span class="n">col</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">DateType</span><span class="p">())</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">),</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="n">col</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>  <span class="c1"># Keep as string</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="p">)</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="n">df_typed</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </span></code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="common-problems">Common Problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h3>
-<p><strong>"File appears corrupted"</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Use verbose mode to see detailed error information</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>damaged.dbf<span class="w"> </span>--verbose
+<h3 id="common-solutions">Common Solutions<a class="headerlink" href="#common-solutions" title="Permanent link">&para;</a></h3>
+<p><strong>File Not Recognized</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check file extension and content</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>pyforge<span class="w"> </span>info<span class="w"> </span>unknown_file.txt
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>pyforge<span class="w"> </span>validate<span class="w"> </span>unknown_file.txt
+</span></code></pre></div></p>
+<p><strong>Detection Failures</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Use verbose mode to see detection process</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.csv<span class="w"> </span>--verbose
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Force overwrite to retry conversion</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>damaged.dbf<span class="w"> </span>--force<span class="w"> </span>--verbose
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Check file has content and proper structure</span>
 </span></code></pre></div></p>
-<p><strong>"Garbled text in output"</strong>:
-- Encoding detection failed - check verbose output
-- Use <code>pyforge info file.dbf</code> to verify file structure
-- File may be corrupted or non-standard format</p>
-<p><strong>"Out of memory errors"</strong>:
+<p><strong>Memory Issues</strong>:
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Use compression to reduce memory usage</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large.dbf<span class="w"> </span>--compression<span class="w"> </span>gzip
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Monitor memory usage with verbose output</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>huge.dbf<span class="w"> </span>--verbose
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large_file.csv<span class="w"> </span>--compression<span class="w"> </span>gzip
 </span></code></pre></div></p>
-<h3 id="debug-mode">Debug Mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Get detailed processing information</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.dbf<span class="w"> </span>--verbose
+<p><strong>Character Encoding Issues</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Auto-detection usually handles this</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Check verbose output for encoding confidence</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>file.csv<span class="w"> </span>--verbose
+</span></code></pre></div></p>
+<h3 id="debug-information">Debug Information<a class="headerlink" href="#debug-information" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Get detailed processing information</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--verbose
 </span></code></pre></div>
 <p>This shows:
-- Encoding detection process
-- Field type mapping decisions
-- Conversion progress
-- Performance metrics</p>
+- Encoding detection process and confidence
+- Delimiter detection results
+- Header detection decision
+- Row and column counts
+- Conversion statistics
+- Processing time</p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Backup Originals</strong>: Keep original DBF files as backup</li>
-<li><strong>Test Encoding</strong>: Use <code>pyforge info</code> to check detected encoding</li>
-<li><strong>Validate Results</strong>: Compare record counts before/after conversion</li>
-<li><strong>Handle Errors Gracefully</strong>: Use <code>--skip-errors</code> for problematic files</li>
-<li><strong>Use Compression</strong>: GZIP compression saves significant space</li>
-<li><strong>Batch Process</strong>: Convert multiple files using shell scripts</li>
-<li><strong>Check Data Quality</strong>: Inspect converted data for encoding issues</li>
+<li><strong>Use Verbose Mode</strong>: Always use <code>--verbose</code> for important conversions to verify detection accuracy</li>
+<li><strong>Validate First</strong>: Use <code>pyforge info</code> and <code>pyforge validate</code> before converting critical data</li>
+<li><strong>Choose Compression</strong>: Use GZIP for storage, Snappy for speed</li>
+<li><strong>Batch Process</strong>: Convert multiple files using shell scripts for efficiency</li>
+<li><strong>Verify Output</strong>: Check converted data structure and content</li>
+<li><strong>Handle Large Files</strong>: Monitor memory usage for very large CSV files</li>
 </ol>
-<h2 id="legacy-system-notes">Legacy System Notes<a class="headerlink" href="#legacy-system-notes" title="Permanent link">&para;</a></h2>
-<h3 id="dbase-variants">dBASE Variants<a class="headerlink" href="#dbase-variants" title="Permanent link">&para;</a></h3>
-<p>Different dBASE implementations may have slight variations:
-- <strong>Clipper</strong>: May use different date formats
-- <strong>FoxPro</strong>: Extended field types and sizes
-- <strong>Xbase++</strong>: Modern extensions to DBF format</p>
-<h3 id="historical-context">Historical Context<a class="headerlink" href="#historical-context" title="Permanent link">&para;</a></h3>
-<p>DBF files were commonly used in:
-- <strong>1980s-1990s</strong>: Primary database format for PC applications
-- <strong>GIS Systems</strong>: Shapefile attribute tables
-- <strong>Legacy ERP</strong>: Accounting and inventory systems
-- <strong>Point of Sale</strong>: Retail transaction systems</p>
 <h2 id="character-encoding-reference">Character Encoding Reference<a class="headerlink" href="#character-encoding-reference" title="Permanent link">&para;</a></h2>
-<p>Common encodings for DBF files by region:</p>
+<p>Common CSV encodings by source:</p>
 <table>
 <thead>
 <tr>
-<th>Region</th>
+<th>Source</th>
 <th>Encoding</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>US/Western Europe</strong></td>
-<td>cp437, cp850</td>
-<td>DOS codepages</td>
-</tr>
-<tr>
-<td><strong>Windows Systems</strong></td>
-<td>cp1252</td>
-<td>Windows Latin-1</td>
-</tr>
-<tr>
-<td><strong>Eastern Europe</strong></td>
-<td>cp852, iso-8859-2</td>
-<td>Central European</td>
-</tr>
-<tr>
-<td><strong>Russian/Cyrillic</strong></td>
-<td>cp866, cp1251</td>
-<td>Cyrillic encodings</td>
-</tr>
-<tr>
 <td><strong>Modern Systems</strong></td>
-<td>utf-8</td>
-<td>Unicode standard</td>
+<td>UTF-8</td>
+<td>Unicode standard, handles all characters</td>
+</tr>
+<tr>
+<td><strong>Windows Excel</strong></td>
+<td>Windows-1252</td>
+<td>Windows default, Western European</td>
+</tr>
+<tr>
+<td><strong>European Systems</strong></td>
+<td>ISO-8859-1 (Latin-1)</td>
+<td>Western European characters</td>
+</tr>
+<tr>
+<td><strong>Legacy Systems</strong></td>
+<td>ASCII</td>
+<td>Basic English characters only</td>
+</tr>
+<tr>
+<td><strong>International</strong></td>
+<td>UTF-16</td>
+<td>Unicode with BOM marker</td>
 </tr>
 </tbody>
 </table>
