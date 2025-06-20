@@ -34,19 +34,15 @@ theme:
   features:
     - navigation.sections
     - navigation.expand
-    - navigation.path
     - navigation.indexes
-    - toc.follow
-    - toc.integrate
     - navigation.top
+    - toc.follow
     - search.highlight
     - search.share
     - search.suggest
     - content.tabs.link
     - content.code.copy
     - content.code.select
-    - content.action.edit
-    - content.action.view
   icon:
     repo: fontawesome/brands/github
     edit: material/pencil
