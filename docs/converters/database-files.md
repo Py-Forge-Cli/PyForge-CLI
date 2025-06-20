@@ -158,19 +158,22 @@ Shows:
 
 ## Data Type Mapping
 
-PyForge handles Access data types intelligently:
+PyForge converts all Access data to string format for maximum compatibility:
 
 | Access Type | Parquet Type | Notes |
 |-------------|--------------|-------|
-| **AutoNumber** | int64 | Primary key preservation |
-| **Number** | int64/float64 | Based on field size |
-| **Currency** | float64 | Maintains precision |
+| **AutoNumber** | string | Numeric values preserved as strings |
+| **Number** | string | Decimal precision up to 5 places, no trailing zeros |
+| **Currency** | string | Monetary values as decimal strings |
 | **Text/Short Text** | string | UTF-8 encoded |
 | **Long Text/Memo** | string | Full content preserved |
-| **Date/Time** | datetime64 | Timezone aware |
-| **Yes/No** | bool | True/False conversion |
-| **OLE Object** | binary | Base64 encoded |
+| **Date/Time** | string | ISO 8601 format (YYYY-MM-DDTHH:MM:SS) |
+| **Yes/No** | string | "true" or "false" lowercase strings |
+| **OLE Object** | string | Base64 encoded |
 | **Hyperlink** | string | URL text only |
+
+!!! note "String-Based Conversion"
+    PyForge CLI currently uses a string-based conversion approach to ensure consistent behavior across all database formats (Excel, MDB, DBF). While this preserves data integrity and precision, you may need to cast types in your analysis tools (pandas, Spark, etc.) if you require native numeric or datetime types.
 
 ## Error Handling
 
@@ -328,12 +331,32 @@ def load_access_tables(parquet_dir):
             tables[table_name] = pd.read_parquet(f'{parquet_dir}/{file}')
     return tables
 
+# Convert string columns to appropriate types
+def convert_table_types(df):
+    for col in df.columns:
+        # Try to convert to numeric (will stay string if not possible)
+        df[col] = pd.to_numeric(df[col], errors='ignore')
+        
+        # Try to convert to datetime (will stay string if not possible)
+        if df[col].dtype == 'object':
+            try:
+                df[col] = pd.to_datetime(df[col], errors='ignore')
+            except:
+                pass
+        
+        # Convert boolean strings
+        if df[col].dtype == 'object':
+            bool_mask = df[col].isin(['true', 'false'])
+            if bool_mask.any():
+                df.loc[bool_mask, col] = df.loc[bool_mask, col].map({'true': True, 'false': False})
+    return df
+
 # Usage
 tables = load_access_tables('converted_database/')
-customers = tables['Customers']
-orders = tables['Orders']
+customers = convert_table_types(tables['Customers'])
+orders = convert_table_types(tables['Orders'])
 
-# Join tables
+# Join tables (ensure matching types for join keys)
 customer_orders = customers.merge(orders, on='CustomerID')
 ```
 
@@ -341,6 +364,8 @@ customer_orders = customers.merge(orders, on='CustomerID')
 
 ```python
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, when
+from pyspark.sql.types import *
 
 spark = SparkSession.builder.appName("AccessData").getOrCreate()
 
@@ -353,13 +378,43 @@ def load_spark_tables(parquet_dir):
             tables[table_name] = spark.read.parquet(f'{parquet_dir}/{file}')
     return tables
 
+# Convert string columns to appropriate types
+def convert_spark_types(df, type_mapping):
+    """
+    Convert DataFrame columns to specified types
+    type_mapping: dict like {'CustomerID': IntegerType(), 'OrderDate': TimestampType()}
+    """
+    for column, data_type in type_mapping.items():
+        if column in df.columns:
+            df = df.withColumn(column, col(column).cast(data_type))
+    
+    # Convert boolean strings
+    string_cols = [field.name for field in df.schema.fields if field.dataType == StringType()]
+    for column in string_cols:
+        df = df.withColumn(column, 
+            when(col(column) == "true", True)
+            .when(col(column) == "false", False)
+            .otherwise(col(column))
+        )
+    
+    return df
+
 # Usage
 tables = load_spark_tables('converted_database/')
-customers_df = tables['Customers']
+customers_raw = tables['Customers']
+
+# Define type mappings for specific tables
+customer_types = {
+    'CustomerID': IntegerType(),
+    'DateCreated': TimestampType(),
+    'Balance': DoubleType()
+}
+
+customers_df = convert_spark_types(customers_raw, customer_types)
 customers_df.createOrReplaceTempView('customers')
 
 # SQL queries on converted data
-result = spark.sql("SELECT * FROM customers WHERE State = 'CA'")
+result = spark.sql("SELECT CustomerID, Balance FROM customers WHERE Balance > 1000")
 ```
 
 ## Troubleshooting

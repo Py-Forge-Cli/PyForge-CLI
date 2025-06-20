@@ -156,15 +156,19 @@ pyforge convert monthly.xlsx --merge-sheets
 
 ## Data Type Handling
 
-PyForge intelligently handles Excel data types:
+PyForge converts all Excel data to string format for maximum compatibility:
 
 | Excel Type | Parquet Type | Notes |
 |------------|--------------|-------|
-| Numbers | int64/float64 | Preserves precision |
-| Dates | datetime64 | Maintains timezone info |
+| Numbers | string | Decimal precision preserved up to 27 places |
+| Dates | string | ISO 8601 format (YYYY-MM-DDTHH:MM:SS) |
 | Text | string | UTF-8 encoding |
-| Formulas | Calculated values | Formulas are evaluated |
-| Merged Cells | First cell value | Warns about merged cells |
+| Formulas | string | Formulas are evaluated, results stored as strings |
+| Boolean | string | "True" or "False" string values |
+| Merged Cells | string | First cell value, warns about merged cells |
+
+!!! note "String-Based Conversion"
+    PyForge CLI currently uses a string-based conversion approach to ensure consistent behavior across all database formats (Excel, MDB, DBF). While this preserves data integrity and precision, you may need to cast types in your analysis tools (pandas, Spark, etc.) if you require native numeric or datetime types.
 
 ## Performance Optimization
 
@@ -287,24 +291,55 @@ import pandas as pd
 # Read converted parquet file
 df = pd.read_parquet('converted_data.parquet')
 
-# Multiple sheets
+# Convert string columns to appropriate types
+def convert_types(df):
+    for col in df.columns:
+        # Try to convert to numeric (will stay string if not possible)
+        df[col] = pd.to_numeric(df[col], errors='ignore')
+        
+        # Try to convert to datetime (will stay string if not possible)  
+        if df[col].dtype == 'object':
+            try:
+                df[col] = pd.to_datetime(df[col], errors='ignore')
+            except:
+                pass
+    return df
+
+# Apply type conversion
+df = convert_types(df)
+
+# Multiple sheets with type conversion
 import os
 parquet_dir = 'multi_sheet_data/'
 sheets = {}
 for file in os.listdir(parquet_dir):
     if file.endswith('.parquet'):
         sheet_name = file.replace('.parquet', '')
-        sheets[sheet_name] = pd.read_parquet(f'{parquet_dir}/{file}')
+        df = pd.read_parquet(f'{parquet_dir}/{file}')
+        sheets[sheet_name] = convert_types(df)
 ```
 
 ### Spark Integration
 
 ```python
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from pyspark.sql.types import *
 
 spark = SparkSession.builder.appName("ExcelData").getOrCreate()
+
+# Read parquet file (all columns will be strings)
 df = spark.read.parquet('converted_data.parquet')
-df.show()
+
+# Convert specific columns to appropriate types
+df_typed = df.select(
+    col("id").cast(IntegerType()).alias("id"),
+    col("amount").cast(DoubleType()).alias("amount"), 
+    col("date").cast(TimestampType()).alias("date"),
+    col("description")  # Keep as string
+)
+
+df_typed.show()
 ```
 
 ## Troubleshooting

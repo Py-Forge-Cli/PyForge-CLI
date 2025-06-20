@@ -115,20 +115,23 @@ pyforge convert huge_file.dbf --chunk-size 50000
 
 ## Data Type Handling
 
-DBF files have limited data types that PyForge maps intelligently:
+PyForge converts all DBF data to string format for maximum compatibility:
 
 | DBF Type | DBF Code | Parquet Type | Notes |
 |----------|----------|--------------|-------|
 | **Character** | C | string | Text fields, UTF-8 encoded |
-| **Numeric** | N | int64/float64 | Based on decimal places |
-| **Date** | D | datetime64 | YYYYMMDD format |
-| **Logical** | L | bool | T/F, Y/N, 1/0 values |
+| **Numeric** | N | string | Decimal precision preserved, no trailing zeros |
+| **Date** | D | string | ISO 8601 format (YYYY-MM-DD) |
+| **Logical** | L | string | "true" or "false" lowercase strings |
 | **Memo** | M | string | Large text fields |
-| **Float** | F | float64 | Floating point numbers |
-| **Currency** | Y | float64 | Monetary values |
-| **DateTime** | T | datetime64 | Date and time |
-| **Integer** | I | int32 | 32-bit integers |
-| **Double** | B | float64 | Double precision |
+| **Float** | F | string | Floating point values as decimal strings |
+| **Currency** | Y | string | Monetary values as decimal strings |
+| **DateTime** | T | string | ISO 8601 format (YYYY-MM-DDTHH:MM:SS) |
+| **Integer** | I | string | Integer values preserved as strings |
+| **Double** | B | string | Double precision values as decimal strings |
+
+!!! note "String-Based Conversion"
+    PyForge CLI currently uses a string-based conversion approach to ensure consistent behavior across all database formats (Excel, MDB, DBF). While this preserves data integrity and precision, you may need to cast types in your analysis tools (pandas, Spark, etc.) if you require native numeric or datetime types.
 
 ## Error Handling
 
@@ -280,19 +283,42 @@ import pandas as pd
 # Read converted DBF data
 df = pd.read_parquet('converted_data.parquet')
 
-# Data analysis
+# Convert string columns to appropriate types
+def convert_dbf_types(df):
+    for col in df.columns:
+        # Clean string data (remove padding spaces)
+        if df[col].dtype == 'object':
+            df[col] = df[col].str.strip()
+        
+        # Try to convert to numeric (will stay string if not possible)
+        df[col] = pd.to_numeric(df[col], errors='ignore')
+        
+        # Try to convert to datetime (will stay string if not possible)
+        if df[col].dtype == 'object':
+            try:
+                df[col] = pd.to_datetime(df[col], errors='ignore')
+            except:
+                pass
+        
+        # Convert boolean strings
+        if df[col].dtype == 'object':
+            bool_mask = df[col].isin(['true', 'false'])
+            if bool_mask.any():
+                df.loc[bool_mask, col] = df.loc[bool_mask, col].map({'true': True, 'false': False})
+    return df
+
+# Apply type conversion
+df = convert_dbf_types(df)
+
+# Data analysis with proper types
 print(f"Records: {len(df)}")
 print(f"Columns: {list(df.columns)}")
-print(f"Data types:\n{df.dtypes}")
+print(f"Data types after conversion:\n{df.dtypes}")
 
-# Handle date fields
-if 'DATE_FIELD' in df.columns:
-    df['DATE_FIELD'] = pd.to_datetime(df['DATE_FIELD'])
-
-# Clean string data
-string_cols = df.select_dtypes(include=['object']).columns
-for col in string_cols:
-    df[col] = df[col].str.strip()  # Remove padding spaces
+# Now you can perform numeric operations on converted columns
+numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
+if len(numeric_cols) > 0:
+    print(f"Numeric summary:\n{df[numeric_cols].describe()}")
 ```
 
 ### Data Quality Assessment
