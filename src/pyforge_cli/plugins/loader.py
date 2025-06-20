@@ -41,6 +41,14 @@ class PluginLoader:
             self.loaded_plugins.append('excel')
         except ImportError as e:
             print(f"Warning: Could not load Excel converter: {e}")
+        
+        # Load CSV converter
+        try:
+            from ..converters.csv_converter import CSVConverter
+            registry.register('csv', CSVConverter)
+            self.loaded_plugins.append('csv')
+        except ImportError as e:
+            print(f"Warning: Could not load CSV converter: {e}")
     
     def load_from_entry_points(self) -> None:
         """Load converters from setuptools entry points."""
