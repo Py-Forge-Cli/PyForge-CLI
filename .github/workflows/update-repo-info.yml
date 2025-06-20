@@ -1,0 +1,27 @@
+name: Update Repository Info
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Update Repository Description
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          await github.rest.repos.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            description: 'A powerful CLI tool for data format conversion and synthetic data generation',
+            homepage: 'https://pypi.org/project/pyforge-cli/',
+            topics: ['cli', 'data-conversion', 'pdf', 'excel', 'parquet', 'python', 'database', 'mdb', 'dbf']
+          })
