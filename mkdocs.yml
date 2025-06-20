@@ -113,6 +113,9 @@ nav:
   - Converters:
     - converters/index.md
     - PDF to Text: converters/pdf-to-text.md
+    - Excel to Parquet: converters/excel-to-parquet.md
+    - MDB/ACCDB Files: converters/database-files.md
+    - DBF Files: converters/dbf-files.md
   - Reference:
     - reference/index.md
     - CLI Commands: reference/cli-reference.md
