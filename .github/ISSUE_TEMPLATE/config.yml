@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://py-forge-cli.github.io/PyForge-CLI/
+    about: Visit our comprehensive documentation for guides, examples, and API reference
+  - name: 💬 Discussions
+    url: https://github.com/Py-Forge-Cli/PyForge-CLI/discussions
+    about: Ask questions, share ideas, and discuss PyForge CLI with the community
+  - name: 🚀 Quick Start Guide
+    url: https://py-forge-cli.github.io/PyForge-CLI/getting-started/
+    about: New to PyForge CLI? Start here for installation and basic usage
+  - name: 🔧 CLI Reference
+    url: https://py-forge-cli.github.io/PyForge-CLI/reference/cli-reference/
+    about: Complete reference for all CLI commands and options

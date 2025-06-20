@@ -1,0 +1,28 @@
+#!/bin/bash
+# Implement Feature Request - Claude Command  
+# Usage: /project:implement-feature 456
+
+echo "✨ Implementing Feature Request #$ARGUMENTS"
+echo ""
+echo "Claude will:"
+echo "1. 📖 Analyze the feature requirements and acceptance criteria"
+echo "2. 🏗️  Design the CLI interface and integration points"  
+echo "3. 🔍 Examine existing code patterns for consistency"
+echo "4. 🛠️  Implement the feature following project conventions"
+echo "5. 🧪 Add comprehensive unit and integration tests"
+echo "6. 📚 Update CLI help text and documentation"
+echo "7. 🚀 Create a PR with detailed description and examples"
+echo ""
+echo "📋 Analysis commands to run:"
+echo "   pyforge formats"
+echo "   grep -r 'click.option' src/pyforge_cli/"
+echo "   grep -r 'convert' src/pyforge_cli/converters/"
+echo "   ls src/pyforge_cli/converters/"
+echo ""
+echo "🎯 Key areas to examine:"
+echo "   - src/pyforge_cli/main.py (CLI interface)"
+echo "   - src/pyforge_cli/converters/ (conversion logic)"
+echo "   - tests/ (test patterns)"
+echo ""
+echo "💡 Tip: Include the GitHub issue URL or feature requirements"
+echo "   for Claude to understand the full scope!"

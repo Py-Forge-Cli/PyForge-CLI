@@ -1,0 +1,23 @@
+#!/bin/bash
+# Fix GitHub Issue - Claude Command
+# Usage: /project:fix-issue 123
+
+echo "🔧 Working on GitHub Issue #$ARGUMENTS"
+echo ""
+echo "Claude will:"
+echo "1. 📖 Read the issue details from GitHub or issue description"
+echo "2. 🔍 Analyze the codebase for related files and components"
+echo "3. 🧪 Create/run tests to understand current behavior"
+echo "4. 🛠️  Implement the fix with proper error handling"
+echo "5. ✅ Add/update tests to prevent regression"
+echo "6. 📚 Update documentation if needed"
+echo "7. 🚀 Create a PR that references the issue"
+echo ""
+echo "📋 Investigation commands to run:"
+echo "   pyforge info [test-file]"
+echo "   pyforge convert [test-file] --verbose"
+echo "   grep -r 'related-function' src/"
+echo "   python -m pytest tests/ -v"
+echo ""
+echo "💡 Tip: Provide the issue URL or paste the issue description"
+echo "   for Claude to get started immediately!"
