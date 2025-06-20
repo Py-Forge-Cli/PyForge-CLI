@@ -194,3 +194,5 @@ example.pdf
 sample.pdf
 test_*.pdf
 *.txtexcel-library-analysis/
+
+test_install_env/
