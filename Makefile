@@ -172,11 +172,19 @@ docs-build: docs-install ## Build documentation static site
 		exit 1; \
 	fi
 
-docs-deploy: docs-build ## Deploy documentation to GitHub Pages
+docs-deploy: docs-build ## Deploy documentation to GitHub Pages manually
 	@echo "$(BLUE)Deploying documentation to GitHub Pages...$(RESET)"
-	@echo "$(YELLOW)ℹ️  This will be handled by GitHub Actions$(RESET)"
-	@echo "$(YELLOW)🚀 Push to main branch to trigger automatic deployment$(RESET)"
+	@echo "$(YELLOW)Installing ghp-import if needed...$(RESET)"
+	@pip install --user ghp-import >/dev/null 2>&1 || echo "ghp-import already installed"
+	@echo "$(YELLOW)🚀 Deploying to gh-pages branch...$(RESET)"
+	@if command -v ghp-import >/dev/null 2>&1; then \
+		ghp-import -n -p -f site; \
+	else \
+		/Users/sdandey/Library/Python/3.10/bin/ghp-import -n -p -f site; \
+	fi
+	@echo "$(GREEN)✅ Documentation deployed successfully!$(RESET)"
 	@echo "$(GREEN)📖 Live site: https://py-forge-cli.github.io/PyForge-CLI/$(RESET)"
+	@echo "$(YELLOW)Note: Automatic deployment also happens on every push to main$(RESET)"
 
 docs-clean: ## Clean documentation build files
 	@echo "$(BLUE)Cleaning documentation build files...$(RESET)"
