@@ -44,33 +44,29 @@ pyforge convert legacy_data.dbf modern_data.parquet
 pyforge convert historical.dbf processed/
 ```
 
-## Encoding Detection
+## Encoding Handling
 
 PyForge automatically detects and handles various character encodings:
 
 ### Automatic Detection
 
 ```bash
-# Automatic encoding detection (recommended)
+# Automatic encoding detection (always enabled)
 pyforge convert international.dbf
 
-# Shows detected encoding in verbose mode
+# Shows processing information in verbose mode
 pyforge convert file.dbf --verbose
-# Info: Detected encoding: cp1252 (Windows Latin-1)
+# Info: Processing DBF file with automatic encoding detection
 ```
 
-### Manual Encoding
+### Encoding Support
 
-```bash
-# Force specific encoding
-pyforge convert file.dbf --encoding cp437
-
-# Common encodings:
-pyforge convert file.dbf --encoding utf-8      # UTF-8
-pyforge convert file.dbf --encoding cp1252     # Windows Latin-1
-pyforge convert file.dbf --encoding iso-8859-1 # ISO Latin-1
-pyforge convert file.dbf --encoding cp850      # DOS Latin-1
-```
+PyForge automatically handles common DBF encodings:
+- **DOS**: cp437, cp850 (legacy DOS systems)
+- **Windows**: cp1252 (Windows Latin-1)  
+- **International**: iso-8859-1, iso-8859-2 (European)
+- **Cyrillic**: cp866, cp1251 (Russian/Eastern European)
+- **Modern**: utf-8 (Unicode standard)
 
 ## Advanced Options
 
@@ -82,16 +78,16 @@ pyforge convert file.dbf --encoding cp850      # DOS Latin-1
     pyforge convert data.dbf
     ```
 
-=== "Custom Encoding"
+=== "Custom Compression"
     ```bash
-    # Force specific encoding
-    pyforge convert data.dbf --encoding cp1252
+    # Use different compression
+    pyforge convert data.dbf --compression gzip
     ```
 
-=== "Error Handling"
+=== "Force Overwrite"
     ```bash
-    # Skip corrupted records
-    pyforge convert damaged.dbf --skip-errors
+    # Overwrite existing output
+    pyforge convert data.dbf --force
     ```
 
 === "Verbose Output"
@@ -139,39 +135,27 @@ PyForge converts all DBF data to string format for maximum compatibility:
 
 **Encoding Problems**:
 ```bash
-# Try different encodings
-pyforge convert file.dbf --encoding cp437
-pyforge convert file.dbf --encoding iso-8859-1
-
-# Let PyForge detect automatically
-pyforge convert file.dbf --auto-encoding
-```
-
-**Corrupted Files**:
-```bash
-# Skip bad records and continue
-pyforge convert damaged.dbf --skip-errors
-
-# Get detailed error information
-pyforge convert problematic.dbf --verbose --debug
+# PyForge automatically detects encoding
+# If conversion fails, check verbose output for encoding issues
+pyforge convert file.dbf --verbose
 ```
 
 **Large Files**:
 ```bash
-# Process in smaller chunks
-pyforge convert huge.dbf --chunk-size 25000
-
 # Use compression to save space
 pyforge convert large.dbf --compression gzip
+
+# Monitor progress with verbose output
+pyforge convert huge.dbf --verbose
 ```
 
-**Missing Headers**:
+**File Corruption**:
 ```bash
-# Force header detection
-pyforge convert headerless.dbf --force-header
+# Use verbose mode to see detailed error information
+pyforge convert problematic.dbf --verbose
 
-# Specify custom field names
-pyforge convert noheader.dbf --fields "id,name,date,amount"
+# Force overwrite if needed
+pyforge convert data.dbf --force
 ```
 
 ## Validation and Inspection
@@ -207,12 +191,8 @@ pyforge validate file.dbf --check-encoding --verbose
 ```bash
 # Optimize for large DBF files
 pyforge convert massive.dbf \
-  --chunk-size 100000 \
   --compression snappy \
   --verbose
-
-# Low memory mode
-pyforge convert big_file.dbf --low-memory
 ```
 
 ### Batch Processing
@@ -234,11 +214,10 @@ done
 ```bash
 # Convert old accounting system files
 pyforge convert accounts.dbf \
-  --encoding cp437 \
   --compression gzip \
   --verbose
 
-# Output includes encoding and conversion details
+# Output includes automatic encoding detection and conversion details
 ```
 
 ### Geographic Data Processing
@@ -246,10 +225,9 @@ pyforge convert accounts.dbf \
 ```bash
 # Convert GIS shapefile DBF components
 pyforge convert shapefile_attributes.dbf \
-  --encoding utf-8 \
-  --preserve-types
+  --compression snappy
 
-# Maintain spatial data relationships
+# Automatic encoding detection maintains data integrity
 ```
 
 ### Historical Data Recovery
@@ -257,20 +235,19 @@ pyforge convert shapefile_attributes.dbf \
 ```bash
 # Recover data from potentially corrupted files
 pyforge convert old_backup.dbf \
-  --skip-errors \
   --verbose \
-  --encoding auto
+  --force
 
-# Review warnings for data quality assessment
+# Review verbose output for data quality assessment
 ```
 
 ### International Data Handling
 
 ```bash
-# Handle international character sets
-pyforge convert european_data.dbf --encoding iso-8859-1
-pyforge convert russian_data.dbf --encoding cp1251
-pyforge convert japanese_data.dbf --encoding shift_jis
+# Handle international character sets (automatic detection)
+pyforge convert european_data.dbf --verbose
+pyforge convert russian_data.dbf --verbose  
+pyforge convert japanese_data.dbf --verbose
 ```
 
 ## Integration Examples
@@ -371,48 +348,40 @@ df.show(20)
 
 ### Common Problems
 
-**"Unable to detect encoding"**:
-```bash
-# Try common encodings manually
-pyforge convert file.dbf --encoding cp437   # DOS
-pyforge convert file.dbf --encoding cp1252  # Windows
-pyforge convert file.dbf --encoding utf-8   # Modern
-```
-
 **"File appears corrupted"**:
 ```bash
-# Use error recovery mode
-pyforge convert damaged.dbf --skip-errors --verbose
+# Use verbose mode to see detailed error information
+pyforge convert damaged.dbf --verbose
 
-# Try reading partial file
-pyforge convert partial.dbf --max-records 1000
+# Force overwrite to retry conversion
+pyforge convert damaged.dbf --force --verbose
 ```
 
 **"Garbled text in output"**:
-- Wrong encoding was used or detected
-- Try different encoding with `--encoding`
-- Use `pyforge info file.dbf` to see detected encoding
+- Encoding detection failed - check verbose output
+- Use `pyforge info file.dbf` to verify file structure
+- File may be corrupted or non-standard format
 
 **"Out of memory errors"**:
 ```bash
-# Reduce chunk size
-pyforge convert large.dbf --chunk-size 10000
+# Use compression to reduce memory usage
+pyforge convert large.dbf --compression gzip
 
-# Use streaming mode
-pyforge convert huge.dbf --stream
+# Monitor memory usage with verbose output
+pyforge convert huge.dbf --verbose
 ```
 
 ### Debug Mode
 
 ```bash
 # Get detailed processing information
-pyforge convert file.dbf --debug --verbose
+pyforge convert file.dbf --verbose
 ```
 
 This shows:
 - Encoding detection process
 - Field type mapping decisions
-- Error recovery actions
+- Conversion progress
 - Performance metrics
 
 ## Best Practices

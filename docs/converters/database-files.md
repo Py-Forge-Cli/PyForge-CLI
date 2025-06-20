@@ -84,26 +84,26 @@ pyforge convert database.mdb
     pyforge convert crm.accdb --tables "Customers,Orders,Products"
     ```
 
-=== "With Summary"
+=== "With Verbose Output"
     ```bash
-    # Generate Excel summary report
-    pyforge convert database.mdb --summary
+    # Show detailed conversion progress
+    pyforge convert database.mdb --verbose
     ```
 
 ### Advanced Options
 
 ```bash
+# Password-protected databases
+pyforge convert secured.mdb --password mypassword
+
 # Verbose output for monitoring
 pyforge convert large_db.accdb --verbose
 
 # Force overwrite existing files
 pyforge convert database.mdb --force
 
-# Custom compression
+# Custom compression (default is snappy)
 pyforge convert data.accdb --compression gzip
-
-# Include system tables (advanced)
-pyforge convert db.mdb --include-system-tables
 ```
 
 ## Output Structure
@@ -188,9 +188,9 @@ pyforge convert protected.mdb
 
 **Corrupted Tables**:
 ```bash
-# Skip corrupted tables and continue
-pyforge convert damaged.accdb --skip-errors
-# Warning: Table 'CorruptedTable' could not be read, skipping...
+# Use verbose mode to see detailed error information
+pyforge convert damaged.accdb --verbose
+# Will show specific errors for problematic tables
 ```
 
 **Missing Dependencies**:
@@ -205,8 +205,8 @@ sudo apt-get install mdbtools
 
 **Large Tables**:
 ```bash
-# Process large tables in chunks
-pyforge convert huge_db.accdb --chunk-size 50000
+# Monitor progress with verbose output
+pyforge convert huge_db.accdb --verbose
 ```
 
 ## Performance Optimization
@@ -216,24 +216,20 @@ pyforge convert huge_db.accdb --chunk-size 50000
 ```bash
 # Optimize for large databases
 pyforge convert big_database.accdb \
-  --chunk-size 100000 \
   --compression gzip \
   --verbose
 
-# Parallel table processing
-pyforge convert multi_table.mdb --max-workers 4
+# Process specific tables only to reduce load
+pyforge convert multi_table.mdb --tables "LargeTable1,LargeTable2"
 ```
 
 ### Memory Management
 
-```bash
-# Reduce memory usage for large tables
-pyforge convert database.accdb \
-  --chunk-size 25000 \
-  --low-memory
-
-# Process one table at a time
-pyforge convert db.mdb --sequential
+PyForge automatically optimizes memory usage for large databases:
+- Processes tables sequentially to minimize memory footprint
+- Uses streaming writes for large datasets
+- Provides 6-stage progress tracking with real-time metrics
+- Automatically handles memory-efficient conversion
 ```
 
 ## Validation and Quality Checks
@@ -244,18 +240,20 @@ pyforge convert db.mdb --sequential
 # Analyze database before conversion
 pyforge info database.mdb
 
-# Check for potential issues
-pyforge validate database.accdb --check-integrity
+# Validate database file
+pyforge validate database.accdb
 ```
 
 ### Post-conversion Verification
 
 ```bash
-# Verify conversion results
-pyforge validate output_directory/ --source database.mdb
+# Check converted files
+pyforge info output_directory/
 
-# Compare record counts
-pyforge info output_directory/ --compare-source database.mdb
+# Validate individual parquet files
+for file in output_directory/*.parquet; do
+    pyforge validate "$file"
+done
 ```
 
 ## Examples
@@ -445,11 +443,11 @@ sudo yum install mdbtools
 
 **Memory errors with large databases**:
 ```bash
-# Reduce chunk size
-pyforge convert large.accdb --chunk-size 10000
+# Use verbose output to monitor memory usage
+pyforge convert large.accdb --verbose
 
-# Use sequential processing
-pyforge convert large.accdb --sequential
+# Use compression to reduce output size
+pyforge convert large.accdb --compression gzip
 ```
 
 ## Best Practices

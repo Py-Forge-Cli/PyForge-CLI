@@ -36,24 +36,24 @@ pyforge convert monthly_data.xlsx output_folder/
 
 ## Advanced Options
 
-### Sheet Selection
+### Multi-Sheet Handling
 
-=== "All Sheets"
+=== "Default Behavior"
     ```bash
-    # Convert all sheets (default behavior)
+    # Automatic analysis and conversion of all sheets
     pyforge convert workbook.xlsx
     ```
 
-=== "Specific Sheets"
+=== "Force Combination"
     ```bash
-    # Convert only specified sheets
-    pyforge convert workbook.xlsx --sheets "Sheet1,Summary,Data"
+    # Force combination of matching sheets into single file
+    pyforge convert workbook.xlsx --combine
     ```
 
-=== "Interactive Mode"
+=== "Keep Separate"
     ```bash
-    # Interactive sheet selection
-    pyforge convert workbook.xlsx --interactive
+    # Keep all sheets as separate parquet files
+    pyforge convert workbook.xlsx --separate
     ```
 
 ### Compression Options
@@ -72,17 +72,17 @@ pyforge convert data.xlsx --compression none
 ### Advanced Processing
 
 ```bash
-# Merge sheets with matching columns
-pyforge convert quarterly_reports.xlsx --merge-sheets
-
-# Generate Excel summary report
-pyforge convert data.xlsx --summary
-
 # Force overwrite existing files
 pyforge convert data.xlsx --force
 
 # Verbose output for debugging
 pyforge convert data.xlsx --verbose
+
+# Specify output format explicitly
+pyforge convert data.xlsx --format parquet
+
+# Custom compression (snappy is default)
+pyforge convert data.xlsx --compression gzip
 ```
 
 ## Multi-Sheet Processing
@@ -104,27 +104,26 @@ pyforge convert sales_2023.xlsx
 
 ### Column Matching
 
-When sheets have similar structures, merge them:
+When sheets have similar structures, PyForge automatically detects and handles them:
 
 ```bash
-# Combine sheets with matching columns
-pyforge convert monthly_data.xlsx --merge-sheets
+# Automatic analysis with intelligent handling
+pyforge convert monthly_data.xlsx
 
-# Output: Single parquet file with combined data
+# Force combination of matching sheets
+pyforge convert monthly_data.xlsx --combine
+
+# Keep sheets separate even if they match
+pyforge convert monthly_data.xlsx --separate
 ```
 
-### Interactive Selection
+### Sheet Processing Logic
 
-For complex workbooks, use interactive mode:
-
-```bash
-pyforge convert complex_workbook.xlsx --interactive
-```
-
-This will prompt you to:
-1. Select which sheets to convert
-2. Choose output format (separate files or combined)
-3. Set column matching preferences
+PyForge analyzes your workbook and:
+1. Detects sheets with matching column signatures
+2. Groups compatible sheets together
+3. Prompts for user preference when multiple options exist
+4. Converts according to your specified flags or interactive choice
 
 ## Output Formats
 
@@ -147,11 +146,11 @@ Output: quarterly/ directory
         └── _summary.xlsx
 ```
 
-### Merged Output
+### Combined Output
 
 ```bash
-pyforge convert monthly.xlsx --merge-sheets
-# Output: monthly_merged.parquet
+pyforge convert monthly.xlsx --combine
+# Output: monthly_combined.parquet (when sheets have matching columns)
 ```
 
 ## Data Type Handling
@@ -175,22 +174,23 @@ PyForge converts all Excel data to string format for maximum compatibility:
 ### Large Files
 
 ```bash
-# For very large Excel files
-pyforge convert huge_file.xlsx --chunk-size 10000
-
-# Use efficient compression
+# Use efficient compression for large files
 pyforge convert large_data.xlsx --compression gzip
+
+# Keep sheets separate to reduce memory usage
+pyforge convert workbook.xlsx --separate
+
+# Enable verbose output to monitor progress
+pyforge convert huge_file.xlsx --verbose
 ```
 
 ### Memory Management
 
-```bash
-# Process sheets individually to save memory
-pyforge convert workbook.xlsx --no-merge-sheets
-
-# Limit concurrent processing
-pyforge convert workbook.xlsx --max-workers 2
-```
+PyForge automatically optimizes memory usage for large files:
+- Processes sheets sequentially to minimize memory footprint
+- Uses streaming writes for large datasets  
+- Provides progress feedback for long-running operations
+- Automatically handles memory-efficient conversion
 
 ## Error Handling
 
@@ -246,17 +246,15 @@ pyforge validate output.parquet --source spreadsheet.xlsx
 ### Business Reports
 
 ```bash
-# Convert financial reports
+# Convert financial reports with compression
 pyforge convert "Q4_Financial_Report.xlsx" \
-  --sheets "Income_Statement,Balance_Sheet" \
   --compression gzip \
-  --summary
+  --verbose
 
-# Output:
-#   Q4_Financial_Report/
-#   ├── Income_Statement.parquet
-#   ├── Balance_Sheet.parquet
-#   └── _summary.xlsx
+# Output depends on sheet structure:
+# - If sheets match: Single combined parquet file
+# - If sheets differ: Separate parquet files per sheet
+# - Directory structure automatically created
 ```
 
 ### Data Analysis Pipeline
@@ -264,7 +262,7 @@ pyforge convert "Q4_Financial_Report.xlsx" \
 ```bash
 # Convert multiple files for analysis
 for file in data/*.xlsx; do
-  pyforge convert "$file" --merge-sheets --compression snappy
+  pyforge convert "$file" --compression snappy --verbose
 done
 
 # Result: Efficient parquet files ready for pandas/spark
@@ -274,9 +272,10 @@ done
 
 ```bash
 # Convert with validation
+pyforge validate source_data.xlsx && \
 pyforge convert source_data.xlsx \
   --verbose \
-  --summary \
+  --compression gzip \
   && echo "Conversion successful" \
   || echo "Conversion failed"
 ```
@@ -355,20 +354,20 @@ pyforge convert data.xlsx --force
 **Memory Issues**:
 ```bash
 # Process sheets separately
-pyforge convert large_file.xlsx --no-merge-sheets
+pyforge convert large_file.xlsx --separate
 ```
 
-**Encoding Problems**:
+**Excel File Issues**:
 ```bash
-# Force UTF-8 encoding
-pyforge convert data.xlsx --encoding utf-8
+# Use verbose output for detailed error information
+pyforge convert data.xlsx --verbose
 ```
 
 ### Debug Mode
 
 ```bash
 # Get detailed processing information
-pyforge convert data.xlsx --verbose --debug
+pyforge convert data.xlsx --verbose
 ```
 
 ## Best Practices
