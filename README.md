@@ -346,7 +346,7 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.2.1 (Development)
+### 0.2.1 (Current Release)
 
 - Fixed GitHub Actions workflow for automated PyPI publishing
 - Updated CI/CD pipeline to use API token authentication
