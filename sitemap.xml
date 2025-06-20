@@ -61,6 +61,18 @@
          <lastmod>2025-06-20</lastmod>
     </url>
     <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/converters/database-files/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/converters/dbf-files/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/converters/excel-to-parquet/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
          <loc>https://py-forge-cli.github.io/PyForge-CLI/converters/pdf-to-text/</loc>
          <lastmod>2025-06-20</lastmod>
     </url>

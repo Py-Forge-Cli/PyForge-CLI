@@ -243,9 +243,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="PyForge CLI Documentation" class="md-nav__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
       
@@ -449,6 +447,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -509,6 +513,75 @@
   
   <span class="md-ellipsis">
     PDF to Text
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../converters/excel-to-parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Excel to Parquet
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../converters/database-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDB/ACCDB Files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../converters/dbf-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DBF Files
     
   </span>
   
@@ -921,6 +994,812 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clone-and-navigate-to-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Clone and Navigate to Project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-set-up-virtual-environment-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Set Up Virtual Environment (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-development-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Install Development Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-build-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Build Checklist
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-Build Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Version Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-quality-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Code Quality Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Documentation Updates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-status-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Git Status Clean
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building the Package
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building the Package">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-using-python-build-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 1: Using Python Build (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-using-uv-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 2: Using UV Build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-manual-build-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 3: Manual Build Steps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-the-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing the Build
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing the Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-validate-package-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Validate Package Integrity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-inspect-package-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Inspect Package Contents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-local-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Test Local Installation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pypi-account-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyPI Account Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PyPI Account Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Create Accounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-enable-two-factor-authentication-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Enable Two-Factor Authentication (Required)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-generate-api-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Generate API Tokens
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Generate API Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Test PyPI:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-production-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Production PyPI:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-configure-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Configure Authentication
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Configure Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-using-pypirc-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option A: Using .pypirc File
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option B: Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-to-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying to Test PyPI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying to Test PyPI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-upload-to-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Upload to Test PyPI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-expected-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Expected Output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Verify Upload
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-installation-from-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Installation from Test PyPI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Installation from Test PyPI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-clean-test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Create Clean Test Environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-install-from-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install from Test PyPI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Test Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-clean-up-test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Clean Up Test Environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-to-production-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying to Production PyPI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying to Production PyPI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-production-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Pre-Production Checklist
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-upload-to-production-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Upload to Production PyPI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-expected-output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Expected Output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-production-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Verify Production Deployment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-git-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Create Git Tag
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automated-deployment-with-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Deployment with GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automated Deployment with GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-set-up-repository-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Set Up Repository Secrets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configure-trusted-publishers-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configure Trusted Publishers (Recommended)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Configure Trusted Publishers (Recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      On PyPI:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-test-pypi" class="md-nav__link">
+    <span class="md-ellipsis">
+      On Test PyPI:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-automated-release-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Automated Release Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-monitor-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Monitor Workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-build-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Build Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Build Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-import-errors-during-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Import Errors During Build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Version Conflicts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-authentication-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Authentication Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-upload-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Upload Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Upload Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-large-file-upload-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Large File Upload Timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-metadata-validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Metadata Validation Errors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-networkcertificate-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Network/Certificate Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-tool-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build Tool Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Build Tool Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-uv-build-network-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. UV Build Network Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hatchling-build-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Hatchling Build Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-update-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Update Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-announce-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Announce Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-monitor-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Monitor Package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-prepare-next-development-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Prepare Next Development Cycle
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complete-build-and-deploy-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Build and Deploy Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-and-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support and Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -930,19 +1809,6 @@
 
 
   
-    <a href="https://github.com/Py-Forge-Cli/PyForge-CLI/edit/main/docs/BUILD_AND_DEPLOY_GUIDE.md" title="Edit this page" class="md-content__button md-icon">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
-    </a>
-  
-  
-    
-      
-    
-    <a href="https://github.com/Py-Forge-Cli/PyForge-CLI/raw/main/docs/BUILD_AND_DEPLOY_GUIDE.md" title="View source of this page" class="md-content__button md-icon">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
-    </a>
   
 
 
@@ -1551,7 +2417,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "toc.integrate", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.tabs.link", "content.code.copy", "content.code.select", "content.action.edit", "content.action.view"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "toc.follow", "search.highlight", "search.share", "search.suggest", "content.tabs.link", "content.code.copy", "content.code.select"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
