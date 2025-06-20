@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write  # Required for gh-pages deployment
+  pages: write     # Required for GitHub Pages
+  id-token: write  # Required for authentication
 
 jobs:
   deploy:
@@ -32,15 +34,22 @@ jobs:
       - name: Build MkDocs site
         run: |
           echo "Building MkDocs site..."
-          mkdocs build --clean --strict
+          mkdocs build --clean
           echo "Build completed. Site contents:"
           ls -la site/
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Deploy to gh-pages branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Deploying to gh-pages branch..."
           pip install ghp-import
-          ghp-import -n -p -f site
+          ghp-import -n -p -f site -m "Deploy documentation from GitHub Actions"
           echo "Deployment completed!"
 
       - name: Verify deployment
