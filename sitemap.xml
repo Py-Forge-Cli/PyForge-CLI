@@ -57,6 +57,14 @@
          <lastmod>2025-06-20</lastmod>
     </url>
     <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/api/plugin-development/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/api/python-api/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
          <loc>https://py-forge-cli.github.io/PyForge-CLI/converters/</loc>
          <lastmod>2025-06-20</lastmod>
     </url>
@@ -101,7 +109,23 @@
          <lastmod>2025-06-20</lastmod>
     </url>
     <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/reference/options/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/reference/output-formats/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
          <loc>https://py-forge-cli.github.io/PyForge-CLI/tutorials/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/tutorials/automation/</loc>
+         <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://py-forge-cli.github.io/PyForge-CLI/tutorials/batch-processing/</loc>
          <lastmod>2025-06-20</lastmod>
     </url>
     <url>
