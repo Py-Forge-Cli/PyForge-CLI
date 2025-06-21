@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.3] - 2025-06-21
+
+### 🔧 Fixed
+- **GitHub Actions Workflow**: Fixed deprecation warnings and failures
+  - Updated pypa/gh-action-pypi-publish to v1.11.0 (latest version)
+  - Removed redundant sigstore signing step (PyPI handles signing automatically)
+  - Fixed deprecated actions/upload-artifact v3 usage causing workflow failures
+  - Simplified and improved workflow reliability
+
+---
+
 ## [0.2.2] - 2025-06-21
 
 ### 🎉 Major Feature: CSV to Parquet Conversion with Auto-Detection
