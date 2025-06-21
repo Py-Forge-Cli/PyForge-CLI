@@ -466,9 +466,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#version-025-latest" class="md-nav__link">
+  <a href="#version-030-latest" class="md-nav__link">
     <span class="md-ellipsis">
-      Version 0.2.5 (Latest)
+      Version 0.3.0 (Latest)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-025" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.2.5
     </span>
   </a>
   
@@ -1420,9 +1429,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#version-025-latest" class="md-nav__link">
+  <a href="#version-030-latest" class="md-nav__link">
     <span class="md-ellipsis">
-      Version 0.2.5 (Latest)
+      Version 0.3.0 (Latest)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-025" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.2.5
     </span>
   </a>
   
@@ -1551,8 +1569,11 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Convert Access database</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>database.mdb
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Get help</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pyforge<span class="w"> </span>--help
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Convert XML with intelligent flattening</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>api_response.xml
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Get help</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>pyforge<span class="w"> </span>--help
 </span></code></pre></div>
 <h2 id="supported-formats">Supported Formats<a class="headerlink" href="#supported-formats" title="Permanent link">&para;</a></h2>
 <table>
@@ -1576,6 +1597,12 @@
 <td>Parquet (.parquet)</td>
 <td>✅ Available</td>
 <td>Multi-sheet support with intelligent merging</td>
+</tr>
+<tr>
+<td><strong>XML</strong> (.xml, .xml.gz, .xml.bz2)</td>
+<td>Parquet (.parquet)</td>
+<td>✅ Available</td>
+<td>Intelligent flattening with configurable strategies</td>
 </tr>
 <tr>
 <td><strong>Access</strong> (.mdb/.accdb)</td>
@@ -1632,6 +1659,13 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>financial_report.xlsx<span class="w"> </span>--combine<span class="w"> </span>--compression<span class="w"> </span>gzip
 </span></code></pre></div>
 </div>
+<div class="admonition example">
+<p class="admonition-title">XML API Data Processing</p>
+<p>Convert XML API responses and configuration files to Parquet for data analysis.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>api_response.xml<span class="w"> </span>--flatten-strategy<span class="w"> </span>aggressive<span class="w"> </span>--array-handling<span class="w"> </span>expand
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>config.xml<span class="w"> </span>--namespace-handling<span class="w"> </span>strip
+</span></code></pre></div>
+</div>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>Choose your path based on your experience level:</p>
 <div class="grid cards">
@@ -1670,7 +1704,18 @@
 <li><strong>📦 PyPI</strong>: <a href="https://pypi.org/project/pyforge-cli/">Package repository</a> with installation stats</li>
 </ul>
 <h2 id="whats-new">What's New<a class="headerlink" href="#whats-new" title="Permanent link">&para;</a></h2>
-<h3 id="version-025-latest">Version 0.2.5 (Latest)<a class="headerlink" href="#version-025-latest" title="Permanent link">&para;</a></h3>
+<h3 id="version-030-latest">Version 0.3.0 (Latest)<a class="headerlink" href="#version-030-latest" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>XML to Parquet Converter</strong>: Complete implementation with intelligent flattening</li>
+<li>✅ <strong>Automatic Structure Detection</strong>: Analyzes XML hierarchy and array patterns</li>
+<li>✅ <strong>Flexible Flattening Strategies</strong>: Conservative, moderate, and aggressive options</li>
+<li>✅ <strong>Advanced Array Handling</strong>: Expand, concatenate, or JSON string modes</li>
+<li>✅ <strong>Namespace Support</strong>: Configurable namespace processing</li>
+<li>✅ <strong>Schema Preview</strong>: Optional structure preview before conversion</li>
+<li>✅ <strong>Comprehensive Documentation</strong>: User guide and quick reference</li>
+<li>✅ <strong>Compressed XML Support</strong>: Handles .xml.gz and .xml.bz2 files</li>
+</ul>
+<h3 id="version-025">Version 0.2.5<a class="headerlink" href="#version-025" title="Permanent link">&para;</a></h3>
 <ul>
 <li>✅ Fixed package build configuration and PyPI publication metadata</li>
 <li>✅ Resolved InvalidDistribution errors for wheel packaging</li>

@@ -1891,8 +1891,14 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Excel with specific sheets</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.xlsx<span class="w"> </span>--sheets<span class="w"> </span><span class="s2">&quot;Sheet1,Summary&quot;</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Database conversion</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>database.mdb<span class="w"> </span>output_directory/
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># XML with intelligent flattening</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>api_response.xml<span class="w"> </span>--flatten-strategy<span class="w"> </span>aggressive
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Database conversion</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>database.mdb<span class="w"> </span>output_directory/
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># CSV with auto-detection</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv<span class="w"> </span>--compression<span class="w"> </span>gzip
 </span></code></pre></div>
 <h4 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h4>
 <table>
@@ -1964,6 +1970,30 @@
 <td>string</td>
 <td>Database password</td>
 <td>MDB/ACCDB</td>
+</tr>
+<tr>
+<td><code>--flatten-strategy &lt;strategy&gt;</code></td>
+<td>string</td>
+<td>XML flattening: conservative, moderate, aggressive</td>
+<td>XML</td>
+</tr>
+<tr>
+<td><code>--array-handling &lt;mode&gt;</code></td>
+<td>string</td>
+<td>XML array handling: expand, concatenate, json_string</td>
+<td>XML</td>
+</tr>
+<tr>
+<td><code>--namespace-handling &lt;mode&gt;</code></td>
+<td>string</td>
+<td>XML namespace handling: preserve, strip, prefix</td>
+<td>XML</td>
+</tr>
+<tr>
+<td><code>--preview-schema</code></td>
+<td>flag</td>
+<td>Preview XML structure before conversion</td>
+<td>XML</td>
 </tr>
 <tr>
 <td><code>--force</code></td>

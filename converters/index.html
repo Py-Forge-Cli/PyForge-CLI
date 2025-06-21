@@ -1328,6 +1328,18 @@
 <p>Convert legacy DBF database files to Parquet</p>
 <p><a href="dbf-files/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Learn More</a></p>
 </li>
+<li>
+<p>:material-code-xml: <strong>XML to Parquet</strong></p>
+<hr />
+<p>Convert XML files to Parquet with intelligent flattening</p>
+<p><a href="../xml-converter/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Learn More</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8zm1 14-2 4h-3l2-4H9v-5h6zm-2-7V3.5L18.5 9z"/></svg></span> <strong>CSV to Parquet</strong></p>
+<hr />
+<p>Convert CSV/TSV files to Parquet with auto-detection</p>
+<p><a href="csv-to-parquet/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Learn More</a></p>
+</li>
 </ul>
 </div>
 <h2 id="format-compatibility-matrix">Format Compatibility Matrix<a class="headerlink" href="#format-compatibility-matrix" title="Permanent link">&para;</a></h2>
@@ -1357,6 +1369,13 @@
 <td>Windows, macOS, Linux</td>
 </tr>
 <tr>
+<td><strong>XML</strong></td>
+<td><code>.xml</code>, <code>.xml.gz</code>, <code>.xml.bz2</code></td>
+<td>Parquet (<code>.parquet</code>)</td>
+<td>✅ Stable</td>
+<td>Windows, macOS, Linux</td>
+</tr>
+<tr>
 <td><strong>Access</strong></td>
 <td><code>.mdb</code>, <code>.accdb</code></td>
 <td>Parquet (<code>.parquet</code>)</td>
@@ -1372,9 +1391,9 @@
 </tr>
 <tr>
 <td><strong>CSV</strong></td>
-<td><code>.csv</code></td>
+<td><code>.csv</code>, <code>.tsv</code>, <code>.txt</code></td>
 <td>Parquet (<code>.parquet</code>)</td>
-<td>🚧 Coming Soon</td>
+<td>✅ Stable</td>
 <td>Windows, macOS, Linux</td>
 </tr>
 </tbody>
@@ -1436,6 +1455,12 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Convert DBF file</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>legacy.dbf
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Convert XML with intelligent flattening</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>api_response.xml
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Convert CSV with auto-detection</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>data.csv
 </span></code></pre></div>
 <h3 id="advanced-options">Advanced Options<a class="headerlink" href="#advanced-options" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># PDF with page range and metadata</span>
@@ -1449,6 +1474,12 @@
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># DBF with specific encoding</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>legacy.dbf<span class="w"> </span>--encoding<span class="w"> </span>cp1252
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># XML with aggressive flattening and array expansion</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>catalog.xml<span class="w"> </span>--flatten-strategy<span class="w"> </span>aggressive<span class="w"> </span>--array-handling<span class="w"> </span>expand
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># CSV with compression</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>pyforge<span class="w"> </span>convert<span class="w"> </span>large_data.csv<span class="w"> </span>--compression<span class="w"> </span>gzip
 </span></code></pre></div>
 <h2 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h2>
 <h3 id="file-size-guidelines">File Size Guidelines<a class="headerlink" href="#file-size-guidelines" title="Permanent link">&para;</a></h3>
@@ -1478,6 +1509,13 @@
 <td>&gt; 1 GB</td>
 </tr>
 <tr>
+<td><strong>XML</strong></td>
+<td>&lt; 10 MB</td>
+<td>10-100 MB</td>
+<td>100 MB - 1 GB</td>
+<td>&gt; 1 GB</td>
+</tr>
+<tr>
 <td><strong>Access</strong></td>
 <td>&lt; 100 MB</td>
 <td>100 MB - 1 GB</td>
@@ -1486,6 +1524,13 @@
 </tr>
 <tr>
 <td><strong>DBF</strong></td>
+<td>&lt; 50 MB</td>
+<td>50-500 MB</td>
+<td>500 MB - 2 GB</td>
+<td>&gt; 2 GB</td>
+</tr>
+<tr>
+<td><strong>CSV</strong></td>
 <td>&lt; 50 MB</td>
 <td>50-500 MB</td>
 <td>500 MB - 2 GB</td>
@@ -1584,8 +1629,10 @@
 <ul>
 <li><strong><a href="pdf-to-text/">PDF to Text</a></strong> - Document processing and text extraction</li>
 <li><strong><a href="excel-to-parquet/">Excel to Parquet</a></strong> - Spreadsheet data conversion</li>
+<li><strong><a href="../xml-converter/">XML to Parquet</a></strong> - XML flattening and structure analysis</li>
 <li><strong><a href="database-files/">Database Files</a></strong> - Access database migration</li>
 <li><strong><a href="dbf-files/">DBF Files</a></strong> - Legacy database modernization</li>
+<li><strong><a href="csv-to-parquet/">CSV to Parquet</a></strong> - Delimited file processing</li>
 </ul>
 <p>Or explore other sections:</p>
 <ul>
