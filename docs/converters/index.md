@@ -48,7 +48,7 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 
     Convert XML files to Parquet with intelligent flattening
 
-    [:octicons-arrow-right-24: Learn More](../xml-converter.md)
+    [:octicons-arrow-right-24: Learn More](xml-to-parquet.md)
 
 -   :material-file-delimited: **CSV to Parquet**
 
@@ -241,7 +241,7 @@ Choose a converter to learn more about:
 
 - **[PDF to Text](pdf-to-text.md)** - Document processing and text extraction
 - **[Excel to Parquet](excel-to-parquet.md)** - Spreadsheet data conversion
-- **[XML to Parquet](../xml-converter.md)** - XML flattening and structure analysis
+- **[XML to Parquet](xml-to-parquet.md)** - XML flattening and structure analysis
 - **[Database Files](database-files.md)** - Access database migration
 - **[DBF Files](dbf-files.md)** - Legacy database modernization
 - **[CSV to Parquet](csv-to-parquet.md)** - Delimited file processing

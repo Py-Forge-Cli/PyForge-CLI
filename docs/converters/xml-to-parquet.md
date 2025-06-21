@@ -1,6 +1,6 @@
-# XML to Parquet Converter
+# XML to Parquet Conversion
 
-The PyForge CLI includes a powerful XML to Parquet converter that automatically analyzes XML structure and intelligently flattens hierarchical data for analytics use cases.
+Convert XML files to efficient Parquet format with intelligent structure analysis and configurable flattening strategies for analytics use cases.
 
 ## Features
 

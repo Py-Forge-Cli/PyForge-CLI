@@ -28,7 +28,7 @@ For detailed information about each output format, see:
 
 - [PDF to Text Converter](../converters/pdf-to-text.md)
 - [Excel to Parquet Converter](../converters/excel-to-parquet.md)
-- [XML to Parquet Converter](../xml-converter.md)
+- [XML to Parquet Converter](../converters/xml-to-parquet.md)
 - [Database Files Converter](../converters/database-files.md)
 - [DBF Files Converter](../converters/dbf-files.md)
 - [CSV to Parquet Converter](../converters/csv-to-parquet.md)
