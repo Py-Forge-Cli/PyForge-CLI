@@ -42,6 +42,22 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 
     [:octicons-arrow-right-24: Learn More](dbf-files.md)
 
+-   :material-code-xml: **XML to Parquet**
+
+    ---
+
+    Convert XML files to Parquet with intelligent flattening
+
+    [:octicons-arrow-right-24: Learn More](../xml-converter.md)
+
+-   :material-file-delimited: **CSV to Parquet**
+
+    ---
+
+    Convert CSV/TSV files to Parquet with auto-detection
+
+    [:octicons-arrow-right-24: Learn More](csv-to-parquet.md)
+
 </div>
 
 ## Format Compatibility Matrix
@@ -50,9 +66,10 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 |-------------|-----------------|---------------|--------|-------------------|
 | **PDF** | `.pdf` | Text (`.txt`) | ✅ Stable | Windows, macOS, Linux |
 | **Excel** | `.xlsx` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
+| **XML** | `.xml`, `.xml.gz`, `.xml.bz2` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 | **Access** | `.mdb`, `.accdb` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS*, Linux* |
 | **DBF** | `.dbf` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
-| **CSV** | `.csv` | Parquet (`.parquet`) | 🚧 Coming Soon | Windows, macOS, Linux |
+| **CSV** | `.csv`, `.tsv`, `.txt` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 
 *Requires mdbtools installation
 
@@ -115,6 +132,12 @@ pyforge convert database.mdb
 
 # Convert DBF file
 pyforge convert legacy.dbf
+
+# Convert XML with intelligent flattening
+pyforge convert api_response.xml
+
+# Convert CSV with auto-detection
+pyforge convert data.csv
 ```
 
 ### Advanced Options
@@ -131,6 +154,12 @@ pyforge convert database.mdb output_directory/
 
 # DBF with specific encoding
 pyforge convert legacy.dbf --encoding cp1252
+
+# XML with aggressive flattening and array expansion
+pyforge convert catalog.xml --flatten-strategy aggressive --array-handling expand
+
+# CSV with compression
+pyforge convert large_data.csv --compression gzip
 ```
 
 ## Performance Considerations
@@ -141,8 +170,10 @@ pyforge convert legacy.dbf --encoding cp1252
 |--------|-------|--------|-------|------------|
 | **PDF** | < 10 MB | 10-100 MB | 100 MB - 1 GB | > 1 GB |
 | **Excel** | < 50 MB | 50-200 MB | 200 MB - 1 GB | > 1 GB |
+| **XML** | < 10 MB | 10-100 MB | 100 MB - 1 GB | > 1 GB |
 | **Access** | < 100 MB | 100 MB - 1 GB | 1-10 GB | > 10 GB |
 | **DBF** | < 50 MB | 50-500 MB | 500 MB - 2 GB | > 2 GB |
+| **CSV** | < 50 MB | 50-500 MB | 500 MB - 2 GB | > 2 GB |
 
 ### Optimization Tips
 
@@ -210,8 +241,10 @@ Choose a converter to learn more about:
 
 - **[PDF to Text](pdf-to-text.md)** - Document processing and text extraction
 - **[Excel to Parquet](excel-to-parquet.md)** - Spreadsheet data conversion
+- **[XML to Parquet](../xml-converter.md)** - XML flattening and structure analysis
 - **[Database Files](database-files.md)** - Access database migration
 - **[DBF Files](dbf-files.md)** - Legacy database modernization
+- **[CSV to Parquet](csv-to-parquet.md)** - Delimited file processing
 
 Or explore other sections:
 

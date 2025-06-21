@@ -31,6 +31,7 @@ def cli(ctx, verbose):
     CURRENTLY SUPPORTED FORMATS:
         • PDF to Text conversion with advanced options
         • Excel (.xlsx) to Parquet conversion with multi-sheet support
+        • XML (.xml, .xml.gz, .xml.bz2) to Parquet conversion with intelligent flattening
         • MDB/ACCDB (Microsoft Access) to Parquet conversion
         • DBF (dBase) to Parquet conversion
         • CSV (.csv, .tsv, .txt) to Parquet conversion with auto-detection
@@ -63,6 +64,11 @@ def cli(ctx, verbose):
         pyforge convert data.csv --format parquet
         pyforge convert sales_data.csv output.parquet --compression gzip --verbose
         pyforge convert international.tsv --format parquet --force
+        
+        # XML conversion
+        pyforge convert data.xml --format parquet
+        pyforge convert catalog.xml --flatten-strategy aggressive --array-handling expand
+        pyforge convert api_response.xml --namespace-handling strip --preview-schema
         
         # File information and validation
         pyforge info document.pdf --format json
@@ -115,8 +121,22 @@ def cli(ctx, verbose):
               help='Force combination of matching sheets into single parquet (Excel only)')
 @click.option('--separate', is_flag=True,
               help='Keep all sheets as separate parquet files (Excel only)')
+@click.option('--flatten-strategy',
+              type=click.Choice(['conservative', 'moderate', 'aggressive'], case_sensitive=False),
+              default='conservative',
+              help='XML flattening strategy (XML only): conservative, moderate, aggressive')
+@click.option('--array-handling',
+              type=click.Choice(['expand', 'concatenate', 'json_string'], case_sensitive=False),
+              default='expand',
+              help='XML array handling mode (XML only): expand, concatenate, json_string')
+@click.option('--namespace-handling',
+              type=click.Choice(['preserve', 'strip', 'prefix'], case_sensitive=False),
+              default='preserve',
+              help='XML namespace handling (XML only): preserve, strip, prefix')
+@click.option('--preview-schema', is_flag=True,
+              help='Preview XML structure before conversion (XML only)')
 @click.pass_context
-def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force, combine, separate):
+def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force, combine, separate, flatten_strategy, array_handling, namespace_handling, preview_schema):
     """Convert files between different formats.
     
     \b
@@ -177,6 +197,11 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         cortexpy convert database.mdb --format parquet
         cortexpy convert data.dbf output_dir/ --format parquet --compression gzip
         cortexpy convert secure.accdb --password "secret" --tables "customers,orders"
+        
+        # XML conversion examples
+        cortexpy convert data.xml --format parquet
+        cortexpy convert catalog.xml --flatten-strategy aggressive --array-handling expand
+        cortexpy convert api_response.xml --namespace-handling strip --preview-schema
     
     \b
     OUTPUT:
@@ -197,6 +222,13 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         • Shows 6-stage progress with real-time metrics
         • Generates Excel report with conversion summary
         • All data converted to string format for Phase 1
+        
+        XML CONVERSION:
+        • Analyzes XML structure and detects arrays automatically
+        • Flattens hierarchical data using configurable strategies
+        • Handles namespaces and attributes intelligently
+        • Creates single Parquet file with column-based output
+        • All data converted to string format with proper handling
     
     \b
     NOTES:
@@ -275,6 +307,16 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         options['combine'] = True
     if separate:
         options['separate'] = True
+    
+    # XML-specific options
+    if flatten_strategy:
+        options['flatten_strategy'] = flatten_strategy
+    if array_handling:
+        options['array_handling'] = array_handling
+    if namespace_handling:
+        options['namespace_handling'] = namespace_handling
+    if preview_schema:
+        options['preview_schema'] = True
     
     # Perform conversion
     success = converter.convert(input_file, output_file, **options)

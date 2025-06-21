@@ -23,6 +23,12 @@ cortexpy formats
 # Convert a PDF to text
 cortexpy convert document.pdf
 
+# Convert XML to Parquet with intelligent flattening
+cortexpy convert api_response.xml --flatten-strategy aggressive
+
+# Convert Excel to Parquet
+cortexpy convert spreadsheet.xlsx --format parquet
+
 # Get file information
 cortexpy info document.pdf
 

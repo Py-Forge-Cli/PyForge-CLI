@@ -31,9 +31,11 @@
 
 - **PDF to Text Conversion**: Extract text from PDF documents with advanced options
 - **Excel to Parquet Conversion**: Convert Excel files (.xlsx) to Parquet format with multi-sheet support
+- **XML to Parquet Conversion**: Intelligent XML flattening with automatic structure detection and configurable strategies
 - **Database File Conversion**: Convert Microsoft Access (.mdb/.accdb) and DBF files to Parquet
+- **CSV to Parquet Conversion**: Smart delimiter detection and encoding handling
 - **Rich CLI Interface**: Beautiful terminal output with progress bars and tables
-- **Intelligent Processing**: Automatic encoding detection, table discovery, and column matching
+- **Intelligent Processing**: Automatic encoding detection, structure analysis, and column matching
 - **Extensible Architecture**: Plugin-based system for adding new format converters
 - **Metadata Extraction**: Get detailed information about your files
 - **Cross-platform**: Works on Windows, macOS, and Linux
@@ -132,6 +134,25 @@ pyforge convert sales_data.csv --compression gzip
 
 # Convert delimited text file
 pyforge convert export.txt
+```
+
+### Convert XML Files
+
+```bash
+# Convert XML with automatic structure detection
+pyforge convert data.xml
+
+# Convert with aggressive flattening for analytics
+pyforge convert catalog.xml --flatten-strategy aggressive
+
+# Handle arrays by expanding to multiple rows
+pyforge convert orders.xml --array-handling expand
+
+# Strip namespaces for cleaner column names
+pyforge convert api_response.xml --namespace-handling strip
+
+# Preview schema before conversion
+pyforge convert complex.xml --preview-schema
 ```
 
 ### Get File Information
@@ -245,6 +266,31 @@ pyforge convert data.tsv --compression gzip
 for file in *.csv; do pyforge convert "$file" --compression snappy; done
 ```
 
+### XML Conversion Examples
+
+```bash
+# Convert XML with automatic structure detection
+pyforge convert catalog.xml
+
+# Convert with aggressive flattening for data analysis
+pyforge convert api_response.xml --flatten-strategy aggressive
+
+# Handle arrays as concatenated strings
+pyforge convert orders.xml --array-handling concatenate
+
+# Strip namespaces for cleaner output
+pyforge convert soap_response.xml --namespace-handling strip
+
+# Preview structure before conversion
+pyforge convert complex_structure.xml --preview-schema
+
+# Convert compressed XML files
+pyforge convert data.xml.gz --verbose
+
+# Batch convert XML files with specific strategy
+for file in *.xml; do pyforge convert "$file" --flatten-strategy moderate; done
+```
+
 ### File Information
 
 ```bash
@@ -267,6 +313,7 @@ pyforge info document.pdf --format json > metadata.json
 |-------------|----------------|---------|
 | PDF (.pdf)  | Text (.txt)    | ✅ Available |
 | Excel (.xlsx) | Parquet (.parquet) | ✅ Available |
+| XML (.xml, .xml.gz, .xml.bz2) | Parquet (.parquet) | ✅ Available |
 | Access (.mdb/.accdb) | Parquet (.parquet) | ✅ Available |
 | DBF (.dbf)  | Parquet (.parquet) | ✅ Available |
 | CSV (.csv, .tsv, .txt) | Parquet (.parquet) | ✅ Available |
@@ -379,8 +426,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - Support for various DBF formats
   - Robust error handling for corrupted files
 
-### Version 0.3.0 - Enhanced Features (Planned)
-- [x] CSV to Parquet conversion with auto-detection (string-based)
+### Version 0.3.0 - Enhanced Features (Released)
+- ✅ **XML to Parquet Conversion**
+  - Automatic XML structure detection and analysis
+  - Intelligent flattening strategies (conservative, moderate, aggressive)
+  - Array handling modes (expand, concatenate, json_string)
+  - Namespace processing (preserve, strip, prefix)
+  - Schema preview before conversion
+  - Support for compressed XML files (.xml.gz, .xml.bz2)
+- ✅ **CSV to Parquet conversion** with auto-detection (string-based)
 - [ ] CSV schema inference and native type conversion
 - [ ] JSON processing and flattening
 - [ ] Data validation and cleaning options
@@ -407,7 +461,18 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.2.1 (Current Release)
+### 0.3.0 (Current Release)
+
+- ✅ **XML to Parquet Converter**: Complete implementation with intelligent flattening
+- ✅ **Automatic Structure Detection**: Analyzes XML hierarchy and array patterns
+- ✅ **Flexible Flattening Strategies**: Conservative, moderate, and aggressive options
+- ✅ **Advanced Array Handling**: Expand, concatenate, or JSON string modes
+- ✅ **Namespace Support**: Configurable namespace processing
+- ✅ **Schema Preview**: Optional structure preview before conversion
+- ✅ **Comprehensive Documentation**: User guide and quick reference
+- ✅ **Compressed XML Support**: Handles .xml.gz and .xml.bz2 files
+
+### 0.2.1
 
 - ✅ **Complete Documentation Site**: Comprehensive GitHub Pages documentation
 - ✅ **Fixed CI/CD**: GitHub Actions workflow for automated PyPI publishing  
