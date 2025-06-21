@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyforge-cli"
-version = "0.2.3"
+version = "0.2.4"
 description = "A powerful CLI tool for data format conversion and synthetic data generation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -90,8 +90,8 @@ Changelog = "https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/CHANGELOG.md"
 [project.scripts]
 pyforge = "pyforge_cli.main:cli"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/pyforge_cli"]
+[tool.hatch.build]
+sources = ["src"]
 
 [tool.hatch.build.targets.sdist]
 include = [

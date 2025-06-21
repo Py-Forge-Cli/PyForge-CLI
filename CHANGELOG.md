@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.4] - 2025-06-21
+
+### 🔧 Fixed
+- **Package Build Configuration**: Fixed wheel packaging metadata issues
+  - Corrected hatchling build configuration for src layout
+  - Fixed missing Name and Version fields in wheel metadata
+  - Updated package metadata to include proper project information
+  - Resolved InvalidDistribution errors during PyPI publication
+
+---
+
 ## [0.2.3] - 2025-06-21
 
 ### 🔧 Fixed
