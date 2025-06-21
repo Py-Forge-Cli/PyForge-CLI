@@ -160,6 +160,25 @@ class XmlStructureAnalyzer:
                     if child_path in self.elements:
                         self.elements[child_path].is_array = True
                         self.array_elements.add(child_path)
+        
+        # Remove false positives: elements that appear once per parent instance
+        # but the parent itself is an array
+        elements_to_remove = []
+        for array_path in list(self.array_elements):
+            if '/' in array_path:
+                parent_path = array_path.rsplit('/', 1)[0]
+                if parent_path in self.array_elements:
+                    # Check if this element appears exactly once per parent instance
+                    parent_occurrences = self.elements[parent_path].occurrences
+                    child_occurrences = self.elements[array_path].occurrences
+                    if child_occurrences == parent_occurrences:
+                        # This is not really an array, just appears once per parent
+                        elements_to_remove.append(array_path)
+        
+        for path in elements_to_remove:
+            self.array_elements.discard(path)
+            if path in self.elements:
+                self.elements[path].is_array = False
     
     def _build_analysis_results(self) -> Dict[str, Any]:
         """Build comprehensive analysis results."""

@@ -8,6 +8,7 @@ import pandas as pd
 
 from .base import BaseConverter
 from .xml_structure_analyzer import XmlStructureAnalyzer
+from .xml_flattener import XmlFlattener
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ class XmlConverter(BaseConverter):
         self.supported_inputs = {".xml", ".xml.gz", ".xml.bz2"}
         self.supported_outputs = {".parquet"}
         self.analyzer = XmlStructureAnalyzer()
+        self.flattener = XmlFlattener()
         
     def validate_input(self, input_path: Path) -> bool:
         """
@@ -184,27 +186,49 @@ class XmlConverter(BaseConverter):
                        f"max depth: {analysis['max_depth']}, "
                        f"arrays: {len(analysis['array_elements'])}")
             
-            # TODO: Implement actual flattening logic
-            # For now, create a placeholder implementation with structure info
+            # Flatten XML data using the flattener
             self._update_progress(30, "Flattening XML structure")
             
-            # Create DataFrame with basic structure info
-            df_data = {
-                'element_path': [],
-                'element_tag': [],
-                'has_text': [],
-                'has_children': [],
-                'is_array': []
-            }
-            
-            for path, elem_info in analysis['elements'].items():
-                df_data['element_path'].append(path)
-                df_data['element_tag'].append(elem_info['tag'])
-                df_data['has_text'].append(elem_info['has_text'])
-                df_data['has_children'].append(elem_info['has_children'])
-                df_data['is_array'].append(elem_info['is_array'])
-            
-            df = pd.DataFrame(df_data)
+            try:
+                # Use flattener to extract actual data
+                flattened_records = self.flattener.flatten_file(
+                    input_path, 
+                    analysis,
+                    flatten_strategy=flatten_strategy,
+                    array_handling=array_handling,
+                    namespace_handling=namespace_handling
+                )
+                
+                # Convert to DataFrame
+                if flattened_records:
+                    df = pd.DataFrame(flattened_records)
+                else:
+                    # Fallback: Create DataFrame with basic structure info if no data extracted
+                    logger.warning("No data records extracted, creating structure summary")
+                    df_data = {
+                        'element_path': [],
+                        'element_tag': [],
+                        'has_text': [],
+                        'has_children': [],
+                        'is_array': []
+                    }
+                    
+                    for path, elem_info in analysis['elements'].items():
+                        df_data['element_path'].append(path)
+                        df_data['element_tag'].append(elem_info['tag'])
+                        df_data['has_text'].append(elem_info['has_text'])
+                        df_data['has_children'].append(elem_info['has_children'])
+                        df_data['is_array'].append(elem_info['is_array'])
+                    
+                    df = pd.DataFrame(df_data)
+                
+                self._update_progress(70, f"Extracted {len(df)} records")
+                
+            except Exception as e:
+                logger.error(f"Error during flattening: {e}")
+                # Create a simple error record
+                df = pd.DataFrame({'error': [f"Flattening failed: {str(e)}"]})
+                logger.warning("Created error record due to flattening failure")
             
             # Write to Parquet
             self._update_progress(90, "Writing Parquet file")
