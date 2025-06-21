@@ -1,28 +1,28 @@
 /* Custom styling for PyForge CLI documentation */
 
-/* Header logo styling for better visibility */
+/* Navigation logo styling - wide format for better visibility */
 .md-header__button.md-logo {
   width: auto !important;
   height: auto !important;
-  padding: 0.3rem !important;
+  padding: 0.2rem 0.5rem !important;
   margin-right: 0.5rem !important;
 }
 
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
-  width: 48px !important;
-  height: 48px !important;
-  max-width: 48px !important;
-  max-height: 48px !important;
+  width: 120px !important;
+  height: 32px !important;
+  max-width: 120px !important;
+  max-height: 32px !important;
 }
 
 /* Alternative selector for logo in case structure differs */
 .md-logo img,
 .md-logo svg {
-  width: 48px !important;
-  height: 48px !important;
-  max-width: 48px !important;
-  max-height: 48px !important;
+  width: 120px !important;
+  height: 32px !important;
+  max-width: 120px !important;
+  max-height: 32px !important;
 }
 
 /* Ensure logo is visible with proper contrast and no filters */
@@ -32,25 +32,20 @@
   background: none !important;
 }
 
-/* Adjust header height to accommodate larger logo */
+/* Make sure the header accommodates the logo */
 .md-header {
-  min-height: 3.5rem !important;
+  min-height: 3rem !important;
 }
 
-/* Align header title with larger logo */
+/* Adjust header title positioning */
 .md-header__title {
-  line-height: 3rem !important;
+  line-height: 2.5rem !important;
   margin-left: 0.5rem !important;
   font-weight: 600 !important;
 }
 
-/* Ensure navigation items align properly with larger header */
-.md-header__nav {
-  height: 3.5rem !important;
-}
-
-/* Make sure the header logo stands out */
+/* Add subtle hover effect */
 .md-header__button.md-logo:hover {
-  transform: scale(1.05) !important;
+  transform: scale(1.02) !important;
   transition: transform 0.2s ease !important;
 }

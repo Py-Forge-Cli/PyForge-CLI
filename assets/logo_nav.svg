@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="32" viewBox="0 0 120 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wide header logo optimized for navigation bar -->
+  <defs>
+    <linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background rectangle -->
+  <rect width="120" height="32" rx="16" fill="url(#navGradient)"/>
+  
+  <!-- PyForge text optimized for navigation header -->
+  <text x="60" y="18" text-anchor="middle" 
+        font-family="'Montserrat', 'Inter', 'SF Pro Display', sans-serif" 
+        font-size="12" 
+        font-weight="800" 
+        letter-spacing="-0.5px"
+        fill="#ffffff">
+    PyForge
+  </text>
+  
+  <!-- CLI text -->
+  <text x="60" y="26" text-anchor="middle" 
+        font-family="'Montserrat', 'Inter', sans-serif" 
+        font-size="6" 
+        font-weight="400" 
+        letter-spacing="1px"
+        fill="#e9ecef" 
+        opacity="0.9">
+    CLI
+  </text>
+</svg>
