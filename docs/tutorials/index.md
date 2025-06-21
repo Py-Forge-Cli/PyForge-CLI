@@ -1,5 +1,9 @@
 # Tutorials
 
+<div align="center">
+  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+</div>
+
 Learn PyForge CLI through hands-on tutorials and real-world examples.
 
 ## Available Tutorials

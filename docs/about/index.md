@@ -1,5 +1,9 @@
 # About PyForge CLI
 
+<div align="center">
+  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+</div>
+
 Learn about the project, its history, and how to contribute.
 
 ## Project Information
