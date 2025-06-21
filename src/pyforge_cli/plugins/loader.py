@@ -49,6 +49,14 @@ class PluginLoader:
             self.loaded_plugins.append('csv')
         except ImportError as e:
             print(f"Warning: Could not load CSV converter: {e}")
+        
+        # Load XML converter
+        try:
+            from ..converters.xml import XmlConverter
+            registry.register('xml', XmlConverter)
+            self.loaded_plugins.append('xml')
+        except ImportError as e:
+            print(f"Warning: Could not load XML converter: {e}")
     
     def load_from_entry_points(self) -> None:
         """Load converters from setuptools entry points."""

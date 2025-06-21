@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+    <book id="1">
+        <title>XML Developer's Guide</title>
+        <author>Smith, John</author>
+        <price currency="USD">44.95</price>
+        <tags>
+            <tag>XML</tag>
+            <tag>Programming</tag>
+            <tag>Development</tag>
+        </tags>
+    </book>
+    <book id="2">
+        <title>Learning Python</title>
+        <author>Jones, Mary</author>
+        <price currency="USD">39.95</price>
+        <tags>
+            <tag>Python</tag>
+            <tag>Programming</tag>
+        </tags>
+    </book>
+    <book id="3">
+        <title>Data Science Handbook</title>
+        <author>Brown, David</author>
+        <price currency="EUR">49.99</price>
+        <tags>
+            <tag>Data Science</tag>
+            <tag>Machine Learning</tag>
+            <tag>Python</tag>
+        </tags>
+    </book>
+</catalog>
