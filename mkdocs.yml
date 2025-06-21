@@ -9,6 +9,8 @@ use_directory_urls: true
 theme:
   name: material
   language: en
+  logo: assets/icon_pyforge_forge.svg
+  favicon: assets/icon_pyforge_forge.svg
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
@@ -18,16 +20,16 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue
-      accent: light blue
+      primary: deep purple
+      accent: purple
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: blue
-      accent: light blue
+      primary: deep purple
+      accent: purple
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
