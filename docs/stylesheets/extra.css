@@ -1,28 +1,28 @@
 /* Custom styling for PyForge CLI documentation */
 
-/* Navigation logo styling - wide format for better visibility */
+/* Large header logo using high-resolution 512x512 icon */
 .md-header__button.md-logo {
   width: auto !important;
   height: auto !important;
-  padding: 0.2rem 0.5rem !important;
-  margin-right: 0.5rem !important;
+  padding: 0.4rem !important;
+  margin-right: 0.8rem !important;
 }
 
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
-  width: 120px !important;
-  height: 32px !important;
-  max-width: 120px !important;
-  max-height: 32px !important;
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
 }
 
 /* Alternative selector for logo in case structure differs */
 .md-logo img,
 .md-logo svg {
-  width: 120px !important;
-  height: 32px !important;
-  max-width: 120px !important;
-  max-height: 32px !important;
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
 }
 
 /* Ensure logo is visible with proper contrast and no filters */
@@ -32,20 +32,38 @@
   background: none !important;
 }
 
-/* Make sure the header accommodates the logo */
+/* Adjust header height to accommodate large logo */
 .md-header {
-  min-height: 3rem !important;
+  min-height: 4.5rem !important;
 }
 
-/* Adjust header title positioning */
+/* Center align header title with large logo */
 .md-header__title {
-  line-height: 2.5rem !important;
-  margin-left: 0.5rem !important;
+  line-height: 4rem !important;
+  margin-left: 0.8rem !important;
   font-weight: 600 !important;
+  font-size: 1.1rem !important;
+}
+
+/* Ensure navigation items align properly with larger header */
+.md-header__nav {
+  height: 4.5rem !important;
+}
+
+/* Center all header content vertically */
+.md-header__inner {
+  height: 4.5rem !important;
+  align-items: center !important;
 }
 
 /* Add subtle hover effect */
 .md-header__button.md-logo:hover {
-  transform: scale(1.02) !important;
+  transform: scale(1.05) !important;
   transition: transform 0.2s ease !important;
+}
+
+/* Ensure search and navigation buttons align with larger header */
+.md-header__button {
+  margin: 0.2rem !important;
+  padding: 0.6rem !important;
 }
