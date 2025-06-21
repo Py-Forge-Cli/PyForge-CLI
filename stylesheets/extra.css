@@ -1,0 +1,42 @@
+/* Custom styling for PyForge CLI documentation */
+
+/* Increase logo size in header navigation */
+.md-header__button.md-logo {
+  width: auto !important;
+  height: auto !important;
+  padding: 0.2rem !important;
+}
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+}
+
+/* Alternative selector for logo in case structure differs */
+.md-logo img,
+.md-logo svg {
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+}
+
+/* Ensure logo is visible with proper contrast */
+.md-header .md-logo {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Adjust header height if needed to accommodate larger logo */
+.md-header {
+  min-height: 3rem !important;
+}
+
+/* Make sure text next to logo aligns properly */
+.md-header__title {
+  line-height: 2.4rem !important;
+  margin-left: 0.5rem !important;
+}
