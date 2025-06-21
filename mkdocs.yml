@@ -9,7 +9,7 @@ use_directory_urls: true
 theme:
   name: material
   language: en
-  logo: assets/logo_header.svg
+  logo: assets/logo_nav.svg
   favicon: assets/icon_pyforge_forge.svg
   palette:
     # Palette toggle for automatic mode
