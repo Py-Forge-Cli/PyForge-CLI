@@ -112,6 +112,22 @@ pyforge convert data.dbf
 pyforge convert database.accdb output_folder/
 ```
 
+### Convert CSV Files
+
+```bash
+# Convert CSV with automatic delimiter and encoding detection
+pyforge convert data.csv
+
+# Convert TSV (tab-separated) file
+pyforge convert data.tsv
+
+# Convert with compression
+pyforge convert sales_data.csv --compression gzip
+
+# Convert delimited text file
+pyforge convert export.txt
+```
+
 ### Get File Information
 
 ```bash
@@ -204,6 +220,25 @@ pyforge convert legacy.dbf --encoding cp1252
 for file in *.dbf; do pyforge convert "$file"; done
 ```
 
+### CSV Conversion Examples
+
+```bash
+# Convert CSV with automatic detection
+pyforge convert sales_data.csv
+
+# Convert international CSV with auto-encoding detection
+pyforge convert european_data.csv --verbose
+
+# Convert semicolon-delimited CSV (European format)
+pyforge convert data_semicolon.csv
+
+# Convert tab-separated file with compression
+pyforge convert data.tsv --compression gzip
+
+# Batch convert multiple CSV files
+for file in *.csv; do pyforge convert "$file" --compression snappy; done
+```
+
 ### File Information
 
 ```bash
@@ -228,7 +263,7 @@ pyforge info document.pdf --format json > metadata.json
 | Excel (.xlsx) | Parquet (.parquet) | ✅ Available |
 | Access (.mdb/.accdb) | Parquet (.parquet) | ✅ Available |
 | DBF (.dbf)  | Parquet (.parquet) | ✅ Available |
-| CSV (.csv)  | Parquet (.parquet) | 🚧 Coming Soon |
+| CSV (.csv, .tsv, .txt) | Parquet (.parquet) | ✅ Available |
 
 ## Development
 
@@ -339,7 +374,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - Robust error handling for corrupted files
 
 ### Version 0.3.0 - Enhanced Features (Planned)
-- [ ] CSV to Parquet conversion with schema inference
+- [x] CSV to Parquet conversion with auto-detection (string-based)
+- [ ] CSV schema inference and native type conversion
 - [ ] JSON processing and flattening
 - [ ] Data validation and cleaning options
 - [ ] Batch processing with pattern matching
