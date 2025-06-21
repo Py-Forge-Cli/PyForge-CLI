@@ -1,7 +1,7 @@
 # API Documentation
 
 <div align="center">
-  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
 </div>
 
 Learn how to use PyForge CLI as a Python library and extend it with custom plugins.

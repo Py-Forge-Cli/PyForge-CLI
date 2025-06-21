@@ -1,7 +1,7 @@
 # Getting Started
 
 <div align="center">
-  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
 </div>
 
 Welcome to PyForge CLI! This section will help you get up and running quickly with data format conversion.

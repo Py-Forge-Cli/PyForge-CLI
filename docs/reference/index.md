@@ -1,7 +1,7 @@
 # CLI Reference
 
 <div align="center">
-  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
 </div>
 
 Complete command-line interface documentation for PyForge CLI.

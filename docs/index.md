@@ -1,7 +1,7 @@
 # PyForge CLI
 
 <div align="center">
-  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="128" height="128">
+  <img src="assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="128" height="128">
 </div>
 
 <div align="center">

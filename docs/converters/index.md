@@ -1,7 +1,7 @@
 # Format Converters
 
 <div align="center">
-  <img src="../../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
+  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="80" height="80">
 </div>
 
 PyForge CLI supports conversion between multiple data formats. Each converter is optimized for its specific format with intelligent processing and error handling.
