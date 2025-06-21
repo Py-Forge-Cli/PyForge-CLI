@@ -27,8 +27,14 @@ pyforge convert report.pdf --pages "1-10"
 # Excel with specific sheets
 pyforge convert data.xlsx --sheets "Sheet1,Summary"
 
+# XML with intelligent flattening
+pyforge convert api_response.xml --flatten-strategy aggressive
+
 # Database conversion
 pyforge convert database.mdb output_directory/
+
+# CSV with auto-detection
+pyforge convert data.csv --compression gzip
 ```
 
 #### Options
@@ -45,6 +51,10 @@ pyforge convert database.mdb output_directory/
 | `--encoding <encoding>` | string | Character encoding (e.g., cp1252) | DBF |
 | `--tables <names>` | string | Comma-separated table names | MDB/ACCDB |
 | `--password <password>` | string | Database password | MDB/ACCDB |
+| `--flatten-strategy <strategy>` | string | XML flattening: conservative, moderate, aggressive | XML |
+| `--array-handling <mode>` | string | XML array handling: expand, concatenate, json_string | XML |
+| `--namespace-handling <mode>` | string | XML namespace handling: preserve, strip, prefix | XML |
+| `--preview-schema` | flag | Preview XML structure before conversion | XML |
 | `--force` | flag | Overwrite existing output files | All |
 | `--verbose` | flag | Enable detailed output | All |
 

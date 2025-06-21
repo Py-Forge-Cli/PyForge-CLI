@@ -61,6 +61,9 @@ pyforge convert spreadsheet.xlsx
 # Convert Access database
 pyforge convert database.mdb
 
+# Convert XML with intelligent flattening
+pyforge convert api_response.xml
+
 # Get help
 pyforge --help
 ```
@@ -71,6 +74,7 @@ pyforge --help
 |-------------|---------------|--------|-------------|
 | **PDF** (.pdf) | Text (.txt) | ✅ Available | Extract text with metadata and page ranges |
 | **Excel** (.xlsx) | Parquet (.parquet) | ✅ Available | Multi-sheet support with intelligent merging |
+| **XML** (.xml, .xml.gz, .xml.bz2) | Parquet (.parquet) | ✅ Available | Intelligent flattening with configurable strategies |
 | **Access** (.mdb/.accdb) | Parquet (.parquet) | ✅ Available | Cross-platform database conversion |
 | **DBF** (.dbf) | Parquet (.parquet) | ✅ Available | Legacy database with encoding detection |
 | **CSV** (.csv) | Parquet (.parquet) | ✅ Available | Auto-detection of delimiters and encoding |
@@ -116,6 +120,14 @@ Designed specifically for data engineers, scientists, and analysts with real-wor
     
     ```bash
     pyforge convert financial_report.xlsx --combine --compression gzip
+    ```
+
+!!! example "XML API Data Processing"
+    Convert XML API responses and configuration files to Parquet for data analysis.
+    
+    ```bash
+    pyforge convert api_response.xml --flatten-strategy aggressive --array-handling expand
+    pyforge convert config.xml --namespace-handling strip
     ```
 
 ## Getting Started
@@ -167,7 +179,17 @@ Choose your path based on your experience level:
 
 ## What's New
 
-### Version 0.2.5 (Latest)
+### Version 0.3.0 (Latest)
+- ✅ **XML to Parquet Converter**: Complete implementation with intelligent flattening
+- ✅ **Automatic Structure Detection**: Analyzes XML hierarchy and array patterns
+- ✅ **Flexible Flattening Strategies**: Conservative, moderate, and aggressive options
+- ✅ **Advanced Array Handling**: Expand, concatenate, or JSON string modes
+- ✅ **Namespace Support**: Configurable namespace processing
+- ✅ **Schema Preview**: Optional structure preview before conversion
+- ✅ **Comprehensive Documentation**: User guide and quick reference
+- ✅ **Compressed XML Support**: Handles .xml.gz and .xml.bz2 files
+
+### Version 0.2.5
 - ✅ Fixed package build configuration and PyPI publication metadata
 - ✅ Resolved InvalidDistribution errors for wheel packaging
 - ✅ Updated hatchling build configuration for src layout
