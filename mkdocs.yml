@@ -60,6 +60,9 @@ extra:
     provider: mike
     default: latest
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search:
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
