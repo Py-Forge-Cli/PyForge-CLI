@@ -1,6 +1,10 @@
 # PyForge CLI
 
 <div align="center">
+  <img src="../assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="128" height="128">
+</div>
+
+<div align="center">
   <strong>A powerful command-line tool for data format conversion and synthetic data generation</strong>
 </div>
 
@@ -69,7 +73,7 @@ pyforge --help
 | **Excel** (.xlsx) | Parquet (.parquet) | ✅ Available | Multi-sheet support with intelligent merging |
 | **Access** (.mdb/.accdb) | Parquet (.parquet) | ✅ Available | Cross-platform database conversion |
 | **DBF** (.dbf) | Parquet (.parquet) | ✅ Available | Legacy database with encoding detection |
-| **CSV** (.csv) | Parquet (.parquet) | 🚧 Coming Soon | High-performance CSV processing |
+| **CSV** (.csv) | Parquet (.parquet) | ✅ Available | Auto-detection of delimiters and encoding |
 
 ## Key Features
 
@@ -163,10 +167,31 @@ Choose your path based on your experience level:
 
 ## What's New
 
-### Version 0.2.1 (Latest)
+### Version 0.2.5 (Latest)
+- ✅ Fixed package build configuration and PyPI publication metadata
+- ✅ Resolved InvalidDistribution errors for wheel packaging
+- ✅ Updated hatchling build configuration for src layout
+
+### Version 0.2.4
+- ✅ Fixed GitHub Actions deprecation warnings and workflow failures
+- ✅ Updated pypa/gh-action-pypi-publish to latest version
+- ✅ Removed redundant sigstore signing steps
+
+### Version 0.2.3
+- 🎉 **Major Feature**: CSV to Parquet conversion with auto-detection
+- ✅ Intelligent delimiter detection (comma, semicolon, tab, pipe)
+- ✅ Smart encoding detection (UTF-8, Latin-1, Windows-1252, UTF-16)
+- ✅ Header detection with fallback to generic column names
+- ✅ String-based conversion consistent with Phase 1 architecture
+
+### Version 0.2.2
+- ✅ Enhanced GitHub workflow templates for structured development
+- ✅ Updated README documentation with CSV support
+- ✅ Comprehensive testing and documentation for CSV converter
+
+### Version 0.2.1
 - ✅ Fixed GitHub Actions workflow for automated PyPI publishing
 - ✅ Updated CI/CD pipeline to use API token authentication
-- ✅ Improved package distribution automation
 
 ### Version 0.2.0
 - ✅ Excel to Parquet conversion with multi-sheet support

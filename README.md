@@ -1,6 +1,12 @@
 # PyForge CLI
 
-A powerful command-line tool for data format conversion and manipulation, built with Python and Click.
+<div align="center">
+  <img src="assets/icon_pyforge_forge.svg" alt="PyForge CLI" width="128" height="128">
+</div>
+
+<div align="center">
+  <strong>A powerful command-line tool for data format conversion and manipulation, built with Python and Click.</strong>
+</div>
 
 ## 📖 Documentation
 
