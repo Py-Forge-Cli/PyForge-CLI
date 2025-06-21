@@ -200,6 +200,13 @@ excel:
 # Database settings
 database:
   encoding: utf-8
+
+# XML-specific settings
+xml:
+  flatten_strategy: conservative
+  array_handling: expand
+  namespace_handling: preserve
+  preview_schema: false
 ```
 
 ## Advanced Usage Patterns
@@ -217,6 +224,15 @@ done
 
 # Parallel processing
 ls *.pdf | xargs -P 4 -I {} pyforge convert {}
+
+# Batch convert XML files with consistent strategy
+for file in *.xml; do
+    pyforge convert "$file" "${file%.xml}.parquet" --flatten-strategy moderate
+done
+
+# Process XML files with different strategies based on size
+find . -name "*.xml" -size +10M -exec pyforge convert {} --flatten-strategy conservative \;
+find . -name "*.xml" -size -10M -exec pyforge convert {} --flatten-strategy aggressive \;
 ```
 
 ### Pipeline Integration
@@ -289,6 +305,35 @@ pyforge convert database.mdb --tables "customers,orders,products"
 
 # Custom output directory
 pyforge convert large.accdb /output/database/
+```
+
+### XML Processing
+
+```bash
+# Conservative flattening (default)
+pyforge convert api_response.xml --flatten-strategy conservative
+
+# Aggressive flattening for analytics
+pyforge convert catalog.xml --flatten-strategy aggressive
+
+# Handle arrays as concatenated strings
+pyforge convert orders.xml --array-handling concatenate
+
+# Strip namespaces for cleaner columns
+pyforge convert soap_response.xml --namespace-handling strip
+
+# Preview structure before conversion
+pyforge convert complex.xml --preview-schema
+
+# Convert compressed XML files
+pyforge convert data.xml.gz --verbose
+
+# Combined options for data analysis
+pyforge convert api_data.xml analysis.parquet \
+  --flatten-strategy aggressive \
+  --array-handling expand \
+  --namespace-handling strip \
+  --compression gzip
 ```
 
 ### DBF Processing
