@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Optimized header logo version -->
+  <defs>
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <filter id="headerShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle for better header visibility -->
+  <circle cx="24" cy="24" r="22" fill="url(#headerGradient)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  
+  <!-- PyForge text optimized for small header size -->
+  <text x="24" y="20" text-anchor="middle" 
+        font-family="'Montserrat', 'Inter', 'SF Pro Display', sans-serif" 
+        font-size="8" 
+        font-weight="800" 
+        letter-spacing="-0.5px"
+        filter="url(#headerShadow)">
+    <tspan fill="#ffffff">Py</tspan><tspan fill="#f8f9fa">Forge</tspan>
+  </text>
+  
+  <!-- CLI text -->
+  <text x="24" y="30" text-anchor="middle" 
+        font-family="'Montserrat', 'Inter', sans-serif" 
+        font-size="5" 
+        font-weight="400" 
+        letter-spacing="1px"
+        fill="#e9ecef" 
+        opacity="0.9">
+    CLI
+  </text>
+</svg>
