@@ -10,24 +10,28 @@
       
       
       
-        <link rel="canonical" href="https://py-forge-cli.github.io/PyForge-CLI/xml-converter/">
+        <link rel="canonical" href="https://py-forge-cli.github.io/PyForge-CLI/converters/xml-to-parquet/">
       
       
+        <link rel="prev" href="../excel-to-parquet/">
       
       
-      <link rel="icon" href="../assets/icon_pyforge_forge.svg">
+        <link rel="next" href="../csv-to-parquet/">
+      
+      
+      <link rel="icon" href="../../assets/icon_pyforge_forge.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>XML to Parquet Converter - PyForge CLI Documentation</title>
+        <title>XML to Parquet - PyForge CLI Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -46,9 +50,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#xml-to-parquet-converter" class="md-skip">
+        <a href="#xml-to-parquet-conversion" class="md-skip">
           Skip to content
         </a>
       
@@ -94,9 +98,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="PyForge CLI Documentation" class="md-header__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
+    <a href="../.." title="PyForge CLI Documentation" class="md-header__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
       
-  <img src="../assets/icon_512x512.svg" alt="logo">
+  <img src="../../assets/icon_512x512.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              XML to Parquet Converter
+              XML to Parquet
             
           </span>
         </div>
@@ -246,9 +250,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="PyForge CLI Documentation" class="md-nav__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
+    <a href="../.." title="PyForge CLI Documentation" class="md-nav__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
       
-  <img src="../assets/icon_512x512.svg" alt="logo">
+  <img src="../../assets/icon_512x512.svg" alt="logo">
 
     </a>
     PyForge CLI Documentation
@@ -275,7 +279,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -328,7 +332,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../getting-started/" class="md-nav__link ">
+            <a href="../../getting-started/" class="md-nav__link ">
               
   
   
@@ -363,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -386,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/quick-start/" class="md-nav__link">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -409,7 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/first-conversion/" class="md-nav__link">
+      <a href="../../getting-started/first-conversion/" class="md-nav__link">
         
   
   
@@ -436,6 +440,8 @@
       
   
   
+    
+  
   
   
     
@@ -455,6 +461,8 @@
       
         
       
+        
+      
     
     
     
@@ -464,17 +472,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../converters/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -493,7 +499,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Converters
@@ -509,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../converters/pdf-to-text/" class="md-nav__link">
+      <a href="../pdf-to-text/" class="md-nav__link">
         
   
   
@@ -532,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../converters/excel-to-parquet/" class="md-nav__link">
+      <a href="../excel-to-parquet/" class="md-nav__link">
         
   
   
@@ -552,10 +558,546 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    XML to Parquet
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    XML to Parquet
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Capabilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Input Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Conversion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema Information
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flattening-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flattening Strategies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#array-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Array Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Namespace Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema Preview
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-simple-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Simple XML
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-xml-with-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: XML with Arrays
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-complex-nested-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: Complex Nested XML
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#column-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Column Naming Convention
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Column Naming Convention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Elements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arrays
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-handling_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Namespace Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-size-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Size Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Tips
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pythonpandas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python/Pandas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duckdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      DuckDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apache-spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Apache Spark
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Use Cases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-data-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Data Migration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-api-response-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. API Response Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configuration-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configuration Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-log-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Log Processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-type-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Type Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      String Conversion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../converters/csv-to-parquet/" class="md-nav__link">
+      <a href="../csv-to-parquet/" class="md-nav__link">
         
   
   
@@ -578,7 +1120,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../converters/database-files/" class="md-nav__link">
+      <a href="../database-files/" class="md-nav__link">
         
   
   
@@ -601,7 +1143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../converters/dbf-files/" class="md-nav__link">
+      <a href="../dbf-files/" class="md-nav__link">
         
   
   
@@ -658,7 +1200,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -693,7 +1235,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/cli-reference/" class="md-nav__link">
+      <a href="../../reference/cli-reference/" class="md-nav__link">
         
   
   
@@ -750,7 +1292,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../tutorials/" class="md-nav__link ">
+            <a href="../../tutorials/" class="md-nav__link ">
               
   
   
@@ -785,7 +1327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/troubleshooting/" class="md-nav__link">
+      <a href="../../tutorials/troubleshooting/" class="md-nav__link">
         
   
   
@@ -840,7 +1382,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../api/" class="md-nav__link ">
+            <a href="../../api/" class="md-nav__link ">
               
   
   
@@ -908,7 +1450,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../about/" class="md-nav__link ">
+            <a href="../../about/" class="md-nav__link ">
               
   
   
@@ -943,7 +1485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/changelog/" class="md-nav__link">
+      <a href="../../about/changelog/" class="md-nav__link">
         
   
   
@@ -966,7 +1508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/contributing/" class="md-nav__link">
+      <a href="../../about/contributing/" class="md-nav__link">
         
   
   
@@ -989,7 +1531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/license/" class="md-nav__link">
+      <a href="../../about/license/" class="md-nav__link">
         
   
   
@@ -1528,8 +2070,8 @@
   
 
 
-<h1 id="xml-to-parquet-converter">XML to Parquet Converter<a class="headerlink" href="#xml-to-parquet-converter" title="Permanent link">&para;</a></h1>
-<p>The PyForge CLI includes a powerful XML to Parquet converter that automatically analyzes XML structure and intelligently flattens hierarchical data for analytics use cases.</p>
+<h1 id="xml-to-parquet-conversion">XML to Parquet Conversion<a class="headerlink" href="#xml-to-parquet-conversion" title="Permanent link">&para;</a></h1>
+<p>Convert XML files to efficient Parquet format with intelligent structure analysis and configurable flattening strategies for analytics use cases.</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="core-capabilities">Core Capabilities<a class="headerlink" href="#core-capabilities" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1903,10 +2445,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "toc.follow", "search.highlight", "search.share", "search.suggest", "content.tabs.link", "content.code.copy", "content.code.select"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "toc.follow", "search.highlight", "search.share", "search.suggest", "content.tabs.link", "content.code.copy", "content.code.select"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
