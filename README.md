@@ -482,7 +482,40 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] REST API wrapper for notebook integration
 - [ ] Data type preservation options (beyond string conversion)
 
-### Version 0.4.0 - Advanced Features (Future)
+### Version 0.4.0 - MDF Tools Infrastructure (Completed)
+- ✅ **MDF Tools Installer**
+  - Automated Docker Desktop installation (macOS/Windows/Linux)
+  - SQL Server Express 2019 container setup
+  - Interactive setup wizard with non-interactive mode
+  - Cross-platform compatibility with system package managers
+- ✅ **Container Management Commands**
+  - 9 lifecycle commands: status, start, stop, restart, logs, test, config, uninstall
+  - Rich terminal UI with status tables and progress tracking
+  - Configuration management with JSON persistence
+  - Health monitoring and connectivity testing
+- ✅ **Infrastructure Foundation**
+  - Complete Docker and SQL Server environment for MDF processing
+  - Foundation ready for MDF file conversion implementation
+  - Comprehensive documentation with live terminal examples
+  - ASCII architecture diagrams and troubleshooting guides
+
+### Version 0.5.0 - MDF File Conversion (Planned)
+- [ ] **MDF to Parquet Converter** (Issue #13)
+  - SQL Server MDF file attachment and processing
+  - 6-stage conversion process (matching MDB converter)
+  - String-only data conversion for Phase 1 consistency
+  - Batch processing with progress tracking
+  - Excel summary reports with conversion statistics
+
+### Version 0.5.1 - Test Datasets Collection (Planned)
+- [ ] **Sample Datasets Installation** (Issue #15)
+  - CLI command: `pyforge install sample-datasets`
+  - Curated test datasets for all formats (XML, MDF, DBF, MDB, CSV, PDF)
+  - Multiple size categories: small (<1MB), medium (1-100MB), large (100MB-3GB)
+  - Direct download from online sources with metadata
+  - Organized directory structure for testing scenarios
+
+### Version 0.6.0 - Advanced Features (Future)
 - [ ] SQL query support for database files
 - [ ] Data transformation pipelines
 - [ ] Cloud storage integration (S3, Azure Blob)
@@ -500,7 +533,18 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.3.0 (Current Release)
+### 0.4.0 (Current Release)
+
+- ✅ **MDF Tools Installer**: Complete automated Docker Desktop and SQL Server Express 2019 setup
+- ✅ **Cross-Platform Installation**: System package managers (Homebrew, Winget, apt/yum)
+- ✅ **Container Management**: 9 lifecycle commands for SQL Server operations
+- ✅ **Interactive Setup Wizard**: User-guided installation with smart detection
+- ✅ **Rich Terminal UI**: Beautiful status tables, progress bars, and error handling
+- ✅ **Critical Docker Fix**: Proper system package manager installation (not pip)
+- ✅ **Infrastructure Foundation**: Complete environment for MDF file processing
+- ✅ **Comprehensive Documentation**: Live terminal examples and ASCII diagrams
+
+### 0.3.0
 
 - ✅ **XML to Parquet Converter**: Complete implementation with intelligent flattening
 - ✅ **Automatic Structure Detection**: Analyzes XML hierarchy and array patterns
@@ -518,7 +562,7 @@ If you encounter any issues or have questions:
 - ✅ **Improved Distribution**: API token authentication and automation
 - ✅ **Better Navigation**: Fixed broken links and improved project structure
 
-### 0.2.0 (Current Release)
+### 0.2.0
 
 - ✅ Excel to Parquet conversion with multi-sheet support
 - ✅ MDB/ACCDB to Parquet conversion with cross-platform support
