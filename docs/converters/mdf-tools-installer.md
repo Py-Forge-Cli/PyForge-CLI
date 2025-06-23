@@ -30,14 +30,147 @@ pyforge mdf-tools test
 
 ### Minimum Requirements
 - **Operating System**: Windows 10+, macOS 10.15+, or Ubuntu 18.04+
-- **Memory**: 4GB RAM available for SQL Server container
-- **Storage**: 2GB free space for Docker images and data
-- **Network**: Internet connection for downloading Docker images
+- **Memory**: 4GB RAM total (1.4GB for SQL Server + 2.6GB for host system)
+- **Storage**: 4GB free space (2GB for Docker images + 2GB for SQL Server data)
+- **Network**: Internet connection for downloading Docker images (~700MB)
+- **Docker**: Docker Desktop 4.0+ with container support
+
+### Recommended Requirements
+- **Memory**: 8GB RAM (for optimal performance with multiple databases)
+- **Storage**: 20GB free space (for multiple MDF files and conversions)
+- **CPU**: 4+ cores (though SQL Server Express limited to 4 cores max)
+- **Network**: Broadband connection for faster image downloads
+
+### SQL Server Express Constraints
+- **Maximum Database Size**: 10GB per attached MDF file
+- **Memory Limit**: 1.4GB buffer pool (cannot be increased)
+- **CPU Utilization**: 1 socket or 4 cores maximum
+- **Concurrent Connections**: Practical limit of 5-10 users
+- **Query Parallelism**: Disabled (DOP = 1)
 
 ### Supported Platforms
 - ✅ **macOS** (Intel and Apple Silicon)
 - ✅ **Windows** (Windows 10/11 with WSL2)
 - ✅ **Linux** (Ubuntu, CentOS, RHEL, Debian)
+
+## Architecture Overview
+
+### MDF Tools Installation Architecture
+
+```mermaid
+graph TB
+    subgraph "Host System"
+        CLI[PyForge CLI]
+        USER[User]
+        CONFIG[~/.pyforge/mdf-config.json]
+    end
+    
+    subgraph "Docker Desktop"
+        DAEMON[Docker Daemon]
+        subgraph "SQL Server Container"
+            SQLSERVER[SQL Server Express 2019]
+            SQLCMD[sqlcmd Tools]
+            MASTER[master database]
+            ATTACHED[Attached MDF Database]
+        end
+        subgraph "Docker Volumes"
+            DATAVOL[pyforge-sql-data<br/>SQL Server Data]
+            MDFVOL[pyforge-mdf-files<br/>MDF Files Mount]
+        end
+    end
+    
+    USER -->|pyforge install mdf-tools| CLI
+    CLI -->|1. Check Docker| DAEMON
+    CLI -->|2. Pull Image| DAEMON
+    CLI -->|3. Create Container| SQLSERVER
+    CLI -->|4. Configure Volumes| DATAVOL
+    CLI -->|4. Configure Volumes| MDFVOL
+    CLI -->|5. Test Connection| SQLCMD
+    CLI -->|6. Save Config| CONFIG
+    
+    SQLSERVER -.->|Port 1433| CLI
+    DATAVOL -.->|Mount /var/opt/mssql| SQLSERVER
+    MDFVOL -.->|Mount /mdf-files| SQLSERVER
+    
+    classDef user fill:#e1f5fe
+    classDef cli fill:#f3e5f5
+    classDef docker fill:#e8f5e8
+    classDef sql fill:#fff3e0
+    classDef config fill:#fce4ec
+    
+    class USER user
+    class CLI cli
+    class DAEMON,DATAVOL,MDFVOL docker
+    class SQLSERVER,SQLCMD,MASTER,ATTACHED sql
+    class CONFIG config
+```
+
+### Installation Workflow Components
+
+**1. Host System Components:**
+- **PyForge CLI**: Main application orchestrating the installation
+- **Configuration File**: Persistent settings stored locally
+- **Docker Desktop**: Container runtime environment
+
+**2. Container Infrastructure:**
+- **SQL Server Express 2019**: Database engine for MDF processing
+- **Persistent Volumes**: Data survival across container restarts
+- **Network Mapping**: Port 1433 exposed to host system
+
+**3. Data Flow:**
+- **Installation**: CLI → Docker → SQL Server → Configuration
+- **MDF Processing**: MDF File → Volume Mount → SQL Server → Parquet Output
+- **Management**: CLI Commands → Docker API → Container Lifecycle
+
+### System Integration Points
+
+| Component | Purpose | Technology | Persistence |
+|-----------|---------|------------|-------------|
+| **Docker Desktop** | Container orchestration | Docker Engine | System service |
+| **SQL Server Container** | Database engine | SQL Server Express 2019 | Container lifecycle |
+| **Data Volume** | SQL Server system data | Docker volume | Persistent across restarts |
+| **MDF Volume** | User MDF files | Docker volume | Persistent across restarts |
+| **Configuration** | Connection settings | JSON file | Local filesystem |
+| **Network Bridge** | Host-container communication | Docker bridge | Dynamic port mapping |
+
+### MDF Processing Workflow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CLI as PyForge CLI
+    participant Docker as Docker Engine
+    participant SQL as SQL Server Express
+    participant Vol as MDF Volume
+    
+    User->>CLI: pyforge convert database.mdf
+    CLI->>Vol: Copy MDF file to volume
+    CLI->>SQL: ATTACH DATABASE command
+    Note over SQL: Validate MDF file structure
+    SQL-->>CLI: Database attached successfully
+    CLI->>SQL: Query table metadata
+    SQL-->>CLI: Return table schemas
+    CLI->>SQL: Execute data extraction queries
+    SQL-->>CLI: Return table data (chunked)
+    CLI->>CLI: Convert to Parquet format
+    CLI->>User: Output Parquet files + summary
+    CLI->>SQL: DETACH DATABASE command
+    Note over Vol: MDF file remains in volume
+```
+
+### Supported MDF File Types
+
+| SQL Server Version | MDF Compatibility | Processing Status |
+|-------------------|------------------|-------------------|
+| **SQL Server 2019** | ✅ Native | Optimal performance |
+| **SQL Server 2017** | ✅ Compatible | Full support |
+| **SQL Server 2016** | ✅ Compatible | Full support |
+| **SQL Server 2014** | ✅ Compatible | Full support |
+| **SQL Server 2012** | ✅ Compatible | Full support |
+| **SQL Server 2008/R2** | ⚠️ Limited | May require upgrade |
+| **SQL Server 2005** | ❌ Incompatible | Not supported |
+
+**Note**: MDF files from newer SQL Server versions (2022+) may not be compatible with SQL Server Express 2019.
 
 ## Installation Process
 
@@ -400,15 +533,72 @@ The installer creates two persistent Docker volumes:
 - **Purpose**: MDF files to be processed
 - **Access**: Shared between host and container
 
+## SQL Server Express 2019 Technical Details
+
+### Database Engine Specifications
+
+The MDF Tools Installer uses **Microsoft SQL Server Express 2019**, the free edition of SQL Server's enterprise database engine. This provides a robust, production-grade database environment for MDF file processing.
+
+**SQL Server Express 2019 Key Features:**
+- **Core Engine**: Same database engine as Enterprise edition
+- **T-SQL Support**: Full Transact-SQL language support
+- **Security**: Enterprise-grade security features
+- **Reliability**: ACID compliance and transaction support
+- **Performance**: Query optimizer and execution engine
+- **Backup/Restore**: Full backup and restore capabilities
+
+### Edition Limitations and Constraints
+
+**⚠️ Important Limitations to Consider:**
+
+| Limitation | SQL Server Express 2019 | Impact on MDF Processing |
+|------------|-------------------------|--------------------------|
+| **Database Size** | 10 GB per database maximum | Large MDF files (>10GB) cannot be processed |
+| **Memory (RAM)** | 1.4 GB buffer pool limit | Performance may be limited with large datasets |
+| **CPU Cores** | 1 socket or 4 cores maximum | Processing may be slower on high-core systems |
+| **Concurrent Users** | No enforced limit (practical ~5-10) | Multiple simultaneous conversions may impact performance |
+| **Parallelism** | Degree of Parallelism (DOP) = 1 | Queries cannot use parallel execution |
+
+**❌ Features Not Available:**
+- SQL Server Agent (automated jobs)
+- Advanced Services (Analysis Services, Reporting Services)
+- Advanced security features (Always Encrypted, Row-Level Security)
+- Advanced performance features (In-Memory OLTP, Columnstore)
+- Enterprise backup compression
+- Database mirroring and log shipping
+
+**✅ Features Available for MDF Processing:**
+- Full T-SQL query support
+- ATTACH DATABASE functionality
+- All standard data types
+- Backup and restore operations
+- Database schemas and relationships
+- Indexes and constraints
+
+### Performance Characteristics
+
+**Optimal MDF File Sizes:**
+- **Small MDF files**: < 1 GB (Excellent performance)
+- **Medium MDF files**: 1-5 GB (Good performance)
+- **Large MDF files**: 5-10 GB (Acceptable performance, may require chunking)
+- **Very Large MDF files**: > 10 GB (❌ Cannot be processed - requires SQL Server Standard/Enterprise)
+
+**Memory Usage Patterns:**
+- **Container Base**: ~500 MB (SQL Server Express)
+- **Available for Data**: ~900 MB (after system overhead)
+- **Recommended Host RAM**: 4 GB minimum (for container + host OS)
+
 ## Database Connection Details
 
 ### Connection Parameters
 - **Server**: `localhost`
 - **Port**: `1433` (default) or custom port
-- **Database**: `master` (default)
+- **Database**: `master` (default system database)
 - **Authentication**: SQL Server Authentication
 - **Username**: `sa` (system administrator)
 - **Password**: `PyForge@2024!` (default) or custom password
+- **Edition**: SQL Server Express 2019
+- **Version**: Microsoft SQL Server 2019 (RTM) - 15.0.4430.1
 
 ### Connection String Examples
 
@@ -436,6 +626,46 @@ sqlcmd -S localhost,1433 -U sa -P "PyForge@2024!" -Q "SELECT 1"
 docker exec pyforge-sql-server /opt/mssql-tools18/bin/sqlcmd \
   -S localhost -U sa -P "PyForge@2024!" -Q "SELECT 1" -C
 ```
+
+## Scaling Beyond SQL Server Express
+
+### When to Consider Upgrading
+
+**Upgrade to SQL Server Standard/Enterprise if you encounter:**
+- MDF files larger than 10 GB
+- Need for high-performance parallel processing
+- Requirements for SQL Server Agent automation
+- Advanced security features (Always Encrypted, etc.)
+- Multiple concurrent users (>10)
+- Enterprise backup and restore features
+
+### Alternative Solutions
+
+**For Large MDF Files (>10 GB):**
+1. **Split Processing**: Break large tables into chunks using date ranges or ID ranges
+2. **SQL Server Standard**: Upgrade to paid edition with higher limits
+3. **Cloud Solutions**: Use Azure SQL Database or SQL Managed Instance
+4. **Alternative Tools**: Consider specialized MDF extraction utilities
+
+**Migration Path Examples:**
+```bash
+# Option 1: Cloud-based processing
+# Upload MDF to Azure SQL Database
+# Process using cloud resources
+# Download results
+
+# Option 2: Chunked processing (when converter supports it)
+# pyforge convert large.mdf --chunk-size 1000000 --date-range "2020-2023"
+# pyforge convert large.mdf --chunk-size 1000000 --date-range "2019-2020"
+```
+
+### Cost Considerations
+
+| Edition | Cost | Database Size Limit | Memory Limit | Use Case |
+|---------|------|-------------------|--------------|----------|
+| **Express** | Free | 10 GB | 1.4 GB | Development, small applications |
+| **Standard** | ~$1,500+ | 524 PB | OS limit | Medium applications |
+| **Enterprise** | ~$5,000+ | 524 PB | OS limit | Large enterprise applications |
 
 ## Security Considerations
 
