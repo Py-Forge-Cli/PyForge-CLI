@@ -1,0 +1,34 @@
+# CODEOWNERS for PyForge CLI
+# This file defines who must review changes to specific parts of the codebase
+# @sdandey must approve all changes as the repository owner
+
+# Global owner - required reviewer for all changes
+* @sdandey
+
+# Source code requires owner approval
+/src/ @sdandey
+/tests/ @sdandey
+
+# Documentation can be reviewed by owner
+/docs/ @sdandey
+/README.md @sdandey
+
+# Critical configuration files require owner approval
+/pyproject.toml @sdandey
+/setup.py @sdandey
+/setup.cfg @sdandey
+/requirements.txt @sdandey
+/requirements-*.txt @sdandey
+/.github/ @sdandey
+/mkdocs.yml @sdandey
+/.gitignore @sdandey
+/LICENSE @sdandey
+
+# CI/CD configuration requires owner approval
+/.github/workflows/ @sdandey
+/.github/actions/ @sdandey
+
+# Package configuration
+/MANIFEST.in @sdandey
+/tox.ini @sdandey
+/.pre-commit-config.yaml @sdandey
