@@ -1,10 +1,10 @@
-# MDB/ACCDB Database Conversion
+# Database File Conversion
 
-Convert Microsoft Access database files (.mdb and .accdb) to efficient Parquet format with automatic table discovery and cross-platform support.
+Convert Microsoft Access (.mdb/.accdb) and SQL Server (.mdf) database files to efficient Parquet format with automatic table discovery and cross-platform support.
 
 ## Overview
 
-PyForge CLI provides comprehensive Microsoft Access database conversion with:
+PyForge CLI provides comprehensive database conversion for Access and SQL Server files with:
 
 - **Cross-platform support** (Windows, macOS, Linux)
 - **Automatic table discovery** and metadata extraction
@@ -20,6 +20,7 @@ PyForge CLI provides comprehensive Microsoft Access database conversion with:
 | **Access 2000-2003** | `.mdb` | Legacy Jet database format | ✅ Full |
 | **Access 2007+** | `.accdb` | Modern Access database format | ✅ Full |
 | **Access Runtime** | `.mdb/.accdb` | Runtime-only databases | ✅ Full |
+| **SQL Server Master** | `.mdf` | SQL Server database files | 🚧 In Development |
 
 ## Basic Usage
 
@@ -459,6 +460,66 @@ pyforge convert large.accdb --compression gzip
 5. **Validate Results**: Always verify record counts and data integrity
 6. **Optimize Settings**: Use appropriate chunk sizes for your system memory
 7. **Handle Passwords**: Be prepared to enter passwords for protected databases
+
+## SQL Server MDF Files
+
+### Prerequisites for MDF Processing
+
+Before processing SQL Server MDF files, you need to install the MDF Tools:
+
+```bash
+# Install Docker Desktop and SQL Server Express
+pyforge install mdf-tools
+
+# Verify installation
+pyforge mdf-tools status
+
+# Test SQL Server connectivity
+pyforge mdf-tools test
+```
+
+**System Requirements for MDF Processing:**
+- Docker Desktop installed and running
+- SQL Server Express container (automatically configured)
+- Minimum 4GB RAM available for SQL Server
+- Internet connection for initial setup
+
+### MDF Container Management
+
+```bash
+# Start SQL Server (if not running)
+pyforge mdf-tools start
+
+# Check status
+pyforge mdf-tools status
+
+# View SQL Server logs
+pyforge mdf-tools logs
+
+# Stop when finished
+pyforge mdf-tools stop
+```
+
+### MDF Conversion (Coming Soon)
+
+Once the MDF converter is implemented, you'll be able to process SQL Server database files:
+
+```bash
+# Convert MDF database (planned feature)
+# pyforge convert database.mdf --format parquet
+
+# With custom options (planned)
+# pyforge convert large.mdf --tables "Users,Orders" --exclude-system-tables
+```
+
+**MDF Processing Features (In Development):**
+- Automatic MDF file mounting in SQL Server Express
+- String-based data conversion (Phase 1 implementation)
+- Table filtering with `--exclude-system-tables` option
+- Chunk-based processing for large databases
+- Same 6-stage conversion process as MDB files
+
+For detailed MDF Tools documentation, see [MDF Tools Installer](mdf-tools-installer.md).
 
 ## Security Considerations
 

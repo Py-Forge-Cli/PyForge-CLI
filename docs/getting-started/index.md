@@ -34,6 +34,14 @@ Welcome to PyForge CLI! This section will help you get up and running quickly wi
 
     [:octicons-arrow-right-24: First Conversion](first-conversion.md)
 
+-   :material-tools: **Tools Prerequisites**
+
+    ---
+
+    Install required tools for specialized file formats
+
+    [:octicons-arrow-right-24: Tools Prerequisites](tools-prerequisites.md)
+
 </div>
 
 ## Learning Path
@@ -43,8 +51,9 @@ If you're new to PyForge CLI, we recommend following this learning path:
 1. **[Install](installation.md)** PyForge CLI on your system
 2. **[Quick Start](quick-start.md)** - Convert a sample file
 3. **[First Conversion](first-conversion.md)** - Understand the process
-4. **[Explore Converters](../converters/index.md)** - Learn about specific formats
-5. **[Try Tutorials](../tutorials/index.md)** - Real-world examples
+4. **[Tools Prerequisites](tools-prerequisites.md)** - Install tools for specialized formats (optional)
+5. **[Explore Converters](../converters/index.md)** - Learn about specific formats
+6. **[Try Tutorials](../tutorials/index.md)** - Real-world examples
 
 ## Prerequisites
 

@@ -115,14 +115,16 @@ nav:
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quick-start.md
     - First Conversion: getting-started/first-conversion.md
+    - Tools Prerequisites: getting-started/tools-prerequisites.md
   - Converters:
     - converters/index.md
     - PDF to Text: converters/pdf-to-text.md
     - Excel to Parquet: converters/excel-to-parquet.md
     - XML to Parquet: converters/xml-to-parquet.md
     - CSV to Parquet: converters/csv-to-parquet.md
-    - MDB/ACCDB Files: converters/database-files.md
+    - Database Files: converters/database-files.md
     - DBF Files: converters/dbf-files.md
+    - MDF Tools Installer: converters/mdf-tools-installer.md
   - Reference:
     - reference/index.md
     - CLI Commands: reference/cli-reference.md

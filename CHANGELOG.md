@@ -7,6 +7,184 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.0] - 2025-06-23
+
+### 🎉 Major Feature: MDF Tools Installer
+
+**Complete SQL Server MDF file processing infrastructure** - Automated Docker Desktop and SQL Server Express 2019 installation with container management for MDF file conversion preparation.
+
+### ✨ Added
+
+#### MDF Tools Installer
+- **Docker Desktop Installation**: Automated installation across platforms
+  - macOS: Homebrew Cask installation (`brew install --cask docker`)
+  - Windows: Winget installation (`winget install Docker.DockerDesktop`)
+  - Linux: Package manager installation (apt/yum)
+  - Installation verification and status checking
+  - Automatic Docker daemon startup
+
+- **SQL Server Express 2019 Container**: Production-ready database server
+  - Microsoft SQL Server Express 2019 (latest)
+  - Container name: `pyforge-sql-server`
+  - Default credentials: sa user with secure password generation
+  - Persistent data storage via Docker volumes
+  - Health checks and connection testing
+  - Memory limit: 2GB, optimized for development
+
+#### Interactive Setup Wizard
+- **Smart Installation Detection**: Checks existing Docker and SQL Server installations
+- **User-Guided Setup**: Interactive prompts for configuration options
+- **Non-Interactive Mode**: `--non-interactive` flag for automation
+- **Progress Tracking**: Real-time installation progress with Rich UI
+- **Error Recovery**: Robust error handling with user-friendly messages
+
+#### Container Management Commands
+- **Status Monitoring**: `pyforge mdf-tools status` - Complete system status
+- **Lifecycle Management**: 
+  - `pyforge mdf-tools start` - Start SQL Server container
+  - `pyforge mdf-tools stop` - Stop SQL Server container  
+  - `pyforge mdf-tools restart` - Restart SQL Server container
+- **Maintenance Operations**:
+  - `pyforge mdf-tools logs` - View SQL Server logs
+  - `pyforge mdf-tools test` - Test database connectivity
+  - `pyforge mdf-tools config` - Show configuration details
+  - `pyforge mdf-tools uninstall` - Complete removal of tools
+
+#### Cross-Platform Support
+- **Windows**: Native Docker Desktop with Winget
+- **macOS**: Docker Desktop via Homebrew
+- **Linux**: Docker CE via package managers
+- **Container Portability**: Consistent SQL Server across all platforms
+- **Platform Detection**: Automatic OS detection and appropriate installation
+
+### 🔧 Enhanced
+
+#### Installation Infrastructure
+- **System Package Managers**: Uses native OS package managers instead of pip
+- **Dependency Validation**: Comprehensive prerequisite checking
+- **Path Detection**: Automatic Docker and SQL Server path resolution
+- **Service Integration**: Proper system service management
+
+#### Configuration Management
+- **Configuration File**: JSON-based configuration storage
+- **Credential Management**: Secure password generation and storage
+- **Port Management**: Configurable SQL Server port (default: 1433)
+- **Volume Management**: Persistent data storage configuration
+
+#### Error Handling & Recovery
+- **Interactive Prompts**: Graceful handling of EOF errors in non-interactive environments
+- **Fallback Strategies**: Multiple installation methods per platform
+- **Detailed Logging**: Comprehensive error reporting and debugging
+- **User Guidance**: Clear next-step instructions on failures
+
+### 🔍 CLI Integration
+
+#### New Command Structure
+```bash
+# Installation command group
+pyforge install mdf-tools          # Interactive installer
+
+# Management command group  
+pyforge mdf-tools status           # System status
+pyforge mdf-tools start           # Start SQL Server
+pyforge mdf-tools stop            # Stop SQL Server
+pyforge mdf-tools restart         # Restart SQL Server
+pyforge mdf-tools logs            # View logs
+pyforge mdf-tools test            # Test connectivity
+pyforge mdf-tools config          # Show configuration
+pyforge mdf-tools uninstall       # Complete removal
+
+# Non-interactive mode
+pyforge install mdf-tools --non-interactive
+```
+
+#### Rich Terminal UI
+- **Status Tables**: Beautiful tabular status displays
+- **Progress Bars**: Real-time installation progress
+- **Color Coding**: Status indicators with color-coded output
+- **Structured Output**: Clean, professional terminal formatting
+
+### 🐛 Fixed
+
+#### Docker Installation Issues
+- **Fixed**: Attempted pip installation of Docker Desktop
+- **Solution**: Use system package managers (brew, winget, apt, yum)
+- **Impact**: Proper Docker Desktop installation across all platforms
+
+#### Interactive Prompt Handling
+- **Fixed**: EOFError when reading lines in non-interactive environments
+- **Solution**: Comprehensive try/catch with fallback to defaults
+- **Result**: Reliable operation in CI/CD and automated environments
+
+#### SQL Server Connection Testing
+- **Fixed**: Incorrect sqlcmd path in container
+- **Solution**: Use correct path `/opt/mssql-tools18/bin/sqlcmd`
+- **Result**: Successful database connectivity testing
+
+#### Container Resource Management
+- **Enhanced**: Memory limits and resource constraints
+- **Result**: Stable SQL Server operation in development environments
+
+### 📊 Technical Specifications
+
+#### SQL Server Express 2019 Limitations
+- **Database Size**: Maximum 10GB per database
+- **Memory Usage**: Maximum 1.4GB RAM utilization
+- **CPU Cores**: Maximum 4 cores utilization
+- **Compute Power**: Limited compared to full SQL Server editions
+- **Advanced Features**: Limited replication, analysis services, and reporting
+
+#### Container Configuration
+- **Base Image**: `mcr.microsoft.com/mssql/server:2019-latest`
+- **Memory Limit**: 2GB container limit
+- **Port Mapping**: 1433:1433 (configurable)
+- **Volume Mount**: Persistent data storage
+- **Environment**: Production-optimized settings
+
+#### System Requirements
+- **Docker Desktop**: 4.0+ with 2GB RAM allocation
+- **Available Memory**: Minimum 4GB system RAM (8GB recommended)
+- **Disk Space**: 2GB for SQL Server image + data storage
+- **Network**: Port 1433 available (configurable)
+
+### 📝 Documentation
+
+#### Comprehensive User Guides
+- **MDF Tools Installer Documentation**: Complete setup and usage guide
+- **Architecture Diagrams**: ASCII art diagrams showing system architecture
+- **Live Terminal Examples**: Real macOS terminal session outputs
+- **Troubleshooting Guide**: Common issues and solutions
+- **Tools Prerequisites**: New Getting Started section
+
+#### Developer Documentation
+- **Plugin Architecture**: Integration patterns for database tools
+- **Container Management**: Docker integration best practices
+- **Cross-Platform Development**: OS-specific implementation notes
+- **Testing Framework**: Automated and manual testing procedures
+
+### 🔮 MDF Converter Preparation
+
+This release prepares the foundation for the upcoming MDF Converter feature:
+
+- **Infrastructure Ready**: Docker and SQL Server environment established
+- **Connection Framework**: Database connectivity and testing implemented  
+- **Management Tools**: Complete lifecycle management for SQL Server
+- **Cross-Platform Base**: Consistent environment across all operating systems
+
+### 💡 Migration Notes
+
+#### For New Users
+- Run `pyforge install mdf-tools` for one-time setup
+- MDF conversion will be available in the next release
+- All existing format converters remain unchanged
+
+#### For Developers
+- New installer plugin system for complex tool chains
+- Container management patterns for database processing
+- Rich terminal UI components for interactive installations
+
+---
+
 ## [0.2.4] - 2025-06-21
 
 ### 🔧 Fixed

@@ -450,8 +450,202 @@ def get_file_info(file_path):
     return json.loads(result.stdout) if result.returncode == 0 else None
 ```
 
+## Installation Commands
+
+### `pyforge install`
+
+Install prerequisites for specific file format converters.
+
+```bash
+pyforge install <tool>
+```
+
+#### Available Tools
+
+##### `pyforge install mdf-tools`
+
+Install Docker Desktop and SQL Server Express for MDF file processing.
+
+```bash
+pyforge install mdf-tools [options]
+```
+
+**Options:**
+- `--password <password>`: Custom SQL Server password (default: PyForge@2024!)
+- `--port <port>`: Custom SQL Server port (default: 1433)
+- `--non-interactive`: Run in non-interactive mode for automation
+
+**Examples:**
+```bash
+# Default installation
+pyforge install mdf-tools
+
+# Custom password and port
+pyforge install mdf-tools --password "MySecure123!" --port 1433
+
+# Non-interactive mode (for scripts)
+pyforge install mdf-tools --non-interactive
+```
+
+## MDF Tools Management
+
+### `pyforge mdf-tools`
+
+Manage SQL Server Express container for MDF file processing.
+
+#### `pyforge mdf-tools status`
+
+Check Docker and SQL Server status.
+
+```bash
+pyforge mdf-tools status
+```
+
+**Sample Output:**
+```
+                      MDF Tools Status                       
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Component             ┃ Status ┃ Details                  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Docker Installed      │ ✓ OK   │ Docker command available │
+│ Docker Running        │ ✓ OK   │ Docker daemon responsive │
+│ SQL Container Exists  │ ✓ OK   │ Container created        │
+│ SQL Container Running │ ✓ OK   │ Container active         │
+│ SQL Server Responding │ ✓ OK   │ Database accessible      │
+│ Configuration File    │ ✓ OK   │ Settings saved           │
+└───────────────────────┴────────┴──────────────────────────┘
+
+✅ All systems operational - ready for MDF processing!
+```
+
+#### `pyforge mdf-tools start`
+
+Start the SQL Server Express container.
+
+```bash
+pyforge mdf-tools start
+```
+
+#### `pyforge mdf-tools stop`
+
+Stop the SQL Server Express container.
+
+```bash
+pyforge mdf-tools stop
+```
+
+#### `pyforge mdf-tools restart`
+
+Restart the SQL Server Express container.
+
+```bash
+pyforge mdf-tools restart
+```
+
+#### `pyforge mdf-tools logs`
+
+View SQL Server container logs.
+
+```bash
+pyforge mdf-tools logs [options]
+```
+
+**Options:**
+- `--lines N`, `-n N`: Number of log lines to show (default: 50)
+
+**Examples:**
+```bash
+# Show last 50 lines (default)
+pyforge mdf-tools logs
+
+# Show last 100 lines
+pyforge mdf-tools logs --lines 100
+
+# Show last 10 lines
+pyforge mdf-tools logs -n 10
+```
+
+#### `pyforge mdf-tools config`
+
+Display current MDF tools configuration.
+
+```bash
+pyforge mdf-tools config
+```
+
+#### `pyforge mdf-tools test`
+
+Test SQL Server connectivity and responsiveness.
+
+```bash
+pyforge mdf-tools test
+```
+
+**Sample Output:**
+```
+🔍 Testing SQL Server connection...
+✅ SQL Server connection successful!
+```
+
+#### `pyforge mdf-tools uninstall`
+
+Remove SQL Server container and clean up all data.
+
+```bash
+pyforge mdf-tools uninstall
+```
+
+**Warning:** This command permanently removes the SQL Server container, all data volumes, and configuration files.
+
+## MDF Tools Usage Examples
+
+### Complete MDF Processing Workflow
+
+```bash
+# Step 1: Install MDF processing tools (one-time setup)
+pyforge install mdf-tools
+
+# Step 2: Verify installation
+pyforge mdf-tools status
+
+# Step 3: Test connectivity
+pyforge mdf-tools test
+
+# Step 4: Convert MDF files (when converter is available)
+# pyforge convert database.mdf --format parquet
+
+# Container lifecycle management
+pyforge mdf-tools start      # Start SQL Server
+pyforge mdf-tools stop       # Stop SQL Server
+pyforge mdf-tools restart    # Restart SQL Server
+pyforge mdf-tools logs       # View logs
+pyforge mdf-tools config     # Show configuration
+pyforge mdf-tools uninstall  # Complete removal
+```
+
+### Automation and Scripting
+
+```bash
+# Non-interactive installation for CI/CD
+pyforge install mdf-tools --non-interactive
+
+# Check if ready for processing
+if pyforge mdf-tools status | grep -q "All systems operational"; then
+    echo "Ready for MDF processing"
+else
+    echo "MDF tools not ready"
+    exit 1
+fi
+
+# Automated container management
+pyforge mdf-tools start && \
+pyforge mdf-tools test && \
+echo "SQL Server is ready for MDF processing"
+```
+
 ## See Also
 
+- **[MDF Tools Installer](../converters/mdf-tools-installer.md)** - Complete MDF tools documentation
 - **[Options Matrix](options.md)** - All options organized by converter
 - **[Output Formats](output-formats.md)** - Output format specifications
 - **[Tutorials](../tutorials/index.md)** - Real-world usage examples

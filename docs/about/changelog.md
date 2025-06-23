@@ -5,6 +5,114 @@ All notable changes to PyForge CLI are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-06-23
+
+### 🚀 Major Feature: MDF Tools Installer
+
+**Complete SQL Server MDF file processing infrastructure** - Interactive Docker Desktop and SQL Server Express installation and management system for future MDF file conversion support.
+
+### ✨ Added
+
+#### MDF Tools Installer (`pyforge install mdf-tools`)
+- **Interactive Installation Wizard**: 5-stage automated setup process
+  - System requirements validation across Windows, macOS, and Linux
+  - Docker Desktop detection and automatic installation via Homebrew/Winget
+  - SQL Server Express 2019 container deployment with persistent storage
+  - Connection validation and configuration persistence
+  - Comprehensive error handling with platform-specific troubleshooting
+
+#### Container Management Commands (`pyforge mdf-tools`)
+- **Full Lifecycle Management**: 8 management commands for SQL Server container
+  - `status` - Comprehensive health check with visual status indicators
+  - `start/stop/restart` - Container lifecycle control with progress tracking
+  - `logs` - SQL Server log viewing with configurable line counts
+  - `config` - Configuration display and validation
+  - `test` - SQL Server connectivity testing
+  - `uninstall` - Complete cleanup with confirmation prompts
+
+#### SQL Server Express 2019 Integration
+- **Production-Grade Database Engine**: Containerized SQL Server Express setup
+  - Microsoft SQL Server Express 2019 (RTM) - 15.0.4430.1
+  - Persistent Docker volumes for data survival across restarts
+  - Default port 1433 with customizable port configuration
+  - Secure password management with complexity requirements
+  - Network isolation with localhost-only access
+
+#### Installation Architecture
+- **Docker Desktop Integration**: Automatic detection and installation
+  - Platform-specific package managers (Homebrew, Winget, apt/yum)
+  - Container orchestration with proper volume mounting
+  - Network bridge configuration for host-container communication
+- **Configuration Management**: Persistent settings storage
+  - `~/.pyforge/mdf-config.json` with connection parameters
+  - Version tracking and installation metadata
+  - Cross-platform compatibility settings
+
+### 📚 Documentation
+
+#### Comprehensive MDF Tools Documentation
+- **Complete Installation Guide**: Step-by-step setup with live terminal examples
+  - macOS installation scenarios (Docker installed vs. not installed)
+  - Windows and Linux platform-specific instructions
+  - Real terminal output examples for all installation stages
+- **Architecture Diagrams**: Visual system overview and workflow documentation
+  - ASCII art system architecture showing component relationships
+  - Installation flow diagrams with clear step-by-step processes
+  - MDF processing workflow for future converter implementation
+- **SQL Server Express Technical Details**: Comprehensive specification documentation
+  - Edition limitations (10GB database size, 1.4GB memory, 4-core CPU)
+  - Performance characteristics and optimal file size recommendations
+  - Version compatibility matrix (SQL Server 2008-2019)
+  - Scaling guidance and upgrade paths to Standard/Enterprise editions
+
+#### Enhanced CLI Documentation
+- **Updated CLI Reference**: Complete command documentation for all 9 MDF tools commands
+- **Troubleshooting Guide**: Platform-specific issue resolution
+  - Docker Desktop installation and startup issues
+  - SQL Server container lifecycle problems
+  - Network connectivity and port conflict resolution
+  - Performance optimization and resource management
+- **Getting Started Updates**: MDF tools integration throughout user documentation
+
+### 🔧 System Requirements
+
+#### Updated Minimum Requirements
+- **Memory**: 4GB RAM total (1.4GB for SQL Server + 2.6GB for host system)
+- **Storage**: 4GB free space (2GB for Docker images + 2GB for SQL Server data)
+- **Network**: Internet connection for downloading Docker images (~700MB)
+- **Docker**: Docker Desktop 4.0+ with container support
+
+#### SQL Server Express Constraints
+- **Database Size Limit**: 10GB per attached MDF file (hard limit)
+- **Memory Limitation**: 1.4GB buffer pool maximum (cannot be increased)
+- **CPU Utilization**: 1 socket or 4 cores maximum utilization
+- **Query Performance**: Degree of Parallelism (DOP) = 1 (no parallel execution)
+
+### 🛠️ Technical Implementation
+
+#### Container Infrastructure
+- **Docker Integration**: Official Microsoft SQL Server image with optimized configuration
+- **Volume Management**: Persistent storage for SQL Server data and MDF file processing
+  - `pyforge-sql-data` volume for SQL Server system databases
+  - `pyforge-mdf-files` volume for user MDF files with shared access
+- **Network Configuration**: Secure localhost-only access with configurable port mapping
+
+#### Error Handling and Recovery
+- **Interactive Prompt Handling**: EOFError recovery for non-interactive environments
+- **Platform Detection**: Operating system specific installation strategies
+- **Resource Validation**: Memory, disk space, and network connectivity checks
+- **Graceful Degradation**: Fallback options for failed automatic installations
+
+### 🔮 Future Features Prepared
+
+#### MDF Converter Foundation
+- **Infrastructure Ready**: All prerequisites installed for MDF to Parquet conversion
+- **Processing Architecture**: Database attachment, schema discovery, and data extraction workflow
+- **String-Based Output**: Consistent with existing Phase 1 converter implementations
+- **6-Stage Process**: Matching MDB converter workflow for familiar user experience
+
+---
+
 ## [0.2.5] - 2025-06-21
 
 ### 🔧 Fixed

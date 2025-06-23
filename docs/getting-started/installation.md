@@ -215,6 +215,20 @@ PDF support is included by default with PyMuPDF. No additional setup required.
 
 Excel support is included by default with openpyxl. No additional setup required.
 
+### For SQL Server MDF Files
+
+MDF file processing requires specialized tools that can be installed automatically:
+
+```bash
+# Install Docker Desktop and SQL Server Express
+pyforge install mdf-tools
+
+# Verify installation
+pyforge mdf-tools status
+```
+
+For detailed setup instructions, see [Tools Prerequisites](tools-prerequisites.md).
+
 ## Verification
 
 After installation, verify that PyForge CLI is working correctly:

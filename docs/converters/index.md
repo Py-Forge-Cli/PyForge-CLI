@@ -30,7 +30,7 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 
     ---
 
-    Convert Access databases (MDB/ACCDB) to Parquet
+    Convert Access (MDB/ACCDB) and SQL Server (MDF) databases to Parquet
 
     [:octicons-arrow-right-24: Learn More](database-files.md)
 
@@ -58,6 +58,14 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 
     [:octicons-arrow-right-24: Learn More](csv-to-parquet.md)
 
+-   :material-docker: **MDF Tools Installer**
+
+    ---
+
+    Setup Docker & SQL Server Express for MDF file processing
+
+    [:octicons-arrow-right-24: Learn More](mdf-tools-installer.md)
+
 </div>
 
 ## Format Compatibility Matrix
@@ -68,10 +76,12 @@ PyForge CLI supports conversion between multiple data formats. Each converter is
 | **Excel** | `.xlsx` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 | **XML** | `.xml`, `.xml.gz`, `.xml.bz2` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 | **Access** | `.mdb`, `.accdb` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS*, Linux* |
+| **SQL Server** | `.mdf` | Parquet (`.parquet`) | 🚧 In Development | Windows, macOS, Linux |
 | **DBF** | `.dbf` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 | **CSV** | `.csv`, `.tsv`, `.txt` | Parquet (`.parquet`) | ✅ Stable | Windows, macOS, Linux |
 
 *Requires mdbtools installation
+**Requires MDF Tools (Docker + SQL Server Express)
 
 ## Conversion Features
 
