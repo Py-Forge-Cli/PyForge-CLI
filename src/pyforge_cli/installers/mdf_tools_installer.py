@@ -570,11 +570,12 @@ class MdfToolsInstaller:
             
             # Test connection using sqlcmd inside container
             exec_result = container.exec_run([
-                "/opt/mssql-tools/bin/sqlcmd",
+                "/opt/mssql-tools18/bin/sqlcmd",
                 "-S", "localhost",
                 "-U", "sa", 
                 "-P", self.sql_password,
-                "-Q", "SELECT 1"
+                "-Q", "SELECT 1",
+                "-C"  # Trust server certificate
             ])
             
             return exec_result.exit_code == 0
