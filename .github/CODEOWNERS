@@ -1,6 +1,7 @@
 # CODEOWNERS for PyForge CLI
-# This file defines who must review changes to specific parts of the codebase
-# @sdandey must approve all changes as the repository owner
+# This file ensures @sdandey is notified of all pull requests
+# With branch protection set to 0 required reviews, @sdandey can self-merge
+# Other contributors will need @sdandey to merge their PRs
 
 # Global owner - required reviewer for all changes
 * @sdandey

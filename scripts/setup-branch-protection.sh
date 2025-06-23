@@ -35,10 +35,10 @@ cat << 'EOF' > branch-protection.json
   },
   "enforce_admins": false,
   "required_pull_request_reviews": {
-    "required_approving_review_count": 1,
+    "required_approving_review_count": 0,
     "dismiss_stale_reviews": true,
-    "require_code_owner_reviews": true,
-    "require_last_push_approval": true,
+    "require_code_owner_reviews": false,
+    "require_last_push_approval": false,
     "dismissal_restrictions": {},
     "bypass_pull_request_allowances": {
       "users": ["sdandey"],
@@ -73,9 +73,9 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "📊 Summary of protection rules:"
     echo "   - Pull requests required for all changes"
-    echo "   - 1 approval required"
-    echo "   - CODEOWNERS review required"
-    echo "   - Admins (sdandey) can bypass restrictions"
+    echo "   - No approval required for @sdandey (can self-merge)"
+    echo "   - Other contributors cannot merge their own PRs"
+    echo "   - Only @sdandey can push/merge to main"
     echo "   - Force pushes and deletions prevented"
     echo "   - Conversation resolution required"
 else
