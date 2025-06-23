@@ -1,0 +1,3557 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A powerful CLI tool for data format conversion and synthetic data generation">
+      
+      
+      
+        <link rel="canonical" href="https://py-forge-cli.github.io/PyForge-CLI/converters/mdf-tools-installer/">
+      
+      
+        <link rel="prev" href="../dbf-files/">
+      
+      
+        <link rel="next" href="../../reference/">
+      
+      
+      <link rel="icon" href="../../assets/icon_pyforge_forge.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>MDF Tools Installer - PyForge CLI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mdf-tools-installer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PyForge CLI Documentation" class="md-header__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
+      
+  <img src="../../assets/icon_512x512.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyForge CLI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MDF Tools Installer
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Py-Forge-Cli/PyForge-CLI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Py-Forge-Cli/PyForge-CLI
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PyForge CLI Documentation" class="md-nav__button md-logo" aria-label="PyForge CLI Documentation" data-md-component="logo">
+      
+  <img src="../../assets/icon_512x512.svg" alt="logo">
+
+    </a>
+    PyForge CLI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Py-Forge-Cli/PyForge-CLI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Py-Forge-Cli/PyForge-CLI
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/first-conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    First Conversion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/tools-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Prerequisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Converters
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Converters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pdf-to-text/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PDF to Text
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../excel-to-parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Excel to Parquet
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../xml-to-parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    XML to Parquet
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../csv-to-parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CSV to Parquet
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbf-files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DBF Files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    MDF Tools Installer
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDF Tools Installer
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Requirements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-express-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Express Constraints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Platforms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mdf-tools-installation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Tools Installation Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-workflow-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Workflow Components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Integration Points
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-processing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Processing Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-mdf-file-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported MDF File Types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-system-requirements-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 1: System Requirements Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-docker-installation-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 2: Docker Installation (if needed)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-docker-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 3: Docker Startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-4-sql-server-express-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 4: SQL Server Express Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-5-configuration-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 5: Configuration and Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macos-installation-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      macOS Installation Walkthrough
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="macOS Installation Walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-1-docker-already-installed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario 1: Docker Already Installed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-2-docker-not-installed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario 2: Docker NOT Installed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-install-mdf-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge install mdf-tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-management-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Container Management Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container Management Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools stop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-uninstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools uninstall
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File Location
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizable-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizable Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizable Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Port
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Volumes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Volumes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-sql-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge-sql-data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge-mdf-files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-server-express-2019-technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Express 2019 Technical Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Server Express 2019 Technical Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-engine-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Engine Specifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edition-limitations-and-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edition Limitations and Constraints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-connection-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Connection Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Connection Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-string-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection String Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection String Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-pyodbc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python (pyodbc)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-sqlcmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Line (sqlcmd)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-beyond-sql-server-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Beyond SQL Server Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Beyond SQL Server Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-consider-upgrading" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to Consider Upgrading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Solutions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Password Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Container Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-desktop-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Desktop Not Starting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-connection-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Connection Failed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port Already in Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insufficient-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Insufficient Memory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tutorials
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../api/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../about/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Requirements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-express-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Express Constraints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Platforms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mdf-tools-installation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Tools Installation Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-workflow-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Workflow Components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Integration Points
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-processing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Processing Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-mdf-file-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported MDF File Types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-system-requirements-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 1: System Requirements Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-docker-installation-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 2: Docker Installation (if needed)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-docker-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 3: Docker Startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-4-sql-server-express-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 4: SQL Server Express Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-5-configuration-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 5: Configuration and Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macos-installation-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      macOS Installation Walkthrough
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="macOS Installation Walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-1-docker-already-installed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario 1: Docker Already Installed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-2-docker-not-installed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario 2: Docker NOT Installed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-install-mdf-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge install mdf-tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-management-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Container Management Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container Management Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools start
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools stop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-tools-uninstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge mdf-tools uninstall
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File Location
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizable-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizable Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizable Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Password
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Port
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Volumes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Volumes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-sql-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge-sql-data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyforge-mdf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      pyforge-mdf-files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-server-express-2019-technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Express 2019 Technical Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Server Express 2019 Technical Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-engine-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Engine Specifications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edition-limitations-and-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edition Limitations and Constraints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-connection-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Connection Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Connection Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-string-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection String Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection String Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-pyodbc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python (pyodbc)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-sqlcmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Line (sqlcmd)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-beyond-sql-server-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Beyond SQL Server Express
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Beyond SQL Server Express">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-consider-upgrading" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to Consider Upgrading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Solutions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Password Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Container Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-desktop-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Desktop Not Starting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-connection-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server Connection Failed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port Already in Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insufficient-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Insufficient Memory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="mdf-tools-installer">MDF Tools Installer<a class="headerlink" href="#mdf-tools-installer" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The MDF Tools Installer provides an interactive setup wizard that automates the installation and configuration of prerequisites needed for processing SQL Server MDF (Master Database Files). This includes Docker Desktop installation, SQL Server Express container setup, and comprehensive container management tools.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>🐋 Docker Desktop Integration</strong>: Automatic detection and installation across platforms</li>
+<li><strong>🗄️ SQL Server Express Setup</strong>: Containerized SQL Server 2019 Express with persistent storage</li>
+<li><strong>⚙️ Interactive Configuration</strong>: Guided setup with customizable passwords and ports</li>
+<li><strong>📊 Real-time Status Monitoring</strong>: Comprehensive health checks for all components</li>
+<li><strong>🔧 Container Lifecycle Management</strong>: Complete control over SQL Server container</li>
+<li><strong>🔒 Secure Configuration</strong>: Encrypted password storage and configurable security settings</li>
+</ul>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install MDF processing tools</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check installation status</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>status
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Test SQL Server connectivity</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span><span class="nb">test</span>
+</span></code></pre></div>
+<h2 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="minimum-requirements">Minimum Requirements<a class="headerlink" href="#minimum-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Operating System</strong>: Windows 10+, macOS 10.15+, or Ubuntu 18.04+</li>
+<li><strong>Memory</strong>: 4GB RAM total (1.4GB for SQL Server + 2.6GB for host system)</li>
+<li><strong>Storage</strong>: 4GB free space (2GB for Docker images + 2GB for SQL Server data)</li>
+<li><strong>Network</strong>: Internet connection for downloading Docker images (~700MB)</li>
+<li><strong>Docker</strong>: Docker Desktop 4.0+ with container support</li>
+</ul>
+<h3 id="recommended-requirements">Recommended Requirements<a class="headerlink" href="#recommended-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Memory</strong>: 8GB RAM (for optimal performance with multiple databases)</li>
+<li><strong>Storage</strong>: 20GB free space (for multiple MDF files and conversions)</li>
+<li><strong>CPU</strong>: 4+ cores (though SQL Server Express limited to 4 cores max)</li>
+<li><strong>Network</strong>: Broadband connection for faster image downloads</li>
+</ul>
+<h3 id="sql-server-express-constraints">SQL Server Express Constraints<a class="headerlink" href="#sql-server-express-constraints" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Maximum Database Size</strong>: 10GB per attached MDF file</li>
+<li><strong>Memory Limit</strong>: 1.4GB buffer pool (cannot be increased)</li>
+<li><strong>CPU Utilization</strong>: 1 socket or 4 cores maximum</li>
+<li><strong>Concurrent Connections</strong>: Practical limit of 5-10 users</li>
+<li><strong>Query Parallelism</strong>: Disabled (DOP = 1)</li>
+</ul>
+<h3 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>macOS</strong> (Intel and Apple Silicon)</li>
+<li>✅ <strong>Windows</strong> (Windows 10/11 with WSL2)</li>
+<li>✅ <strong>Linux</strong> (Ubuntu, CentOS, RHEL, Debian)</li>
+</ul>
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<h3 id="mdf-tools-installation-architecture">MDF Tools Installation Architecture<a class="headerlink" href="#mdf-tools-installation-architecture" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                           HOST SYSTEM                               │
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├─────────────────────────────────────────────────────────────────────┤
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  👤 User                                                           │
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  │                                                                  │
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  └─► 🔧 PyForge CLI                                                │
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│      │                                                              │
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│      ├─► 📄 ~/.pyforge/mdf-config.json                            │
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│      │                                                              │
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│      └─► 🐳 Docker Desktop                                         │
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│          │                                                          │
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│          └─► 📦 SQL Server Container (pyforge-sql-server)          │
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│              ├─► 🗄️  SQL Server Express 2019                      │
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│              ├─► 🔧 sqlcmd Tools                                    │
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│              ├─► 💾 master database                                │
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│              ├─► 💾 Attached MDF Database                          │
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│              │                                                      │
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│              └─► 📁 Docker Volumes                                 │
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                  ├─► pyforge-sql-data (/var/opt/mssql)            │
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                  └─► pyforge-mdf-files (/mdf-files)               │
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>└─────────────────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<h3 id="installation-flow">Installation Flow<a class="headerlink" href="#installation-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Step-by-Step Installation Process:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. User Command
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   👤 User → pyforge install mdf-tools
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>2. System Check
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   🔧 PyForge CLI → Check OS compatibility
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   🔧 PyForge CLI → Detect Docker installation
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>3. Docker Setup
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   🔧 PyForge CLI → Start Docker Desktop
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   🔧 PyForge CLI → Pull SQL Server image (700MB)
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>4. Container Creation
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   🔧 PyForge CLI → Create pyforge-sql-server container
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>   🔧 PyForge CLI → Configure port mapping (1433)
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   🔧 PyForge CLI → Mount persistent volumes
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>5. SQL Server Configuration
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>   🔧 PyForge CLI → Start SQL Server Express
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>   🔧 PyForge CLI → Test connectivity with sqlcmd
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>   🔧 PyForge CLI → Verify database engine
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>6. Finalization
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>   🔧 PyForge CLI → Save configuration file
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>   🔧 PyForge CLI → Display connection details
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>   ✅ Installation Complete!
+</span></code></pre></div>
+<h3 id="installation-workflow-components">Installation Workflow Components<a class="headerlink" href="#installation-workflow-components" title="Permanent link">&para;</a></h3>
+<p><strong>1. Host System Components:</strong>
+- <strong>PyForge CLI</strong>: Main application orchestrating the installation
+- <strong>Configuration File</strong>: Persistent settings stored locally
+- <strong>Docker Desktop</strong>: Container runtime environment</p>
+<p><strong>2. Container Infrastructure:</strong>
+- <strong>SQL Server Express 2019</strong>: Database engine for MDF processing
+- <strong>Persistent Volumes</strong>: Data survival across container restarts
+- <strong>Network Mapping</strong>: Port 1433 exposed to host system</p>
+<p><strong>3. Data Flow:</strong>
+- <strong>Installation</strong>: CLI → Docker → SQL Server → Configuration
+- <strong>MDF Processing</strong>: MDF File → Volume Mount → SQL Server → Parquet Output
+- <strong>Management</strong>: CLI Commands → Docker API → Container Lifecycle</p>
+<h3 id="system-integration-points">System Integration Points<a class="headerlink" href="#system-integration-points" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Technology</th>
+<th>Persistence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Docker Desktop</strong></td>
+<td>Container orchestration</td>
+<td>Docker Engine</td>
+<td>System service</td>
+</tr>
+<tr>
+<td><strong>SQL Server Container</strong></td>
+<td>Database engine</td>
+<td>SQL Server Express 2019</td>
+<td>Container lifecycle</td>
+</tr>
+<tr>
+<td><strong>Data Volume</strong></td>
+<td>SQL Server system data</td>
+<td>Docker volume</td>
+<td>Persistent across restarts</td>
+</tr>
+<tr>
+<td><strong>MDF Volume</strong></td>
+<td>User MDF files</td>
+<td>Docker volume</td>
+<td>Persistent across restarts</td>
+</tr>
+<tr>
+<td><strong>Configuration</strong></td>
+<td>Connection settings</td>
+<td>JSON file</td>
+<td>Local filesystem</td>
+</tr>
+<tr>
+<td><strong>Network Bridge</strong></td>
+<td>Host-container communication</td>
+<td>Docker bridge</td>
+<td>Dynamic port mapping</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mdf-processing-workflow">MDF Processing Workflow<a class="headerlink" href="#mdf-processing-workflow" title="Permanent link">&para;</a></h3>
+<p><strong>How MDF Files Are Processed (Future Feature):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─────────────────────────────────────────────────────────────────────┐
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                     MDF TO PARQUET CONVERSION                       │
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>└─────────────────────────────────────────────────────────────────────┘
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Step 1: File Preparation
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   👤 User → pyforge convert database.mdf
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   📁 MDF File → Copy to /mdf-files volume
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Step 2: Database Attachment  
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   🔧 PyForge CLI → ATTACH DATABASE &#39;database.mdf&#39;
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   🗄️  SQL Server → Validate MDF structure
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   ✅ SQL Server → Database attached successfully
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Step 3: Schema Discovery
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   🔧 PyForge CLI → Query table metadata
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>   🗄️  SQL Server → Return table schemas &amp; row counts
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   📊 PyForge CLI → Display table overview
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>Step 4: Data Extraction
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>   🔧 PyForge CLI → Execute SELECT queries (chunked)
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>   🗄️  SQL Server → Return table data in batches
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>   📦 PyForge CLI → Convert to string format
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>Step 5: Parquet Generation
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>   📦 PyForge CLI → Generate .parquet files
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>   📊 PyForge CLI → Create Excel summary report
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>Step 6: Cleanup
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>   🔧 PyForge CLI → DETACH DATABASE
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>   📁 MDF File → Remains in volume (unchanged)
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>   ✅ Conversion Complete!
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>Output Structure:
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>   database_parquet/
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>   ├── Users.parquet
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>   ├── Orders.parquet  
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>   ├── Products.parquet
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>   └── conversion_summary.xlsx
+</span></code></pre></div>
+<h3 id="supported-mdf-file-types">Supported MDF File Types<a class="headerlink" href="#supported-mdf-file-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>SQL Server Version</th>
+<th>MDF Compatibility</th>
+<th>Processing Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SQL Server 2019</strong></td>
+<td>✅ Native</td>
+<td>Optimal performance</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2017</strong></td>
+<td>✅ Compatible</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2016</strong></td>
+<td>✅ Compatible</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2014</strong></td>
+<td>✅ Compatible</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2012</strong></td>
+<td>✅ Compatible</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2008/R2</strong></td>
+<td>⚠️ Limited</td>
+<td>May require upgrade</td>
+</tr>
+<tr>
+<td><strong>SQL Server 2005</strong></td>
+<td>❌ Incompatible</td>
+<td>Not supported</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: MDF files from newer SQL Server versions (2022+) may not be compatible with SQL Server Express 2019.</p>
+<h2 id="installation-process">Installation Process<a class="headerlink" href="#installation-process" title="Permanent link">&para;</a></h2>
+<p>The installer follows a structured 5-stage process:</p>
+<h3 id="stage-1-system-requirements-check">Stage 1: System Requirements Check<a class="headerlink" href="#stage-1-system-requirements-check" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Validates operating system compatibility</li>
+<li>Checks Docker Desktop installation status</li>
+<li>Verifies Docker SDK for Python availability</li>
+</ul>
+<h3 id="stage-2-docker-installation-if-needed">Stage 2: Docker Installation (if needed)<a class="headerlink" href="#stage-2-docker-installation-if-needed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>macOS</strong>: Automatic installation via Homebrew</li>
+<li><strong>Windows</strong>: Automatic installation via Winget</li>
+<li><strong>Linux</strong>: Package manager instructions (apt/yum)</li>
+<li><strong>Manual</strong>: Step-by-step installation guides</li>
+</ul>
+<h3 id="stage-3-docker-startup">Stage 3: Docker Startup<a class="headerlink" href="#stage-3-docker-startup" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Connects to Docker daemon</li>
+<li>Waits for Docker Desktop to be fully operational</li>
+<li>Validates Docker API accessibility</li>
+</ul>
+<h3 id="stage-4-sql-server-express-setup">Stage 4: SQL Server Express Setup<a class="headerlink" href="#stage-4-sql-server-express-setup" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Downloads Microsoft SQL Server 2019 Express image</li>
+<li>Creates and configures container with:</li>
+<li>Persistent data volume (<code>pyforge-sql-data</code>)</li>
+<li>MDF files mount point (<code>pyforge-mdf-files</code>)</li>
+<li>Default port mapping (1433)</li>
+<li>Secure password configuration</li>
+</ul>
+<h3 id="stage-5-configuration-and-validation">Stage 5: Configuration and Validation<a class="headerlink" href="#stage-5-configuration-and-validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Saves configuration to <code>~/.pyforge/mdf-config.json</code></li>
+<li>Tests SQL Server connectivity using sqlcmd</li>
+<li>Displays connection details and next steps</li>
+</ul>
+<h2 id="macos-installation-walkthrough">macOS Installation Walkthrough<a class="headerlink" href="#macos-installation-walkthrough" title="Permanent link">&para;</a></h2>
+<h3 id="scenario-1-docker-already-installed">Scenario 1: Docker Already Installed<a class="headerlink" href="#scenario-1-docker-already-installed" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$<span class="w"> </span>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>╭──────────────────────────────────────────────────────────────────────────╮
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│ PyForge MDF Tools Setup Wizard                                           │
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│ Setting up Docker Desktop and SQL Server Express for MDF file processing │
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>╰──────────────────────────────────────────────────────────────────────────╯
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>[1/5] Checking system requirements...
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>✓ Operating System: macOS 14.5.0 (supported)
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>✓ Docker Desktop: Installed
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>✓ Docker SDK for Python: Available
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>[3/5] Starting Docker Desktop...
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>✓ Docker Desktop is running
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>[4/5] Setting up SQL Server Express...
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>📥 Pulling SQL Server image: mcr.microsoft.com/mssql/server:2019-latest
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>⠴ ✓ SQL Server image downloaded
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>🚀 Creating SQL Server container...
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>⏳ Waiting for SQL Server to start (this may take a minute)...
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>✓ SQL Server is ready
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>[5/5] Installation Complete!
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>              SQL Server Connection Details              
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>┃ Property    ┃ Value                                   ┃
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│ Host        │ localhost                               │
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>│ Port        │ 1433                                    │
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>│ Username    │ sa                                      │
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>│ Password    │ PyForge@2024!                           │
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>│ Container   │ pyforge-sql-server                      │
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>│ Config File │ /Users/username/.pyforge/mdf-config.json│
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>└─────────────┴─────────────────────────────────────────┘
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>🎉 Setup completed successfully!
+</span></code></pre></div>
+<h3 id="scenario-2-docker-not-installed">Scenario 2: Docker NOT Installed<a class="headerlink" href="#scenario-2-docker-not-installed" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>$<span class="w"> </span>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>╭──────────────────────────────────────────────────────────────────────────╮
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│ PyForge MDF Tools Setup Wizard                                           │
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│ Setting up Docker Desktop and SQL Server Express for MDF file processing │
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>╰──────────────────────────────────────────────────────────────────────────╯
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>[1/5] Checking system requirements...
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>✓ Operating System: macOS 14.5.0 (supported)
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>❌ Docker Desktop: Not found
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>[2/5] Docker Installation Required
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Docker Desktop is required for MDF file conversion.
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Would you like to:
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  1. Install automatically using Homebrew (recommended)
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  2. Get installation instructions
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  3. Skip (I&#39;ll install manually)
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  4. Continue without Docker (installation will fail)
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>Choice [1]: 1
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>📦 Installing Docker Desktop (this may take several minutes)...
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>✅ Docker Desktop installed successfully!
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>🚀 Launching Docker Desktop...
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>⏳ Waiting for Docker Desktop to start...
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>✅ Docker Desktop is running!
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>[4/5] Setting up SQL Server Express...
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>📥 Pulling SQL Server image: mcr.microsoft.com/mssql/server:2019-latest
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>⠴ ✓ SQL Server image downloaded
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>🚀 Creating SQL Server container...
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>⏳ Waiting for SQL Server to start (this may take a minute)...
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>✓ SQL Server is ready
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>[5/5] Installation Complete!
+</span></code></pre></div>
+<h2 id="command-reference">Command Reference<a class="headerlink" href="#command-reference" title="Permanent link">&para;</a></h2>
+<h3 id="installation-commands">Installation Commands<a class="headerlink" href="#installation-commands" title="Permanent link">&para;</a></h3>
+<h4 id="pyforge-install-mdf-tools"><code>pyforge install mdf-tools</code><a class="headerlink" href="#pyforge-install-mdf-tools" title="Permanent link">&para;</a></h4>
+<p>Interactive installation wizard for MDF processing tools.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</span></code></pre></div></p>
+<p><strong>Options:</strong>
+- <code>--password PASSWORD</code>: Custom SQL Server password (default: PyForge@2024!)
+- <code>--port PORT</code>: Custom SQL Server port (default: 1433)
+- <code>--non-interactive</code>: Run in non-interactive mode for automation</p>
+<p><strong>Examples:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Default installation</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Custom password and port</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools<span class="w"> </span>--password<span class="w"> </span><span class="s2">&quot;MySecure123!&quot;</span><span class="w"> </span>--port<span class="w"> </span><span class="m">1433</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Non-interactive mode (for scripts)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools<span class="w"> </span>--non-interactive
+</span></code></pre></div></p>
+<h3 id="container-management-commands">Container Management Commands<a class="headerlink" href="#container-management-commands" title="Permanent link">&para;</a></h3>
+<h4 id="pyforge-mdf-tools-status"><code>pyforge mdf-tools status</code><a class="headerlink" href="#pyforge-mdf-tools-status" title="Permanent link">&para;</a></h4>
+<p>Displays comprehensive status of all MDF tools components.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>status
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>                      MDF Tools Status                       
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>┃ Component             ┃ Status ┃ Details                  ┃
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>│ Docker Installed      │ ✓ OK   │ Docker command available │
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>│ Docker Running        │ ✓ OK   │ Docker daemon responsive │
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>│ SQL Container Exists  │ ✓ OK   │ Container created        │
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>│ SQL Container Running │ ✓ OK   │ Container active         │
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>│ SQL Server Responding │ ✓ OK   │ Database accessible      │
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>│ Configuration File    │ ✓ OK   │ Settings saved           │
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>└───────────────────────┴────────┴──────────────────────────┘
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>✅ All systems operational - ready for MDF processing!
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-start"><code>pyforge mdf-tools start</code><a class="headerlink" href="#pyforge-mdf-tools-start" title="Permanent link">&para;</a></h4>
+<p>Starts the SQL Server Express container.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>start
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>🚀 Starting SQL Server container...
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>⏳ Waiting for SQL Server to start (this may take a minute)...
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>✓ SQL Server is ready
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-stop"><code>pyforge mdf-tools stop</code><a class="headerlink" href="#pyforge-mdf-tools-stop" title="Permanent link">&para;</a></h4>
+<p>Stops the SQL Server Express container.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>stop
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>🛑 Stopping SQL Server container...
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>✓ SQL Server container stopped
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-restart"><code>pyforge mdf-tools restart</code><a class="headerlink" href="#pyforge-mdf-tools-restart" title="Permanent link">&para;</a></h4>
+<p>Restarts the SQL Server Express container.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>restart
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>🛑 Stopping SQL Server container...
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>✓ SQL Server container stopped
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>🚀 Starting SQL Server container...
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>⏳ Waiting for SQL Server to start (this may take a minute)...
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>✓ SQL Server is ready
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-logs"><code>pyforge mdf-tools logs</code><a class="headerlink" href="#pyforge-mdf-tools-logs" title="Permanent link">&para;</a></h4>
+<p>Displays SQL Server container logs.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>logs<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</span></code></pre></div></p>
+<p><strong>Options:</strong>
+- <code>--lines N</code>, <code>-n N</code>: Number of log lines to show (default: 50)</p>
+<p><strong>Examples:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Show last 50 lines (default)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>logs
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Show last 100 lines</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>logs<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Show last 10 lines</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-config"><code>pyforge mdf-tools config</code><a class="headerlink" href="#pyforge-mdf-tools-config" title="Permanent link">&para;</a></h4>
+<p>Displays current MDF tools configuration.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>config
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Configuration file: /Users/username/.pyforge/mdf-config.json
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>{
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>  &quot;sql_server&quot;: {
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    &quot;container_name&quot;: &quot;pyforge-sql-server&quot;,
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    &quot;image&quot;: &quot;mcr.microsoft.com/mssql/server:2019-latest&quot;,
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    &quot;host&quot;: &quot;localhost&quot;,
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    &quot;port&quot;: 1433,
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    &quot;username&quot;: &quot;sa&quot;,
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    &quot;password&quot;: &quot;PyForge@2024!&quot;,
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    &quot;data_volume&quot;: &quot;pyforge-sql-data&quot;,
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    &quot;mdf_volume&quot;: &quot;pyforge-mdf-files&quot;
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>  },
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  &quot;docker&quot;: {
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>    &quot;installed_version&quot;: &quot;Docker version 20.10.17&quot;,
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    &quot;installation_date&quot;: &quot;2024-01-15T10:30:00Z&quot;
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>  },
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>  &quot;installer_version&quot;: &quot;1.0.0&quot;
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>}
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-test"><code>pyforge mdf-tools test</code><a class="headerlink" href="#pyforge-mdf-tools-test" title="Permanent link">&para;</a></h4>
+<p>Tests SQL Server connectivity and responsiveness.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span><span class="nb">test</span>
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>🔍 Testing SQL Server connection...
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>✅ SQL Server connection successful!
+</span></code></pre></div></p>
+<h4 id="pyforge-mdf-tools-uninstall"><code>pyforge mdf-tools uninstall</code><a class="headerlink" href="#pyforge-mdf-tools-uninstall" title="Permanent link">&para;</a></h4>
+<p>Removes SQL Server container and cleans up all data.</p>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>uninstall
+</span></code></pre></div></p>
+<p><strong>Sample Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Are you sure you want to remove SQL Server and all data? [y/n]: y
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>🛑 Stopping and removing container...
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>✓ Container removed
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>✓ Data volume removed
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>✓ MDF files volume removed
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>✓ Configuration file removed
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>✅ Uninstall completed successfully
+</span></code></pre></div></p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="configuration-file-location">Configuration File Location<a class="headerlink" href="#configuration-file-location" title="Permanent link">&para;</a></h3>
+<p>The installer saves configuration to <code>~/.pyforge/mdf-config.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;sql_server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">    </span><span class="nt">&quot;container_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pyforge-sql-server&quot;</span><span class="p">,</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mcr.microsoft.com/mssql/server:2019-latest&quot;</span><span class="p">,</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1433</span><span class="p">,</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sa&quot;</span><span class="p">,</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PyForge@2024!&quot;</span><span class="p">,</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">    </span><span class="nt">&quot;data_volume&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pyforge-sql-data&quot;</span><span class="p">,</span>
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="w">    </span><span class="nt">&quot;mdf_volume&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pyforge-mdf-files&quot;</span>
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">  </span><span class="nt">&quot;docker&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-26-13"><a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="w">    </span><span class="nt">&quot;installed_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker version 20.10.17&quot;</span><span class="p">,</span>
+</span><span id="__span-26-14"><a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="w">    </span><span class="nt">&quot;installation_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15T10:30:00Z&quot;</span>
+</span><span id="__span-26-15"><a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-26-16"><a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="w">  </span><span class="nt">&quot;installer_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+</span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="customizable-settings">Customizable Settings<a class="headerlink" href="#customizable-settings" title="Permanent link">&para;</a></h3>
+<h4 id="custom-password">Custom Password<a class="headerlink" href="#custom-password" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools<span class="w"> </span>--password<span class="w"> </span><span class="s2">&quot;YourSecurePassword123!&quot;</span>
+</span></code></pre></div>
+<h4 id="custom-port">Custom Port<a class="headerlink" href="#custom-port" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools<span class="w"> </span>--port<span class="w"> </span><span class="m">1434</span>
+</span></code></pre></div>
+<h3 id="docker-volumes">Docker Volumes<a class="headerlink" href="#docker-volumes" title="Permanent link">&para;</a></h3>
+<p>The installer creates two persistent Docker volumes:</p>
+<h4 id="pyforge-sql-data"><code>pyforge-sql-data</code><a class="headerlink" href="#pyforge-sql-data" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Mount Point</strong>: <code>/var/opt/mssql</code></li>
+<li><strong>Purpose</strong>: SQL Server system databases and data files</li>
+<li><strong>Persistence</strong>: Survives container restarts and recreations</li>
+</ul>
+<h4 id="pyforge-mdf-files"><code>pyforge-mdf-files</code><a class="headerlink" href="#pyforge-mdf-files" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Mount Point</strong>: <code>/mdf-files</code></li>
+<li><strong>Purpose</strong>: MDF files to be processed</li>
+<li><strong>Access</strong>: Shared between host and container</li>
+</ul>
+<h2 id="sql-server-express-2019-technical-details">SQL Server Express 2019 Technical Details<a class="headerlink" href="#sql-server-express-2019-technical-details" title="Permanent link">&para;</a></h2>
+<h3 id="database-engine-specifications">Database Engine Specifications<a class="headerlink" href="#database-engine-specifications" title="Permanent link">&para;</a></h3>
+<p>The MDF Tools Installer uses <strong>Microsoft SQL Server Express 2019</strong>, the free edition of SQL Server's enterprise database engine. This provides a robust, production-grade database environment for MDF file processing.</p>
+<p><strong>SQL Server Express 2019 Key Features:</strong>
+- <strong>Core Engine</strong>: Same database engine as Enterprise edition
+- <strong>T-SQL Support</strong>: Full Transact-SQL language support
+- <strong>Security</strong>: Enterprise-grade security features
+- <strong>Reliability</strong>: ACID compliance and transaction support
+- <strong>Performance</strong>: Query optimizer and execution engine
+- <strong>Backup/Restore</strong>: Full backup and restore capabilities</p>
+<h3 id="edition-limitations-and-constraints">Edition Limitations and Constraints<a class="headerlink" href="#edition-limitations-and-constraints" title="Permanent link">&para;</a></h3>
+<p><strong>⚠️ Important Limitations to Consider:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>SQL Server Express 2019</th>
+<th>Impact on MDF Processing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Database Size</strong></td>
+<td>10 GB per database maximum</td>
+<td>Large MDF files (&gt;10GB) cannot be processed</td>
+</tr>
+<tr>
+<td><strong>Memory (RAM)</strong></td>
+<td>1.4 GB buffer pool limit</td>
+<td>Performance may be limited with large datasets</td>
+</tr>
+<tr>
+<td><strong>CPU Cores</strong></td>
+<td>1 socket or 4 cores maximum</td>
+<td>Processing may be slower on high-core systems</td>
+</tr>
+<tr>
+<td><strong>Concurrent Users</strong></td>
+<td>No enforced limit (practical ~5-10)</td>
+<td>Multiple simultaneous conversions may impact performance</td>
+</tr>
+<tr>
+<td><strong>Parallelism</strong></td>
+<td>Degree of Parallelism (DOP) = 1</td>
+<td>Queries cannot use parallel execution</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Features Not Available:</strong>
+- SQL Server Agent (automated jobs)
+- Advanced Services (Analysis Services, Reporting Services)
+- Advanced security features (Always Encrypted, Row-Level Security)
+- Advanced performance features (In-Memory OLTP, Columnstore)
+- Enterprise backup compression
+- Database mirroring and log shipping</p>
+<p><strong>✅ Features Available for MDF Processing:</strong>
+- Full T-SQL query support
+- ATTACH DATABASE functionality
+- All standard data types
+- Backup and restore operations
+- Database schemas and relationships
+- Indexes and constraints</p>
+<h3 id="performance-characteristics">Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permanent link">&para;</a></h3>
+<p><strong>Optimal MDF File Sizes:</strong>
+- <strong>Small MDF files</strong>: &lt; 1 GB (Excellent performance)
+- <strong>Medium MDF files</strong>: 1-5 GB (Good performance)
+- <strong>Large MDF files</strong>: 5-10 GB (Acceptable performance, may require chunking)
+- <strong>Very Large MDF files</strong>: &gt; 10 GB (❌ Cannot be processed - requires SQL Server Standard/Enterprise)</p>
+<p><strong>Memory Usage Patterns:</strong>
+- <strong>Container Base</strong>: ~500 MB (SQL Server Express)
+- <strong>Available for Data</strong>: ~900 MB (after system overhead)
+- <strong>Recommended Host RAM</strong>: 4 GB minimum (for container + host OS)</p>
+<h2 id="database-connection-details">Database Connection Details<a class="headerlink" href="#database-connection-details" title="Permanent link">&para;</a></h2>
+<h3 id="connection-parameters">Connection Parameters<a class="headerlink" href="#connection-parameters" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Server</strong>: <code>localhost</code></li>
+<li><strong>Port</strong>: <code>1433</code> (default) or custom port</li>
+<li><strong>Database</strong>: <code>master</code> (default system database)</li>
+<li><strong>Authentication</strong>: SQL Server Authentication</li>
+<li><strong>Username</strong>: <code>sa</code> (system administrator)</li>
+<li><strong>Password</strong>: <code>PyForge@2024!</code> (default) or custom password</li>
+<li><strong>Edition</strong>: SQL Server Express 2019</li>
+<li><strong>Version</strong>: Microsoft SQL Server 2019 (RTM) - 15.0.4430.1</li>
+</ul>
+<h3 id="connection-string-examples">Connection String Examples<a class="headerlink" href="#connection-string-examples" title="Permanent link">&para;</a></h3>
+<h4 id="python-pyodbc">Python (pyodbc)<a class="headerlink" href="#python-pyodbc" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyodbc</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="n">connection_string</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    <span class="s2">&quot;DRIVER={ODBC Driver 17 for SQL Server};&quot;</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>    <span class="s2">&quot;SERVER=localhost,1433;&quot;</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>    <span class="s2">&quot;DATABASE=master;&quot;</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>    <span class="s2">&quot;UID=sa;&quot;</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>    <span class="s2">&quot;PWD=PyForge@2024!&quot;</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="p">)</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_string</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="command-line-sqlcmd">Command Line (sqlcmd)<a class="headerlink" href="#command-line-sqlcmd" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># From host (requires SQL Server tools)</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>sqlcmd<span class="w"> </span>-S<span class="w"> </span>localhost,1433<span class="w"> </span>-U<span class="w"> </span>sa<span class="w"> </span>-P<span class="w"> </span><span class="s2">&quot;PyForge@2024!&quot;</span><span class="w"> </span>-Q<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># From container</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>pyforge-sql-server<span class="w"> </span>/opt/mssql-tools18/bin/sqlcmd<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">  </span>-S<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>sa<span class="w"> </span>-P<span class="w"> </span><span class="s2">&quot;PyForge@2024!&quot;</span><span class="w"> </span>-Q<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span><span class="w"> </span>-C
+</span></code></pre></div>
+<h2 id="scaling-beyond-sql-server-express">Scaling Beyond SQL Server Express<a class="headerlink" href="#scaling-beyond-sql-server-express" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-consider-upgrading">When to Consider Upgrading<a class="headerlink" href="#when-to-consider-upgrading" title="Permanent link">&para;</a></h3>
+<p><strong>Upgrade to SQL Server Standard/Enterprise if you encounter:</strong>
+- MDF files larger than 10 GB
+- Need for high-performance parallel processing
+- Requirements for SQL Server Agent automation
+- Advanced security features (Always Encrypted, etc.)
+- Multiple concurrent users (&gt;10)
+- Enterprise backup and restore features</p>
+<h3 id="alternative-solutions">Alternative Solutions<a class="headerlink" href="#alternative-solutions" title="Permanent link">&para;</a></h3>
+<p><strong>For Large MDF Files (&gt;10 GB):</strong>
+1. <strong>Split Processing</strong>: Break large tables into chunks using date ranges or ID ranges
+2. <strong>SQL Server Standard</strong>: Upgrade to paid edition with higher limits
+3. <strong>Cloud Solutions</strong>: Use Azure SQL Database or SQL Managed Instance
+4. <strong>Alternative Tools</strong>: Consider specialized MDF extraction utilities</p>
+<p><strong>Migration Path Examples:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Option 1: Cloud-based processing</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># Upload MDF to Azure SQL Database</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="c1"># Process using cloud resources</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Download results</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="c1"># Option 2: Chunked processing (when converter supports it)</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="c1"># pyforge convert large.mdf --chunk-size 1000000 --date-range &quot;2020-2023&quot;</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="c1"># pyforge convert large.mdf --chunk-size 1000000 --date-range &quot;2019-2020&quot;</span>
+</span></code></pre></div></p>
+<h3 id="cost-considerations">Cost Considerations<a class="headerlink" href="#cost-considerations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Edition</th>
+<th>Cost</th>
+<th>Database Size Limit</th>
+<th>Memory Limit</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Express</strong></td>
+<td>Free</td>
+<td>10 GB</td>
+<td>1.4 GB</td>
+<td>Development, small applications</td>
+</tr>
+<tr>
+<td><strong>Standard</strong></td>
+<td>~$1,500+</td>
+<td>524 PB</td>
+<td>OS limit</td>
+<td>Medium applications</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>~$5,000+</td>
+<td>524 PB</td>
+<td>OS limit</td>
+<td>Large enterprise applications</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="password-security">Password Security<a class="headerlink" href="#password-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Default password meets SQL Server complexity requirements</li>
+<li>Custom passwords should be strong (8+ characters, mixed case, numbers, symbols)</li>
+<li>Passwords are stored in local configuration file (not transmitted)</li>
+</ul>
+<h3 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li>SQL Server only accessible on localhost by default</li>
+<li>Container isolated in Docker bridge network</li>
+<li>No external network exposure unless explicitly configured</li>
+</ul>
+<h3 id="container-security">Container Security<a class="headerlink" href="#container-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Runs SQL Server Express (free edition with limitations)</li>
+<li>Container uses official Microsoft SQL Server image</li>
+<li>Automatic security updates through image updates</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<h4 id="docker-desktop-not-starting">Docker Desktop Not Starting<a class="headerlink" href="#docker-desktop-not-starting" title="Permanent link">&para;</a></h4>
+<p><strong>Symptoms</strong>: "Docker daemon is not responding"
+<strong>Solutions</strong>:
+1. Manually launch Docker Desktop application
+2. Restart Docker Desktop
+3. Check system resources (memory, disk space)
+4. Restart computer if needed</p>
+<h4 id="sql-server-connection-failed">SQL Server Connection Failed<a class="headerlink" href="#sql-server-connection-failed" title="Permanent link">&para;</a></h4>
+<p><strong>Symptoms</strong>: "SQL Server connection failed"
+<strong>Solutions</strong>:
+1. Check container status: <code>pyforge mdf-tools status</code>
+2. View container logs: <code>pyforge mdf-tools logs</code>
+3. Restart container: <code>pyforge mdf-tools restart</code>
+4. Verify password in config: <code>pyforge mdf-tools config</code></p>
+<h4 id="port-already-in-use">Port Already in Use<a class="headerlink" href="#port-already-in-use" title="Permanent link">&para;</a></h4>
+<p><strong>Symptoms</strong>: "Port 1433 is already allocated"
+<strong>Solutions</strong>:
+1. Stop other SQL Server instances
+2. Use custom port: <code>pyforge install mdf-tools --port 1434</code>
+3. Check for conflicting containers: <code>docker ps</code></p>
+<h4 id="insufficient-memory">Insufficient Memory<a class="headerlink" href="#insufficient-memory" title="Permanent link">&para;</a></h4>
+<p><strong>Symptoms</strong>: Container exits with memory errors
+<strong>Solutions</strong>:
+1. Increase Docker memory allocation (4GB minimum)
+2. Close other applications to free memory
+3. Check available system resources</p>
+<h3 id="debug-commands">Debug Commands<a class="headerlink" href="#debug-commands" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Check Docker status</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>docker<span class="w"> </span>info
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># List all containers</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>docker<span class="w"> </span>ps<span class="w"> </span>-a
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Check container logs</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>docker<span class="w"> </span>logs<span class="w"> </span>pyforge-sql-server
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="c1"># Inspect container configuration</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>docker<span class="w"> </span>inspect<span class="w"> </span>pyforge-sql-server
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>
+</span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="c1"># Check Docker volumes</span>
+</span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>docker<span class="w"> </span>volume<span class="w"> </span>ls
+</span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>
+</span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="c1"># Test SQL Server directly</span>
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>pyforge-sql-server<span class="w"> </span>/opt/mssql-tools18/bin/sqlcmd<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a><span class="w">  </span>-S<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>sa<span class="w"> </span>-P<span class="w"> </span><span class="s2">&quot;PyForge@2024!&quot;</span><span class="w"> </span>-Q<span class="w"> </span><span class="s2">&quot;SELECT @@VERSION&quot;</span><span class="w"> </span>-C
+</span></code></pre></div>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<p>If you encounter issues not covered in this guide:</p>
+<ol>
+<li><strong>Check Status</strong>: Run <code>pyforge mdf-tools status</code> for diagnostic information</li>
+<li><strong>View Logs</strong>: Use <code>pyforge mdf-tools logs</code> to see SQL Server startup messages</li>
+<li><strong>Restart Services</strong>: Try <code>pyforge mdf-tools restart</code> to resolve temporary issues</li>
+<li><strong>Reinstall</strong>: Use <code>pyforge mdf-tools uninstall</code> followed by <code>pyforge install mdf-tools</code></li>
+</ol>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>After successful installation:</p>
+<ol>
+<li><strong>Verify Installation</strong>: Run <code>pyforge mdf-tools status</code> to confirm all components are operational</li>
+<li><strong>Test Connectivity</strong>: Use <code>pyforge mdf-tools test</code> to verify SQL Server is responding</li>
+<li><strong>Install MDF Converter</strong>: Install the MDF to Parquet converter (when available)</li>
+<li><strong>Process MDF Files</strong>: Use PyForge to convert your MDF files to modern formats</li>
+</ol>
+<h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="mdf-to-parquet.md">MDF to Parquet Converter</a> (coming soon)</li>
+<li><a href="../database-files/">Database Files Overview</a></li>
+<li><a href="../../reference/cli-reference/">CLI Reference</a></li>
+<li><a href="../../tutorials/troubleshooting/">Troubleshooting Guide</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Py-Forge-Cli/PyForge-CLI" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/pyforge-cli/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "toc.follow", "search.highlight", "search.share", "search.suggest", "content.tabs.link", "content.code.copy", "content.code.select"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

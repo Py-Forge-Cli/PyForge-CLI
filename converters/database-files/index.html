@@ -24,7 +24,7 @@
     
     
       
-        <title>MDB/ACCDB Files - PyForge CLI Documentation</title>
+        <title>Database Files - PyForge CLI Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mdbaccdb-database-conversion" class="md-skip">
+        <a href="#database-file-conversion" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MDB/ACCDB Files
+              Database Files
             
           </span>
         </div>
@@ -313,6 +313,8 @@
       
         
       
+        
+      
     
     
     
@@ -429,6 +431,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/tools-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools Prerequisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -449,6 +474,8 @@
       
         
           
+        
+      
         
       
         
@@ -621,7 +648,7 @@
   
   
   <span class="md-ellipsis">
-    MDB/ACCDB Files
+    Database Files
     
   </span>
   
@@ -634,7 +661,7 @@
   
   
   <span class="md-ellipsis">
-    MDB/ACCDB Files
+    Database Files
     
   </span>
   
@@ -1041,6 +1068,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sql-server-mdf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server MDF Files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Server MDF Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites-for-mdf-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites for MDF Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-container-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Container Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-conversion-coming-soon" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Conversion (Coming Soon)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       Security Considerations
@@ -1071,6 +1140,29 @@
   
   <span class="md-ellipsis">
     DBF Files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mdf-tools-installer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDF Tools Installer
     
   </span>
   
@@ -1887,6 +1979,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sql-server-mdf-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Server MDF Files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Server MDF Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites-for-mdf-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites for MDF Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-container-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Container Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdf-conversion-coming-soon" class="md-nav__link">
+    <span class="md-ellipsis">
+      MDF Conversion (Coming Soon)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       Security Considerations
@@ -1914,10 +2048,10 @@
   
 
 
-<h1 id="mdbaccdb-database-conversion">MDB/ACCDB Database Conversion<a class="headerlink" href="#mdbaccdb-database-conversion" title="Permanent link">&para;</a></h1>
-<p>Convert Microsoft Access database files (.mdb and .accdb) to efficient Parquet format with automatic table discovery and cross-platform support.</p>
+<h1 id="database-file-conversion">Database File Conversion<a class="headerlink" href="#database-file-conversion" title="Permanent link">&para;</a></h1>
+<p>Convert Microsoft Access (.mdb/.accdb) and SQL Server (.mdf) database files to efficient Parquet format with automatic table discovery and cross-platform support.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>PyForge CLI provides comprehensive Microsoft Access database conversion with:</p>
+<p>PyForge CLI provides comprehensive database conversion for Access and SQL Server files with:</p>
 <ul>
 <li><strong>Cross-platform support</strong> (Windows, macOS, Linux)</li>
 <li><strong>Automatic table discovery</strong> and metadata extraction</li>
@@ -1954,6 +2088,12 @@
 <td><code>.mdb/.accdb</code></td>
 <td>Runtime-only databases</td>
 <td>✅ Full</td>
+</tr>
+<tr>
+<td><strong>SQL Server Master</strong></td>
+<td><code>.mdf</code></td>
+<td>SQL Server database files</td>
+<td>🚧 In Development</td>
 </tr>
 </tbody>
 </table>
@@ -2364,6 +2504,51 @@
 <li><strong>Optimize Settings</strong>: Use appropriate chunk sizes for your system memory</li>
 <li><strong>Handle Passwords</strong>: Be prepared to enter passwords for protected databases</li>
 </ol>
+<h2 id="sql-server-mdf-files">SQL Server MDF Files<a class="headerlink" href="#sql-server-mdf-files" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites-for-mdf-processing">Prerequisites for MDF Processing<a class="headerlink" href="#prerequisites-for-mdf-processing" title="Permanent link">&para;</a></h3>
+<p>Before processing SQL Server MDF files, you need to install the MDF Tools:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Install Docker Desktop and SQL Server Express</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>pyforge<span class="w"> </span>install<span class="w"> </span>mdf-tools
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Verify installation</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>status
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Test SQL Server connectivity</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span><span class="nb">test</span>
+</span></code></pre></div>
+<p><strong>System Requirements for MDF Processing:</strong>
+- Docker Desktop installed and running
+- SQL Server Express container (automatically configured)
+- Minimum 4GB RAM available for SQL Server
+- Internet connection for initial setup</p>
+<h3 id="mdf-container-management">MDF Container Management<a class="headerlink" href="#mdf-container-management" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Start SQL Server (if not running)</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>start
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Check status</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>status
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="c1"># View SQL Server logs</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>logs
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="c1"># Stop when finished</span>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>pyforge<span class="w"> </span>mdf-tools<span class="w"> </span>stop
+</span></code></pre></div>
+<h3 id="mdf-conversion-coming-soon">MDF Conversion (Coming Soon)<a class="headerlink" href="#mdf-conversion-coming-soon" title="Permanent link">&para;</a></h3>
+<p>Once the MDF converter is implemented, you'll be able to process SQL Server database files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Convert MDF database (planned feature)</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1"># pyforge convert database.mdf --format parquet</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># With custom options (planned)</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="c1"># pyforge convert large.mdf --tables &quot;Users,Orders&quot; --exclude-system-tables</span>
+</span></code></pre></div>
+<p><strong>MDF Processing Features (In Development):</strong>
+- Automatic MDF file mounting in SQL Server Express
+- String-based data conversion (Phase 1 implementation)
+- Table filtering with <code>--exclude-system-tables</code> option
+- Chunk-based processing for large databases
+- Same 6-stage conversion process as MDB files</p>
+<p>For detailed MDF Tools documentation, see <a href="../mdf-tools-installer/">MDF Tools Installer</a>.</p>
 <h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Password Handling</strong>: Passwords are not stored or logged</li>
