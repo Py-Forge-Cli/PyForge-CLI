@@ -618,5 +618,344 @@ def validate(input_file):
         console.print(f"[red]✗ {input_file.name} is not a valid {input_file.suffix.upper()} file[/red]")
 
 
+@cli.group()
+def install():
+    """Install prerequisites for specific file format converters.
+    
+    \b
+    DESCRIPTION:
+        Install and configure prerequisites needed for processing specific file formats.
+        Each installer provides an interactive setup wizard to guide you through
+        the installation process.
+    
+    \b
+    AVAILABLE INSTALLERS:
+        mdf-tools    Install Docker Desktop and SQL Server Express for MDF files
+    
+    \b
+    EXAMPLES:
+        # Install MDF processing tools
+        pyforge install mdf-tools
+        
+        # Install with custom settings
+        pyforge install mdf-tools --password "MySecure123!" --port 1433
+    
+    \b
+    NOTES:
+        • Installers are interactive and will guide you through each step
+        • Most installers require administrator privileges for system changes
+        • Configuration is saved to ~/.pyforge/ directory
+        • Use corresponding management commands after installation
+    """
+    pass
+
+
+@install.command('mdf-tools')
+@click.option('--password', 
+              metavar='PASSWORD',
+              help='Custom SQL Server password (default: PyForge@2024!)')
+@click.option('--port', 
+              type=int,
+              metavar='PORT',
+              help='Custom SQL Server port (default: 1433)')
+def install_mdf_tools(password, port):
+    """Install Docker Desktop and SQL Server Express for MDF processing.
+    
+    \b
+    DESCRIPTION:
+        Interactive installer that sets up all prerequisites needed for
+        converting SQL Server MDF files to Parquet format. This includes:
+        • Docker Desktop installation (if needed)
+        • SQL Server Express container setup
+        • Configuration file creation
+        • Connection validation
+    
+    \b
+    INSTALLATION PROCESS:
+        1. Check system requirements and Docker status
+        2. Guide through Docker Desktop installation if needed
+        3. Pull and configure SQL Server Express container
+        4. Test database connectivity
+        5. Save configuration for MDF converter
+    
+    \b
+    EXAMPLES:
+        # Interactive installation with defaults
+        pyforge install mdf-tools
+        
+        # Custom SQL Server password
+        pyforge install mdf-tools --password "MySecure123!"
+        
+        # Custom port and password
+        pyforge install mdf-tools --password "MySecure123!" --port 1433
+    
+    \b
+    SYSTEM REQUIREMENTS:
+        • Windows 10+, macOS 10.15+, or Ubuntu 18.04+
+        • At least 4GB RAM available for SQL Server container
+        • Internet connection for downloading Docker images
+        • Administrator privileges may be required
+    
+    \b
+    AFTER INSTALLATION:
+        Use these commands to manage the SQL Server container:
+        • pyforge mdf-tools status    - Check container status
+        • pyforge mdf-tools start     - Start SQL Server
+        • pyforge mdf-tools stop      - Stop SQL Server
+        • pyforge mdf-tools logs      - View container logs
+    """
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    success = installer.interactive_install(custom_password=password, custom_port=port)
+    
+    if not success:
+        console.print("[red]Installation failed. Please check the errors above and try again.[/red]")
+        raise click.Abort()
+
+
+@cli.group('mdf-tools')
+def mdf_tools():
+    """Manage SQL Server Express container for MDF file processing.
+    
+    \b
+    DESCRIPTION:
+        Commands to manage the Docker container running SQL Server Express
+        that is used for MDF file conversion. The container must be installed
+        first using 'pyforge install mdf-tools'.
+    
+    \b
+    CONTAINER LIFECYCLE:
+        status      Check Docker and SQL Server status
+        start       Start the SQL Server container
+        stop        Stop the SQL Server container  
+        restart     Restart the SQL Server container
+        logs        View SQL Server container logs
+        config      Display current configuration
+        test        Test SQL Server connectivity
+        uninstall   Remove container and clean up
+    
+    \b
+    EXAMPLES:
+        # Check if everything is running
+        pyforge mdf-tools status
+        
+        # Start SQL Server for MDF processing
+        pyforge mdf-tools start
+        
+        # View recent container logs
+        pyforge mdf-tools logs
+        
+        # Test database connection
+        pyforge mdf-tools test
+    
+    \b
+    TROUBLESHOOTING:
+        If you encounter issues:
+        1. Check status: pyforge mdf-tools status
+        2. View logs: pyforge mdf-tools logs
+        3. Restart: pyforge mdf-tools restart
+        4. Reinstall: pyforge mdf-tools uninstall && pyforge install mdf-tools
+    """
+    pass
+
+
+@mdf_tools.command()
+def status():
+    """Check Docker and SQL Server status.
+    
+    Shows the current status of:
+    • Docker Desktop installation and daemon
+    • SQL Server Express container existence and state
+    • Database connectivity and responsiveness
+    • Configuration file presence
+    """
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    from rich.table import Table
+    
+    installer = MdfToolsInstaller()
+    status_info = installer.get_status()
+    
+    # Create status table
+    status_table = Table(title="MDF Tools Status")
+    status_table.add_column("Component", style="cyan")
+    status_table.add_column("Status", style="bold")
+    status_table.add_column("Details", style="dim")
+    
+    def format_status(is_ok: bool) -> str:
+        return "[green]✓ OK[/green]" if is_ok else "[red]✗ FAIL[/red]"
+    
+    status_table.add_row(
+        "Docker Installed", 
+        format_status(status_info["docker_installed"]),
+        "Docker command available" if status_info["docker_installed"] else "Run: pyforge install mdf-tools"
+    )
+    
+    status_table.add_row(
+        "Docker Running",
+        format_status(status_info["docker_running"]),
+        "Docker daemon responsive" if status_info["docker_running"] else "Start Docker Desktop"
+    )
+    
+    status_table.add_row(
+        "SQL Container Exists",
+        format_status(status_info["sql_container_exists"]),
+        "Container created" if status_info["sql_container_exists"] else "Run: pyforge install mdf-tools"
+    )
+    
+    status_table.add_row(
+        "SQL Container Running", 
+        format_status(status_info["sql_container_running"]),
+        "Container active" if status_info["sql_container_running"] else "Run: pyforge mdf-tools start"
+    )
+    
+    status_table.add_row(
+        "SQL Server Responding",
+        format_status(status_info["sql_server_responding"]),
+        "Database accessible" if status_info["sql_server_responding"] else "Check container logs"
+    )
+    
+    status_table.add_row(
+        "Configuration File",
+        format_status(status_info["config_exists"]),
+        "Settings saved" if status_info["config_exists"] else "Run installation"
+    )
+    
+    console.print(status_table)
+    
+    # Overall status
+    all_ok = all([
+        status_info["docker_installed"],
+        status_info["docker_running"], 
+        status_info["sql_container_exists"],
+        status_info["sql_container_running"],
+        status_info["sql_server_responding"]
+    ])
+    
+    if all_ok:
+        console.print("\n[bold green]✅ All systems operational - ready for MDF processing![/bold green]")
+    else:
+        console.print("\n[bold red]❌ System not ready - see status above for issues[/bold red]")
+
+
+@mdf_tools.command()
+def start():
+    """Start the SQL Server container."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    success = installer.start_container()
+    
+    if not success:
+        raise click.Abort()
+
+
+@mdf_tools.command()
+def stop():
+    """Stop the SQL Server container."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    success = installer.stop_container()
+    
+    if not success:
+        raise click.Abort()
+
+
+@mdf_tools.command()
+def restart():
+    """Restart the SQL Server container."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    success = installer.restart_container()
+    
+    if not success:
+        raise click.Abort()
+
+
+@mdf_tools.command()
+@click.option('--lines', '-n', 
+              type=int, 
+              default=50, 
+              help='Number of log lines to show (default: 50)')
+def logs(lines):
+    """View SQL Server container logs.
+    
+    \b
+    EXAMPLES:
+        # Show last 50 lines (default)
+        pyforge mdf-tools logs
+        
+        # Show last 100 lines
+        pyforge mdf-tools logs --lines 100
+        
+        # Show last 10 lines
+        pyforge mdf-tools logs -n 10
+    """
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    installer.show_logs(lines=lines)
+
+
+@mdf_tools.command()
+def config():
+    """Display current configuration."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    import json
+    
+    installer = MdfToolsInstaller()
+    
+    if not installer.config_path.exists():
+        console.print("[red]Configuration file not found. Run 'pyforge install mdf-tools' first.[/red]")
+        return
+    
+    try:
+        with open(installer.config_path, 'r') as f:
+            config = json.load(f)
+        
+        console.print(f"[bold]Configuration file:[/bold] {installer.config_path}")
+        console.print(json.dumps(config, indent=2))
+        
+    except Exception as e:
+        console.print(f"[red]Error reading configuration: {e}[/red]")
+
+
+@mdf_tools.command()
+def test():
+    """Test SQL Server connectivity."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    
+    console.print("🔍 Testing SQL Server connection...")
+    
+    try:
+        import docker
+        installer.docker_client = docker.from_env()
+        
+        if installer._test_sql_connection():
+            console.print("[green]✅ SQL Server connection successful![/green]")
+        else:
+            console.print("[red]❌ SQL Server connection failed[/red]")
+            console.print("Try: pyforge mdf-tools restart")
+            
+    except Exception as e:
+        console.print(f"[red]❌ Connection test failed: {e}[/red]")
+
+
+@mdf_tools.command()
+def uninstall():
+    """Remove SQL Server container and clean up all data."""
+    from .installers.mdf_tools_installer import MdfToolsInstaller
+    
+    installer = MdfToolsInstaller()
+    success = installer.uninstall()
+    
+    if not success:
+        raise click.Abort()
+
+
 if __name__ == '__main__':
     cli()
