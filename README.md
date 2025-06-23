@@ -32,7 +32,8 @@
 - **PDF to Text Conversion**: Extract text from PDF documents with advanced options
 - **Excel to Parquet Conversion**: Convert Excel files (.xlsx) to Parquet format with multi-sheet support
 - **XML to Parquet Conversion**: Intelligent XML flattening with automatic structure detection and configurable strategies
-- **Database File Conversion**: Convert Microsoft Access (.mdb/.accdb) and DBF files to Parquet
+- **Database File Conversion**: Convert Microsoft Access (.mdb/.accdb), DBF, and SQL Server MDF files to Parquet
+- **MDF Tools Installer**: Automated setup of Docker and SQL Server Express for MDF file processing
 - **CSV to Parquet Conversion**: Smart delimiter detection and encoding handling
 - **Rich CLI Interface**: Beautiful terminal output with progress bars and tables
 - **Intelligent Processing**: Automatic encoding detection, structure analysis, and column matching
@@ -75,6 +76,20 @@ sudo apt-get install mdbtools
 # macOS
 brew install mdbtools
 ```
+
+### MDF File Processing Setup
+
+For SQL Server MDF file conversion, install the MDF Tools:
+
+```bash
+# Interactive setup wizard
+pyforge install mdf-tools
+
+# Check installation status
+pyforge mdf-tools status
+```
+
+This installs Docker Desktop and SQL Server Express automatically. See [MDF Tools Documentation](https://py-forge-cli.github.io/PyForge-CLI/converters/mdf-tools-installer) for details.
 
 ## Quick Start
 
@@ -179,6 +194,30 @@ pyforge formats
 ```bash
 pyforge validate document.pdf
 pyforge validate data.xlsx
+```
+
+### MDF File Processing
+
+```bash
+# Step 1: Install MDF processing tools (one-time setup)
+pyforge install mdf-tools
+
+# Step 2: Check installation status
+pyforge mdf-tools status
+
+# Step 3: Start SQL Server (if not running)
+pyforge mdf-tools start
+
+# Step 4: Convert MDF files (when MDF converter is available)
+# pyforge convert database.mdf --format parquet
+
+# Container management
+pyforge mdf-tools stop      # Stop SQL Server
+pyforge mdf-tools restart   # Restart SQL Server
+pyforge mdf-tools logs      # View SQL Server logs
+pyforge mdf-tools test      # Test connectivity
+pyforge mdf-tools config    # Show configuration
+pyforge mdf-tools uninstall # Remove everything
 ```
 
 ## Usage Examples
