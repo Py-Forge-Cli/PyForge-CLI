@@ -658,7 +658,10 @@ def install():
               type=int,
               metavar='PORT',
               help='Custom SQL Server port (default: 1433)')
-def install_mdf_tools(password, port):
+@click.option('--non-interactive', 
+              is_flag=True,
+              help='Run in non-interactive mode (for automation/testing)')
+def install_mdf_tools(password, port, non_interactive):
     """Install Docker Desktop and SQL Server Express for MDF processing.
     
     \b
@@ -707,6 +710,7 @@ def install_mdf_tools(password, port):
     from .installers.mdf_tools_installer import MdfToolsInstaller
     
     installer = MdfToolsInstaller()
+    installer.non_interactive = non_interactive
     success = installer.interactive_install(custom_password=password, custom_port=port)
     
     if not success:

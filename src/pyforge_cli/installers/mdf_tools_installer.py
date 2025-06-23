@@ -40,6 +40,7 @@ class MdfToolsInstaller:
         self.sql_password = "PyForge@2024!"
         self.sql_image = "mcr.microsoft.com/mssql/server:2019-latest"
         self.config_path = Path.home() / ".pyforge" / "mdf-config.json"
+        self.non_interactive = False
         
     def interactive_install(self, custom_password: Optional[str] = None, custom_port: Optional[int] = None) -> bool:
         """
@@ -175,7 +176,15 @@ class MdfToolsInstaller:
         for i, choice in enumerate(choices, 1):
             self.console.print(f"  {i}. {choice}")
         
-        choice = Prompt.ask("Choice", choices=[str(i) for i in range(1, len(choices) + 1)], default="1")
+        if self.non_interactive:
+            choice = "1"  # Default to automatic installation in non-interactive mode
+            self.console.print(f"\n[yellow]Non-interactive mode: Using option {choice}[/yellow]")
+        else:
+            try:
+                choice = Prompt.ask("Choice", choices=[str(i) for i in range(1, len(choices) + 1)], default="1")
+            except EOFError:
+                self.console.print("\n[red]No interactive input available. Using default option (1).[/red]")
+                choice = "1"
         
         if choice == "1" and len(choices) == 4:  # Automatic installation option
             return self._attempt_automatic_docker_installation()
@@ -411,10 +420,14 @@ class MdfToolsInstaller:
                 self.console.print("✅ Docker Desktop installed successfully!")
                 self.console.print("⚠️ Please restart your computer and then launch Docker Desktop manually.")
                 
-                if Confirm.ask("Have you restarted and launched Docker Desktop?"):
+                try:
+                    if Confirm.ask("Have you restarted and launched Docker Desktop?"):
+                        return self._wait_for_docker_startup()
+                    else:
+                        return False
+                except EOFError:
+                    self.console.print("\n[red]No interactive input available. Assuming Docker Desktop is ready.[/red]")
                     return self._wait_for_docker_startup()
-                else:
-                    return False
                     
             except subprocess.TimeoutExpired:
                 self.console.print("❌ Installation timed out. Please try manual installation.")
@@ -458,17 +471,29 @@ class MdfToolsInstaller:
         self.console.print("\n[yellow]Please install Docker Desktop following the instructions above.[/yellow]")
         
         while True:
-            if Confirm.ask("Have you completed the Docker installation?"):
-                if self._is_docker_installed():
-                    self.console.print("✓ Docker installation detected")
-                    return True
+            try:
+                if Confirm.ask("Have you completed the Docker installation?"):
+                    if self._is_docker_installed():
+                        self.console.print("✓ Docker installation detected")
+                        return True
+                    else:
+                        self.console.print("❌ Docker not detected. Please ensure it's properly installed.")
+                        try:
+                            if not Confirm.ask("Try again?"):
+                                return False
+                        except EOFError:
+                            self.console.print("\n[red]No interactive input available. Stopping installation.[/red]")
+                            return False
                 else:
-                    self.console.print("❌ Docker not detected. Please ensure it's properly installed.")
-                    if not Confirm.ask("Try again?"):
+                    try:
+                        if not Confirm.ask("Continue waiting for Docker installation?"):
+                            return False
+                    except EOFError:
+                        self.console.print("\n[red]No interactive input available. Stopping installation.[/red]")
                         return False
-            else:
-                if not Confirm.ask("Continue waiting for Docker installation?"):
-                    return False
+            except EOFError:
+                self.console.print("\n[red]No interactive input available. Stopping installation.[/red]")
+                return False
     
     def _get_existing_container(self):
         """Get existing SQL Server container if it exists"""
@@ -763,7 +788,11 @@ class MdfToolsInstaller:
                 self.console.print("❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.")
                 return False
                 
-            if not Confirm.ask("Are you sure you want to remove SQL Server and all data?"):
+            try:
+                if not Confirm.ask("Are you sure you want to remove SQL Server and all data?"):
+                    return False
+            except EOFError:
+                self.console.print("\n[red]No interactive input available. Cancelling uninstall for safety.[/red]")
                 return False
             
             if not self.docker_client:
