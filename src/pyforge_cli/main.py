@@ -925,11 +925,15 @@ def config():
 @mdf_tools.command()
 def test():
     """Test SQL Server connectivity."""
-    from .installers.mdf_tools_installer import MdfToolsInstaller
+    from .installers.mdf_tools_installer import MdfToolsInstaller, DOCKER_AVAILABLE
     
     installer = MdfToolsInstaller()
     
     console.print("🔍 Testing SQL Server connection...")
+    
+    if not DOCKER_AVAILABLE:
+        console.print("[red]❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.[/red]")
+        return
     
     try:
         import docker

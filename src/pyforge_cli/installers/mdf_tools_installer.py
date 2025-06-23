@@ -110,29 +110,33 @@ class MdfToolsInstaller:
             self.console.print(f"❌ Operating System: {system} (not supported)")
             return False
         
-        # Check if Docker SDK is available
-        global DOCKER_AVAILABLE
-        if not DOCKER_AVAILABLE:
-            self.console.print("❌ Docker SDK for Python: Not installed")
-            self.console.print("\n[yellow]Installing Docker SDK...[/yellow]")
-            try:
-                subprocess.run(["pip", "install", "docker"], check=True, capture_output=True)
-                global docker
-                import docker
-                DOCKER_AVAILABLE = True
-                self.console.print("✓ Docker SDK for Python: Installed")
-            except Exception as e:
-                self.console.print(f"❌ Failed to install Docker SDK: {e}")
-                return False
-        else:
-            self.console.print("✓ Docker SDK for Python: Available")
-        
-        # Check Docker installation
+        # Check Docker Desktop installation (system level)
         docker_installed = self._is_docker_installed()
         if docker_installed:
             self.console.print("✓ Docker Desktop: Installed")
         else:
             self.console.print("❌ Docker Desktop: Not found")
+        
+        # Check if Docker SDK is available (Python package)
+        global DOCKER_AVAILABLE
+        if not DOCKER_AVAILABLE:
+            self.console.print("❌ Docker SDK for Python: Not installed")
+            if docker_installed:
+                # Only install SDK if Docker Desktop exists
+                self.console.print("\n[yellow]Installing Docker SDK for Python...[/yellow]")
+                try:
+                    subprocess.run(["pip", "install", "docker"], check=True, capture_output=True)
+                    global docker
+                    import docker
+                    DOCKER_AVAILABLE = True
+                    self.console.print("✓ Docker SDK for Python: Installed")
+                except Exception as e:
+                    self.console.print(f"❌ Failed to install Docker SDK: {e}")
+                    return False
+            else:
+                self.console.print("⚠️ Docker SDK installation skipped (Docker Desktop required first)")
+        else:
+            self.console.print("✓ Docker SDK for Python: Available")
         
         return True
     
@@ -144,22 +148,41 @@ class MdfToolsInstaller:
         self.console.print("\n[bold blue][2/5] Docker Installation Required[/bold blue]")
         self.console.print("Docker Desktop is required for MDF file conversion.")
         
-        choices = [
-            "Get installation instructions",
-            "Skip (I'll install manually)",
-            "Continue without Docker (installation will fail)"
-        ]
+        system = platform.system()
+        
+        if system == "Darwin":
+            choices = [
+                "Install automatically using Homebrew (recommended)",
+                "Get installation instructions", 
+                "Skip (I'll install manually)",
+                "Continue without Docker (installation will fail)"
+            ]
+        elif system == "Windows":
+            choices = [
+                "Install automatically using Winget (recommended)",
+                "Get installation instructions",
+                "Skip (I'll install manually)", 
+                "Continue without Docker (installation will fail)"
+            ]
+        else:
+            choices = [
+                "Get installation instructions",
+                "Skip (I'll install manually)",
+                "Continue without Docker (installation will fail)"
+            ]
         
         self.console.print("\nWould you like to:")
         for i, choice in enumerate(choices, 1):
             self.console.print(f"  {i}. {choice}")
         
-        choice = Prompt.ask("Choice", choices=["1", "2", "3"], default="1")
+        choice = Prompt.ask("Choice", choices=[str(i) for i in range(1, len(choices) + 1)], default="1")
         
-        if choice == "1":
+        if choice == "1" and len(choices) == 4:  # Automatic installation option
+            return self._attempt_automatic_docker_installation()
+        elif (choice == "1" and len(choices) == 3) or (choice == "2" and len(choices) == 4):
             self._show_docker_installation_instructions()
             return self._wait_for_docker_installation()
-        elif choice == "2":
+        elif (choice == "2" and len(choices) == 3) or (choice == "3" and len(choices) == 4):
             self.console.print("\n[yellow]Please install Docker Desktop and re-run this installer.[/yellow]")
             return False
         else:
@@ -260,6 +283,11 @@ class MdfToolsInstaller:
             "Darwin": {
                 "title": "macOS Docker Installation",
                 "steps": [
+                    "[bold cyan]Option 1: Homebrew (Recommended)[/bold cyan]",
+                    "brew install --cask docker",
+                    "open -a Docker  # Launch Docker Desktop",
+                    "",
+                    "[bold cyan]Option 2: Manual Download[/bold cyan]",
                     "1. Visit: https://docs.docker.com/desktop/install/mac-install/",
                     "2. Download Docker Desktop for Mac",
                     "3. Double-click Docker.dmg and drag to Applications",
@@ -270,9 +298,16 @@ class MdfToolsInstaller:
             "Windows": {
                 "title": "Windows Docker Installation", 
                 "steps": [
+                    "[bold cyan]Option 1: Winget (Recommended)[/bold cyan]",
+                    "winget install Docker.DockerDesktop",
+                    "",
+                    "[bold cyan]Option 2: Chocolatey[/bold cyan]",
+                    "choco install docker-desktop",
+                    "",
+                    "[bold cyan]Option 3: Manual Download[/bold cyan]",
                     "1. Visit: https://docs.docker.com/desktop/install/windows-install/",
                     "2. Download Docker Desktop for Windows",
-                    "3. Run Docker Desktop Installer.exe",
+                    "3. Run Docker Desktop Installer.exe as Administrator",
                     "4. Follow installation wizard",
                     "5. Restart computer if prompted",
                     "6. Launch Docker Desktop from Start menu"
@@ -281,12 +316,21 @@ class MdfToolsInstaller:
             "Linux": {
                 "title": "Linux Docker Installation",
                 "steps": [
-                    "1. Visit: https://docs.docker.com/desktop/install/linux-install/",
-                    "2. Choose your Linux distribution",
-                    "3. Follow distribution-specific instructions",
-                    "4. Or use convenience script: curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh",
-                    "5. Add user to docker group: sudo usermod -aG docker $USER",
-                    "6. Log out and back in for group changes"
+                    "[bold cyan]Option 1: Package Manager (Recommended)[/bold cyan]",
+                    "# Ubuntu/Debian:",
+                    "sudo apt update && sudo apt install docker.io docker-compose",
+                    "sudo systemctl start docker && sudo systemctl enable docker",
+                    "sudo usermod -aG docker $USER",
+                    "",
+                    "# CentOS/RHEL:",
+                    "sudo yum install docker docker-compose",
+                    "sudo systemctl start docker && sudo systemctl enable docker", 
+                    "sudo usermod -aG docker $USER",
+                    "",
+                    "[bold cyan]Option 2: Docker Desktop for Linux[/bold cyan]",
+                    "Visit: https://docs.docker.com/desktop/install/linux-install/",
+                    "",
+                    "[bold yellow]Important:[/bold yellow] Log out and back in after installation"
                 ]
             }
         }
@@ -298,6 +342,116 @@ class MdfToolsInstaller:
             title=info["title"],
             border_style="cyan"
         ))
+    
+    def _attempt_automatic_docker_installation(self) -> bool:
+        """Attempt automatic Docker Desktop installation using system package managers"""
+        system = platform.system()
+        
+        if system == "Darwin":
+            self.console.print("\n[bold yellow]Attempting to install Docker Desktop using Homebrew...[/bold yellow]")
+            
+            # Check if Homebrew is installed
+            try:
+                subprocess.run(["brew", "--version"], check=True, capture_output=True)
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                self.console.print("❌ Homebrew not found. Please install Homebrew first:")
+                self.console.print("   /bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"")
+                return False
+            
+            try:
+                # Install Docker Desktop using Homebrew
+                self.console.print("📦 Installing Docker Desktop (this may take several minutes)...")
+                result = subprocess.run(
+                    ["brew", "install", "--cask", "docker"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=600  # 10 minute timeout
+                )
+                
+                self.console.print("✅ Docker Desktop installed successfully!")
+                self.console.print("🚀 Launching Docker Desktop...")
+                
+                # Launch Docker Desktop
+                subprocess.run(["open", "-a", "Docker"], check=False)
+                
+                return self._wait_for_docker_startup()
+                
+            except subprocess.TimeoutExpired:
+                self.console.print("❌ Installation timed out. Please try manual installation.")
+                return False
+            except subprocess.CalledProcessError as e:
+                self.console.print(f"❌ Installation failed: {e.stderr}")
+                self.console.print("Falling back to manual installation instructions...")
+                self._show_docker_installation_instructions()
+                return self._wait_for_docker_installation()
+                
+        elif system == "Windows":
+            self.console.print("\n[bold yellow]Attempting to install Docker Desktop using Winget...[/bold yellow]")
+            
+            try:
+                # Check if winget is available
+                subprocess.run(["winget", "--version"], check=True, capture_output=True)
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                self.console.print("❌ Winget not found. Please use manual installation.")
+                self._show_docker_installation_instructions()
+                return self._wait_for_docker_installation()
+            
+            try:
+                # Install Docker Desktop using Winget
+                self.console.print("📦 Installing Docker Desktop (this may take several minutes)...")
+                result = subprocess.run(
+                    ["winget", "install", "Docker.DockerDesktop"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=600  # 10 minute timeout
+                )
+                
+                self.console.print("✅ Docker Desktop installed successfully!")
+                self.console.print("⚠️ Please restart your computer and then launch Docker Desktop manually.")
+                
+                if Confirm.ask("Have you restarted and launched Docker Desktop?"):
+                    return self._wait_for_docker_startup()
+                else:
+                    return False
+                    
+            except subprocess.TimeoutExpired:
+                self.console.print("❌ Installation timed out. Please try manual installation.")
+                return False
+            except subprocess.CalledProcessError as e:
+                self.console.print(f"❌ Installation failed: {e.stderr}")
+                self.console.print("Falling back to manual installation instructions...")
+                self._show_docker_installation_instructions()
+                return self._wait_for_docker_installation()
+        
+        return False
+    
+    def _wait_for_docker_startup(self) -> bool:
+        """Wait for Docker Desktop to start up after installation"""
+        self.console.print("\n⏳ Waiting for Docker Desktop to start...")
+        
+        max_attempts = 18  # 3 minutes with 10-second intervals
+        for attempt in range(max_attempts):
+            if self._is_docker_installed():
+                try:
+                    # Try to connect to Docker daemon
+                    result = subprocess.run(
+                        ["docker", "info"], 
+                        check=True, 
+                        capture_output=True,
+                        timeout=5
+                    )
+                    self.console.print("✅ Docker Desktop is running!")
+                    return True
+                except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                    pass
+            
+            if attempt < max_attempts - 1:
+                time.sleep(10)
+        
+        self.console.print("⚠️ Docker Desktop may still be starting. Please ensure it's running and try again.")
+        return False
     
     def _wait_for_docker_installation(self) -> bool:
         """Wait for user to install Docker"""
@@ -512,7 +666,12 @@ class MdfToolsInstaller:
     def start_container(self) -> bool:
         """Start SQL Server container"""
         try:
+            if not DOCKER_AVAILABLE:
+                self.console.print("❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.")
+                return False
+                
             if not self.docker_client:
+                import docker
                 self.docker_client = docker.from_env()
             
             container = self._get_existing_container()
@@ -537,7 +696,12 @@ class MdfToolsInstaller:
     def stop_container(self) -> bool:
         """Stop SQL Server container"""
         try:
+            if not DOCKER_AVAILABLE:
+                self.console.print("❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.")
+                return False
+                
             if not self.docker_client:
+                import docker
                 self.docker_client = docker.from_env()
             
             container = self._get_existing_container()
@@ -572,7 +736,12 @@ class MdfToolsInstaller:
     def show_logs(self, lines: int = 50) -> None:
         """Show SQL Server container logs"""
         try:
+            if not DOCKER_AVAILABLE:
+                self.console.print("❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.")
+                return
+                
             if not self.docker_client:
+                import docker
                 self.docker_client = docker.from_env()
             
             container = self._get_existing_container()
@@ -590,10 +759,15 @@ class MdfToolsInstaller:
     def uninstall(self) -> bool:
         """Uninstall SQL Server container and clean up"""
         try:
+            if not DOCKER_AVAILABLE:
+                self.console.print("❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.")
+                return False
+                
             if not Confirm.ask("Are you sure you want to remove SQL Server and all data?"):
                 return False
             
             if not self.docker_client:
+                import docker
                 self.docker_client = docker.from_env()
             
             # Stop and remove container
@@ -609,14 +783,14 @@ class MdfToolsInstaller:
                 volume = self.docker_client.volumes.get("pyforge-sql-data")
                 volume.remove()
                 self.console.print("✓ Data volume removed")
-            except docker.errors.NotFound:
+            except Exception:  # Catch all Docker exceptions when module might not be available
                 pass
             
             try:
                 mdf_volume = self.docker_client.volumes.get("pyforge-mdf-files")
                 mdf_volume.remove()
                 self.console.print("✓ MDF files volume removed")
-            except docker.errors.NotFound:
+            except Exception:  # Catch all Docker exceptions when module might not be available
                 pass
             
             # Remove config file
