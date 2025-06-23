@@ -1,0 +1,35 @@
+# CODEOWNERS for PyForge CLI
+# This file ensures @sdandey is notified of all pull requests
+# With branch protection set to 0 required reviews, @sdandey can self-merge
+# Other contributors will need @sdandey to merge their PRs
+
+# Global owner - required reviewer for all changes
+* @sdandey
+
+# Source code requires owner approval
+/src/ @sdandey
+/tests/ @sdandey
+
+# Documentation can be reviewed by owner
+/docs/ @sdandey
+/README.md @sdandey
+
+# Critical configuration files require owner approval
+/pyproject.toml @sdandey
+/setup.py @sdandey
+/setup.cfg @sdandey
+/requirements.txt @sdandey
+/requirements-*.txt @sdandey
+/.github/ @sdandey
+/mkdocs.yml @sdandey
+/.gitignore @sdandey
+/LICENSE @sdandey
+
+# CI/CD configuration requires owner approval
+/.github/workflows/ @sdandey
+/.github/actions/ @sdandey
+
+# Package configuration
+/MANIFEST.in @sdandey
+/tox.ini @sdandey
+/.pre-commit-config.yaml @sdandey
