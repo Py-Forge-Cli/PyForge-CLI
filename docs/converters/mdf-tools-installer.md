@@ -57,52 +57,60 @@ pyforge mdf-tools test
 
 ### MDF Tools Installation Architecture
 
-```mermaid
-graph TB
-    subgraph "Host System"
-        CLI[PyForge CLI]
-        USER[User]
-        CONFIG[~/.pyforge/mdf-config.json]
-    end
-    
-    subgraph "Docker Desktop"
-        DAEMON[Docker Daemon]
-        subgraph "SQL Server Container"
-            SQLSERVER[SQL Server Express 2019]
-            SQLCMD[sqlcmd Tools]
-            MASTER[master database]
-            ATTACHED[Attached MDF Database]
-        end
-        subgraph "Docker Volumes"
-            DATAVOL[pyforge-sql-data<br/>SQL Server Data]
-            MDFVOL[pyforge-mdf-files<br/>MDF Files Mount]
-        end
-    end
-    
-    USER -->|pyforge install mdf-tools| CLI
-    CLI -->|1. Check Docker| DAEMON
-    CLI -->|2. Pull Image| DAEMON
-    CLI -->|3. Create Container| SQLSERVER
-    CLI -->|4. Configure Volumes| DATAVOL
-    CLI -->|4. Configure Volumes| MDFVOL
-    CLI -->|5. Test Connection| SQLCMD
-    CLI -->|6. Save Config| CONFIG
-    
-    SQLSERVER -.->|Port 1433| CLI
-    DATAVOL -.->|Mount /var/opt/mssql| SQLSERVER
-    MDFVOL -.->|Mount /mdf-files| SQLSERVER
-    
-    classDef user fill:#e1f5fe
-    classDef cli fill:#f3e5f5
-    classDef docker fill:#e8f5e8
-    classDef sql fill:#fff3e0
-    classDef config fill:#fce4ec
-    
-    class USER user
-    class CLI cli
-    class DAEMON,DATAVOL,MDFVOL docker
-    class SQLSERVER,SQLCMD,MASTER,ATTACHED sql
-    class CONFIG config
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                           HOST SYSTEM                               │
+├─────────────────────────────────────────────────────────────────────┤
+│  👤 User                                                           │
+│  │                                                                  │
+│  └─► 🔧 PyForge CLI                                                │
+│      │                                                              │
+│      ├─► 📄 ~/.pyforge/mdf-config.json                            │
+│      │                                                              │
+│      └─► 🐳 Docker Desktop                                         │
+│          │                                                          │
+│          └─► 📦 SQL Server Container (pyforge-sql-server)          │
+│              ├─► 🗄️  SQL Server Express 2019                      │
+│              ├─► 🔧 sqlcmd Tools                                    │
+│              ├─► 💾 master database                                │
+│              ├─► 💾 Attached MDF Database                          │
+│              │                                                      │
+│              └─► 📁 Docker Volumes                                 │
+│                  ├─► pyforge-sql-data (/var/opt/mssql)            │
+│                  └─► pyforge-mdf-files (/mdf-files)               │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Installation Flow
+
+**Step-by-Step Installation Process:**
+
+```
+1. User Command
+   👤 User → pyforge install mdf-tools
+   
+2. System Check
+   🔧 PyForge CLI → Check OS compatibility
+   🔧 PyForge CLI → Detect Docker installation
+   
+3. Docker Setup
+   🔧 PyForge CLI → Start Docker Desktop
+   🔧 PyForge CLI → Pull SQL Server image (700MB)
+   
+4. Container Creation
+   🔧 PyForge CLI → Create pyforge-sql-server container
+   🔧 PyForge CLI → Configure port mapping (1433)
+   🔧 PyForge CLI → Mount persistent volumes
+   
+5. SQL Server Configuration
+   🔧 PyForge CLI → Start SQL Server Express
+   🔧 PyForge CLI → Test connectivity with sqlcmd
+   🔧 PyForge CLI → Verify database engine
+   
+6. Finalization
+   🔧 PyForge CLI → Save configuration file
+   🔧 PyForge CLI → Display connection details
+   ✅ Installation Complete!
 ```
 
 ### Installation Workflow Components
@@ -135,27 +143,47 @@ graph TB
 
 ### MDF Processing Workflow
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as PyForge CLI
-    participant Docker as Docker Engine
-    participant SQL as SQL Server Express
-    participant Vol as MDF Volume
-    
-    User->>CLI: pyforge convert database.mdf
-    CLI->>Vol: Copy MDF file to volume
-    CLI->>SQL: ATTACH DATABASE command
-    Note over SQL: Validate MDF file structure
-    SQL-->>CLI: Database attached successfully
-    CLI->>SQL: Query table metadata
-    SQL-->>CLI: Return table schemas
-    CLI->>SQL: Execute data extraction queries
-    SQL-->>CLI: Return table data (chunked)
-    CLI->>CLI: Convert to Parquet format
-    CLI->>User: Output Parquet files + summary
-    CLI->>SQL: DETACH DATABASE command
-    Note over Vol: MDF file remains in volume
+**How MDF Files Are Processed (Future Feature):**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     MDF TO PARQUET CONVERSION                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+Step 1: File Preparation
+   👤 User → pyforge convert database.mdf
+   📁 MDF File → Copy to /mdf-files volume
+   
+Step 2: Database Attachment  
+   🔧 PyForge CLI → ATTACH DATABASE 'database.mdf'
+   🗄️  SQL Server → Validate MDF structure
+   ✅ SQL Server → Database attached successfully
+   
+Step 3: Schema Discovery
+   🔧 PyForge CLI → Query table metadata
+   🗄️  SQL Server → Return table schemas & row counts
+   📊 PyForge CLI → Display table overview
+   
+Step 4: Data Extraction
+   🔧 PyForge CLI → Execute SELECT queries (chunked)
+   🗄️  SQL Server → Return table data in batches
+   📦 PyForge CLI → Convert to string format
+   
+Step 5: Parquet Generation
+   📦 PyForge CLI → Generate .parquet files
+   📊 PyForge CLI → Create Excel summary report
+   
+Step 6: Cleanup
+   🔧 PyForge CLI → DETACH DATABASE
+   📁 MDF File → Remains in volume (unchanged)
+   ✅ Conversion Complete!
+
+Output Structure:
+   database_parquet/
+   ├── Users.parquet
+   ├── Orders.parquet  
+   ├── Products.parquet
+   └── conversion_summary.xlsx
 ```
 
 ### Supported MDF File Types

@@ -115,6 +115,7 @@ nav:
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quick-start.md
     - First Conversion: getting-started/first-conversion.md
+    - Tools Prerequisites: getting-started/tools-prerequisites.md
   - Converters:
     - converters/index.md
     - PDF to Text: converters/pdf-to-text.md

@@ -197,6 +197,26 @@ pyforge convert db.mdb --tables "customers,orders"
 pyforge convert database.mdb output_folder/
 ```
 
+### MDF Files (Requires Tools)
+
+For SQL Server MDF files, you first need to install the required tools:
+
+```bash
+# Step 1: Install MDF processing tools (one-time setup)
+pyforge install mdf-tools
+
+# Step 2: Verify installation
+pyforge mdf-tools status
+
+# Step 3: Convert MDF files (coming soon)
+# pyforge convert database.mdf --format parquet
+
+# Manage SQL Server container
+pyforge mdf-tools start    # Start when needed
+pyforge mdf-tools stop     # Stop when finished
+pyforge mdf-tools test     # Test connectivity
+```
+
 ## Step 6: Check Your Output
 
 After conversion, you'll find your files in the same directory:
