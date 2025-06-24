@@ -46,6 +46,7 @@ jobs:
         chmod 600 ~/.kaggle/kaggle.json
     
     - name: Download direct HTTP datasets
+      working-directory: scripts
       run: |
         echo "🚀 Starting direct HTTP downloads..."
         python download_direct.py
@@ -53,18 +54,21 @@ jobs:
     
     - name: Download Kaggle datasets
       if: ${{ vars.KAGGLE_USERNAME && secrets.KAGGLE_KEY }}
+      working-directory: scripts
       run: |
         echo "🚀 Starting Kaggle API downloads..."
         python download_kaggle.py
         echo "✅ Kaggle downloads completed"
     
     - name: Create release artifacts
+      working-directory: scripts
       run: |
         echo "📦 Creating release artifacts..."
         python create_release_artifacts.py --version "${{ env.RELEASE_VERSION }}" --include-large "${{ env.INCLUDE_LARGE }}"
         echo "✅ Release artifacts created"
     
     - name: Generate checksums
+      working-directory: scripts
       run: |
         echo "🔐 Generating checksums..."
         cd collected-datasets
@@ -76,9 +80,9 @@ jobs:
       with:
         name: sample-datasets-${{ env.RELEASE_VERSION }}
         path: |
-          collected-datasets/*.zip
-          collected-datasets/checksums.sha256
-          collected-datasets/manifest.json
+          scripts/collected-datasets/*.zip
+          scripts/collected-datasets/checksums.sha256
+          scripts/collected-datasets/manifest.json
         retention-days: 30
     
     - name: Create GitHub Release
@@ -134,9 +138,9 @@ jobs:
           
           Generated automatically by PyForge CLI Dataset Collection Pipeline.
         files: |
-          collected-datasets/*.zip
-          collected-datasets/checksums.sha256
-          collected-datasets/manifest.json
+          scripts/collected-datasets/*.zip
+          scripts/collected-datasets/checksums.sha256
+          scripts/collected-datasets/manifest.json
         draft: false
         prerelease: false
       env:
