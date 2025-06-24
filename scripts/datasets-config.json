@@ -1,0 +1,291 @@
+{
+  "version": "1.0.0",
+  "description": "PyForge CLI Test Datasets Collection Configuration",
+  "last_updated": "2025-01-23",
+  "datasets": {
+    "direct_downloads": [
+      {
+        "id": "dod-software-guide",
+        "format": "PDF",
+        "name": "DOD Software Guide",
+        "size": "2.1MB",
+        "size_category": "Small",
+        "url": "https://www.acq.osd.mil/se/docs/DoD-STD-499C.pdf",
+        "filename": "DoD-STD-499C.pdf",
+        "description": "Department of Defense software development standards",
+        "license": "Public Domain (US Government)"
+      },
+      {
+        "id": "nist-cybersecurity",
+        "format": "PDF", 
+        "name": "NIST Cybersecurity Framework",
+        "size": "3.2MB",
+        "size_category": "Small",
+        "url": "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf",
+        "filename": "NIST-CSWP-04162018.pdf", 
+        "description": "NIST Cybersecurity Framework guidelines",
+        "license": "Public Domain (US Government)"
+      },
+      {
+        "id": "northwind-2007-vbnet",
+        "format": "Access",
+        "name": "Northwind 2007 Database (VB.NET)",
+        "size": "3.5MB",
+        "size_category": "Small",
+        "url": "https://raw.githubusercontent.com/ssmith1975/samples-vb-net/master/wrox/Chpt%2015.1%20-%20Accessing%20Databases/Northwind%20Customers%20DataGridView/Northwind%20Customers%20DataGridView/Northwind%202007.accdb",
+        "filename": "Northwind_2007_VBNet.accdb",
+        "description": "Classic Northwind sample database used in VB.NET database programming examples",
+        "license": "Educational/Sample Use"
+      },
+      {
+        "id": "sample-dibi",
+        "format": "Access",
+        "name": "Sample Database (Dibi)",
+        "size": "284KB",
+        "size_category": "Small",
+        "url": "https://raw.githubusercontent.com/dg/dibi/master/examples/data/sample.mdb",
+        "filename": "sample_dibi.mdb",
+        "description": "Small sample database used for testing the Dibi database abstraction layer",
+        "license": "Open Source"
+      },
+      {
+        "id": "sakila-access",
+        "format": "Access",
+        "name": "Sakila Sample Database (Access Port)",
+        "size": "3.8MB",
+        "size_category": "Small",
+        "url": "https://raw.githubusercontent.com/ozzymcduff/sakila-sample-database-ports/master/ms-access-sakila-db/access-sakila.mdb",
+        "filename": "access_sakila.mdb",
+        "description": "MySQL Sakila sample database ported to Microsoft Access format",
+        "license": "BSD License"
+      },
+      {
+        "id": "census-tiger-places",
+        "format": "DBF",
+        "name": "Census TIGER Sample", 
+        "size": "25MB",
+        "size_category": "Small",
+        "url": "https://www2.census.gov/geo/tiger/TIGER2024/PLACE/tl_2024_01_place.zip",
+        "filename": "tl_2024_01_place.zip",
+        "description": "US Census TIGER geographic place data",
+        "license": "Public Domain (US Government)"
+      },
+      {
+        "id": "census-blocks",
+        "format": "DBF",
+        "name": "Property Sample",
+        "size": "8.5MB",
+        "size_category": "Small", 
+        "url": "https://www2.census.gov/geo/tiger/TIGER2024/TABBLOCK20/tl_2024_06_tabblock20.zip",
+        "filename": "tl_2024_06_tabblock20.zip",
+        "description": "US Census tabulation blocks geographic data",
+        "license": "Public Domain (US Government)"
+      },
+      {
+        "id": "census-counties",
+        "format": "DBF",
+        "name": "County Geographic",
+        "size": "350MB",
+        "size_category": "Medium",
+        "url": "https://www2.census.gov/geo/tiger/TIGER2024/COUNTY/tl_2024_us_county.zip", 
+        "filename": "tl_2024_us_county.zip",
+        "description": "US Census county geographic boundaries",
+        "license": "Public Domain (US Government)"
+      },
+      {
+        "id": "adventureworks-oltp",
+        "format": "MDF",
+        "name": "AdventureWorks 2012 OLTP LT",
+        "size": "15MB",
+        "size_category": "Small",
+        "url": "https://github.com/microsoft/sql-server-samples/releases/download/adventureworks2012/adventure-works-2012-oltp-lt-data-file.mdf",
+        "filename": "adventure-works-2012-oltp-lt-data-file.mdf",
+        "description": "Microsoft AdventureWorks OLTP lightweight sample database",
+        "license": "Microsoft Sample Code License"
+      },
+      {
+        "id": "adventureworks-dw", 
+        "format": "MDF",
+        "name": "AdventureWorks 2012 DW",
+        "size": "680MB",
+        "size_category": "Medium",
+        "url": "https://github.com/microsoft/sql-server-samples/releases/download/adventureworks2012/adventure-works-2012-dw-data-file.mdf",
+        "filename": "adventure-works-2012-dw-data-file.mdf",
+        "description": "Microsoft AdventureWorks Data Warehouse sample database",
+        "license": "Microsoft Sample Code License"
+      }
+    ],
+    "kaggle_datasets": [
+      {
+        "id": "superstore-final",
+        "format": "Excel",
+        "name": "Superstore Dataset Final",
+        "size": "550KB",
+        "size_category": "Small", 
+        "kaggle_id": "vivek468/superstore-dataset-final",
+        "description": "Business sales data with comprehensive analytics (CSV converted to Excel)",
+        "license": "Public Domain",
+        "edge_cases": ["Business analytics", "Sales data", "Performance metrics"],
+        "note": "Alternative working source - CSV format but downloadable"
+      },
+      {
+        "id": "global-superstore",
+        "format": "Excel",
+        "name": "Global Superstore", 
+        "size": "6MB",
+        "size_category": "Small",
+        "kaggle_id": "shekpaul/global-superstore",
+        "description": "Global e-commerce sales data 2011-2014",
+        "license": "Other (specified)",
+        "edge_cases": ["International data", "Large dataset performance", "Date ranges"]
+      },
+      {
+        "id": "covid-dashboard",
+        "format": "Excel",
+        "name": "COVID Dashboard",
+        "size": "121KB", 
+        "size_category": "Small",
+        "kaggle_id": "suhj22/covid19-excel-dataset-with-interactive-dashboard",
+        "description": "Interactive COVID-19 analysis with embedded charts",
+        "license": "Public",
+        "edge_cases": ["Charts and pivot tables", "Interactive elements", "Formulas"]
+      },
+      {
+        "id": "financial-sample",
+        "format": "Excel",
+        "name": "Financial Sample",
+        "size": "78KB",
+        "size_category": "Small",
+        "kaggle_id": "konstantinognev/financial-samplexlsx", 
+        "description": "Financial statements and analysis",
+        "license": "Public",
+        "edge_cases": ["Financial formulas", "Complex calculations", "Accounting periods"]
+      },
+      {
+        "id": "bike-buyers",
+        "format": "Excel", 
+        "name": "Bike Buyers Analysis",
+        "size": "6.8MB",
+        "size_category": "Small",
+        "kaggle_id": "unica02/data-on-bike-buyers-by-using-ms-excel",
+        "description": "Customer demographic analysis and segmentation",
+        "license": "Public",
+        "edge_cases": ["Market research data", "Demographics", "Segmentation"]
+      },
+      {
+        "id": "rss-feeds",
+        "format": "XML",
+        "name": "RSS News Feeds",
+        "size": "91KB",
+        "size_category": "Small", 
+        "kaggle_id": "ceshine/rss-feeds-from-news-outlets",
+        "description": "4,000+ RSS feeds for news collection",
+        "license": "CC0 Public Domain",
+        "edge_cases": ["Standard RSS format", "Syndication XML"]
+      },
+      {
+        "id": "uspto-patents",
+        "format": "XML", 
+        "name": "USPTO Patent Data",
+        "size": "104MB",
+        "size_category": "Medium",
+        "kaggle_id": "uspto/patent-grant-full-text",
+        "description": "Full-text patent grants from USPTO",
+        "license": "CC Public Domain Mark 1.0",
+        "edge_cases": ["Government XML", "Legal documents", "Complex structure"]
+      },
+      {
+        "id": "titanic-dataset",
+        "format": "CSV",
+        "name": "Titanic Dataset",
+        "size": "100KB",
+        "size_category": "Small",
+        "kaggle_id": "yasserh/titanic-dataset", 
+        "description": "Classic passenger survival dataset",
+        "license": "Public Domain",
+        "edge_cases": ["Mixed data types", "Classification problem", "Missing values"]
+      },
+      {
+        "id": "wine-quality",
+        "format": "CSV",
+        "name": "Wine Quality", 
+        "size": "300KB",
+        "size_category": "Small",
+        "kaggle_id": "yasserh/wine-quality-dataset",
+        "description": "Chemical properties and quality ratings",
+        "license": "Public Domain",
+        "edge_cases": ["Scientific data", "Decimal precision", "Multiple files"]
+      },
+      {
+        "id": "uk-ecommerce",
+        "format": "CSV",
+        "name": "UK E-Commerce Data",
+        "size": "7.5MB", 
+        "size_category": "Small",
+        "kaggle_id": "carrie1/ecommerce-data",
+        "description": "UK online retail transactions",
+        "license": "Public Domain",
+        "edge_cases": ["International data", "Business transactions", "Encoding issues"]
+      },
+      {
+        "id": "credit-fraud",
+        "format": "CSV", 
+        "name": "Credit Card Fraud",
+        "size": "66MB",
+        "size_category": "Small",
+        "kaggle_id": "mlg-ulb/creditcardfraud",
+        "description": "European credit card fraud detection dataset",
+        "license": "Open Database License",
+        "edge_cases": ["Financial data", "Anonymized features", "Imbalanced dataset"]
+      },
+      {
+        "id": "paysim-financial",
+        "format": "CSV",
+        "name": "PaySim Financial",
+        "size": "186MB", 
+        "size_category": "Medium",
+        "kaggle_id": "ealaxi/paysim1",
+        "description": "Synthetic mobile money transactions",
+        "license": "CC BY-SA 4.0",
+        "edge_cases": ["Large row count", "Fraud detection", "Synthetic data"]
+      },
+      {
+        "id": "nyc-taxi",
+        "format": "CSV",
+        "name": "NYC Taxi Trips",
+        "size": "450MB",
+        "size_category": "Medium",
+        "kaggle_id": "elemento/nyc-yellow-taxi-trip-data",
+        "description": "NYC yellow taxi trip records (single month sample)",
+        "license": "Public Domain",
+        "edge_cases": ["Time series", "Geographic coordinates", "Large CSV handling"],
+        "note": "Uses only 2016-03 data file to keep size manageable"
+      }
+    ]
+  },
+  "size_categories": {
+    "Small": "<100MB",
+    "Medium": "100MB-1GB", 
+    "Large": ">1GB"
+  },
+  "formats_supported": [
+    "PDF", "Excel", "XML", "Access", "DBF", "MDF", "CSV"
+  ],
+  "download_methods": {
+    "direct_downloads": {
+      "count": 12,
+      "percentage": 52.0,
+      "description": "Direct HTTP downloads that work immediately"
+    },
+    "kaggle_api": {
+      "count": 10,
+      "percentage": 43.0,
+      "description": "Programmatic access through Kaggle API"
+    },
+    "manual_required": {
+      "count": 1, 
+      "percentage": 5.0,
+      "description": "Requires user intervention or pre-collection"
+    }
+  }
+}
