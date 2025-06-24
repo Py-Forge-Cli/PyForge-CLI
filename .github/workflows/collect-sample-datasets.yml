@@ -16,13 +16,12 @@ on:
     # Run monthly on the 1st at 2 AM UTC
     - cron: '0 2 1 * *'
 
+permissions:
+  contents: write
+
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release_version || 'v1.0.0' }}
   INCLUDE_LARGE: ${{ github.event.inputs.include_large || 'false' }}
-
-permissions:
-  contents: write
-  releases: write
 
 jobs:
   collect-datasets:
