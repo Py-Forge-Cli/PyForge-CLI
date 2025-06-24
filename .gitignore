@@ -196,3 +196,7 @@ test_*.pdf
 *.txtexcel-library-analysis/
 
 test_install_env/
+
+# Datasets directories
+collected-datasets/
+datasets-research/
