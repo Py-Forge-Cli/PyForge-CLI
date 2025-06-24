@@ -650,6 +650,185 @@ def install():
     pass
 
 
+@install.command('sample-datasets')
+@click.argument('path', 
+                type=click.Path(path_type=Path), 
+                required=False,
+                metavar='[PATH]')
+@click.option('--version', '-v',
+              metavar='VERSION',
+              help='Specific release version to install (e.g., v1.0.0)')
+@click.option('--formats', '-f',
+              metavar='FORMATS',
+              help='Comma-separated list of formats to install (e.g., pdf,excel,xml)')
+@click.option('--sizes', '-s',
+              metavar='SIZES', 
+              help='Comma-separated list of sizes to install: small,medium,large')
+@click.option('--list-releases', '-l',
+              is_flag=True,
+              help='List all available dataset releases')
+@click.option('--list-installed',
+              is_flag=True,
+              help='Show currently installed datasets')
+@click.option('--force',
+              is_flag=True,
+              help='Force overwrite existing datasets')
+@click.option('--uninstall',
+              is_flag=True,
+              help='Remove installed datasets')
+@click.pass_context
+def install_sample_datasets(ctx, path, version, formats, sizes, list_releases, list_installed, force, uninstall):
+    """Install curated sample datasets for testing PyForge CLI converters.
+    
+    \\b
+    DESCRIPTION:
+        Download and install curated test datasets from GitHub releases.
+        Datasets cover all supported PyForge CLI formats with various sizes
+        and edge cases for comprehensive testing.
+    
+    \\b
+    ARGUMENTS:
+        PATH            Target directory for datasets (default: ./sample-datasets)
+    
+    \\b
+    SUPPORTED FORMATS:
+        • PDF           Government documents and technical reports
+        • Excel         Multi-sheet business and analytical workbooks
+        • XML           RSS feeds, patents, and bibliographic data
+        • Access        Sample business databases (.mdb/.accdb)
+        • DBF           Geographic and census data files
+        • MDF           SQL Server sample databases
+        • CSV           Classic machine learning datasets
+    
+    \\b
+    SIZE CATEGORIES:
+        • Small         <100MB - Quick testing and typical use cases
+        • Medium        100MB-1GB - Moderate performance testing
+        • Large         >1GB - Heavy performance testing
+    
+    \\b
+    EXAMPLES:
+        # Install all datasets to default location
+        pyforge install sample-datasets
+        
+        # Install to custom directory
+        pyforge install sample-datasets /path/to/datasets
+        
+        # Install specific formats only
+        pyforge install sample-datasets --formats pdf,excel,xml
+        
+        # Install small and medium datasets only
+        pyforge install sample-datasets --sizes small,medium
+        
+        # Install specific version
+        pyforge install sample-datasets --version v1.2.0
+        
+        # List available releases
+        pyforge install sample-datasets --list-releases
+        
+        # Show installed datasets
+        pyforge install sample-datasets --list-installed
+        
+        # Force reinstall over existing datasets
+        pyforge install sample-datasets --force
+        
+        # Remove installed datasets
+        pyforge install sample-datasets --uninstall --force
+    
+    \\b
+    DATASET SOURCES:
+        • Direct Downloads: Government and academic sources
+        • Kaggle API: Public machine learning datasets
+        • Manual Collection: Curated business samples
+    
+    \\b
+    QUICK START AFTER INSTALLATION:
+        # Test PDF conversion
+        pyforge convert sample-datasets/pdf/small/*.pdf
+        
+        # Test Excel conversion  
+        pyforge convert sample-datasets/excel/small/*.xlsx
+        
+        # Test database conversion
+        pyforge convert sample-datasets/access/small/*.mdb
+        
+        # Validate all formats
+        find sample-datasets -name "*.*" -exec pyforge validate {} \\;
+    
+    \\b
+    NOTES:
+        • Downloads use GitHub Releases API with progress tracking
+        • All files include SHA256 checksums for integrity verification
+        • Manifest file provides complete dataset metadata
+        • Archives are automatically extracted after download
+        • Use --force to overwrite existing installations
+    """
+    from .installers.sample_datasets_installer import SampleDatasetsInstaller
+    
+    verbose = ctx.obj.get('verbose', False)
+    
+    # Initialize installer with custom path if provided
+    installer = SampleDatasetsInstaller(target_dir=path)
+    
+    # Handle list operations
+    if list_releases:
+        installer.display_available_releases()
+        return
+    
+    if list_installed:
+        installer.list_installed_datasets()
+        return
+    
+    # Handle uninstall
+    if uninstall:
+        success = installer.uninstall_datasets(force=force)
+        if not success:
+            raise click.Abort()
+        return
+    
+    # Parse format and size filters
+    format_list = None
+    if formats:
+        format_list = [f.strip().lower() for f in formats.split(',')]
+        valid_formats = ['pdf', 'excel', 'xml', 'access', 'dbf', 'mdf', 'csv']
+        invalid_formats = [f for f in format_list if f not in valid_formats]
+        if invalid_formats:
+            console.print(f"[red]Invalid formats: {', '.join(invalid_formats)}[/red]")
+            console.print(f"[dim]Valid formats: {', '.join(valid_formats)}[/dim]")
+            raise click.Abort()
+    
+    size_list = None  
+    if sizes:
+        size_list = [s.strip().lower() for s in sizes.split(',')]
+        valid_sizes = ['small', 'medium', 'large']
+        invalid_sizes = [s for s in size_list if s not in valid_sizes]
+        if invalid_sizes:
+            console.print(f"[red]Invalid sizes: {', '.join(invalid_sizes)}[/red]")
+            console.print(f"[dim]Valid sizes: {', '.join(valid_sizes)}[/dim]")
+            raise click.Abort()
+    
+    if verbose:
+        console.print(f"[dim]Target directory: {installer.target_dir}[/dim]")
+        if version:
+            console.print(f"[dim]Version: {version}[/dim]")
+        if format_list:
+            console.print(f"[dim]Formats: {', '.join(format_list)}[/dim]")
+        if size_list:
+            console.print(f"[dim]Sizes: {', '.join(size_list)}[/dim]")
+    
+    # Perform installation
+    success = installer.install_datasets(
+        version=version,
+        formats=format_list,
+        sizes=size_list,
+        force=force
+    )
+    
+    if not success:
+        console.print("[red]Installation failed![/red]")
+        raise click.Abort()
+
+
 @install.command('mdf-tools')
 @click.option('--password', 
               metavar='PASSWORD',

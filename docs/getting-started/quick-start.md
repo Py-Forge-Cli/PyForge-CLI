@@ -18,7 +18,25 @@ pyforge --version
 
 ## Step 2: Get Sample Files
 
-We'll start with some sample files. You can download these or use your own:
+The easiest way to get started is with our curated sample datasets:
+
+=== "Install Sample Datasets (Recommended)"
+
+    ```bash
+    # Install all sample datasets
+    pyforge install sample-datasets
+    
+    # Or install to a specific directory
+    pyforge install sample-datasets ./test-data
+    
+    # List available releases
+    pyforge install sample-datasets --list-releases
+    
+    # Install specific formats only
+    pyforge install sample-datasets --formats pdf,excel
+    ```
+
+    This gives you 23 curated datasets across all supported formats!
 
 === "PDF Sample"
 
@@ -42,6 +60,9 @@ We'll start with some sample files. You can download these or use your own:
     - Excel files (.xlsx)
     - Access databases (.mdb, .accdb)
     - DBF files (.dbf)
+    - XML files (.xml)
+    - CSV files (.csv)
+    - MDF files (.mdf)
 
 ## Step 3: Your First Conversion
 
@@ -50,6 +71,9 @@ Let's start with the most common operations:
 ### Convert PDF to Text
 
 ```bash
+# Using sample datasets
+pyforge convert sample-datasets/pdf/small/NIST-CSWP-04162018.pdf
+
 # Convert entire PDF to text
 pyforge convert document.pdf
 
@@ -71,6 +95,9 @@ Converting document.pdf...
 ### Convert Excel to Parquet
 
 ```bash
+# Using sample datasets
+pyforge convert sample-datasets/excel/small/financial-sample.xlsx
+
 # Convert all sheets
 pyforge convert spreadsheet.xlsx
 
@@ -95,6 +122,10 @@ Converting spreadsheet.xlsx...
 ### Convert Database Files
 
 ```bash
+# Using sample datasets
+pyforge convert sample-datasets/access/small/Northwind_2007_VBNet.accdb
+pyforge convert sample-datasets/dbf/small/census-tiger-sample.dbf
+
 # Convert Access database
 pyforge convert database.mdb
 
@@ -270,6 +301,7 @@ Now that you've completed your first conversion:
 
 | Task | Command |
 |------|---------|
+| **Install Datasets** | `pyforge install sample-datasets` |
 | **Convert PDF** | `pyforge convert document.pdf` |
 | **Convert Excel** | `pyforge convert spreadsheet.xlsx` |
 | **Convert Database** | `pyforge convert database.mdb` |

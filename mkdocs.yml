@@ -111,13 +111,14 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
-    - getting-started/index.md
+    - Overview: getting-started/index.md
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quick-start.md
     - First Conversion: getting-started/first-conversion.md
     - Tools Prerequisites: getting-started/tools-prerequisites.md
+  - Sample Datasets: sample-datasets.md
   - Converters:
-    - converters/index.md
+    - Overview: converters/index.md
     - PDF to Text: converters/pdf-to-text.md
     - Excel to Parquet: converters/excel-to-parquet.md
     - XML to Parquet: converters/xml-to-parquet.md
@@ -126,15 +127,15 @@ nav:
     - DBF Files: converters/dbf-files.md
     - MDF Tools Installer: converters/mdf-tools-installer.md
   - Reference:
-    - reference/index.md
+    - Overview: reference/index.md
     - CLI Commands: reference/cli-reference.md
   - Tutorials:
-    - tutorials/index.md
+    - Overview: tutorials/index.md
     - Troubleshooting: tutorials/troubleshooting.md
   - API:
-    - api/index.md
+    - Overview: api/index.md
   - About:
-    - about/index.md
+    - Overview: about/index.md
     - Changelog: about/changelog.md
     - Contributing: about/contributing.md
     - License: about/license.md

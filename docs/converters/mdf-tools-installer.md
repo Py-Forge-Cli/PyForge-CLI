@@ -789,7 +789,7 @@ After successful installation:
 
 ## Related Documentation
 
-- [MDF to Parquet Converter](mdf-to-parquet.md) (coming soon)
+- MDF to Parquet Converter (coming soon)
 - [Database Files Overview](database-files.md)
 - [CLI Reference](../reference/cli-reference.md)
 - [Troubleshooting Guide](../tutorials/troubleshooting.md)

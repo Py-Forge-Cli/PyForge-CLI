@@ -4,7 +4,7 @@ A comprehensive collection of sample datasets for testing PyForge CLI data proce
 
 ## Overview
 
-The PyForge CLI Sample Datasets collection provides **23 curated datasets** across **7 different formats**, enabling comprehensive testing of data conversion, processing, and analysis workflows. All datasets are automatically downloadable through the PyForge CLI installation command.
+The PyForge CLI Sample Datasets collection provides **21 curated datasets** across **7 different formats**, enabling comprehensive testing of data conversion, processing, and analysis workflows. All datasets are automatically downloadable through the PyForge CLI installation command.
 
 ## Installation
 
@@ -42,19 +42,10 @@ pyforge install sample-datasets ./data
 
 ## Available Datasets
 
-### 📄 PDF Files (2 datasets)
-
-#### DOD Software Guide
-- **Size**: 2.1MB (Small)
-- **Format**: PDF
-- **License**: Public Domain (US Government)
-- **Description**: Department of Defense software development standards
-- **Use Cases**: Document processing, text extraction, government data
-- **Download**: Direct HTTP
-- **Status**: ❌ SSL certificate issues
+### 📄 PDF Files (1 dataset)
 
 #### NIST Cybersecurity Framework
-- **Size**: 3.2MB → 1.0MB actual (Small)
+- **Size**: 1.0MB (Small)
 - **Format**: PDF
 - **License**: Public Domain (US Government)
 - **Description**: NIST Cybersecurity Framework guidelines
@@ -65,7 +56,7 @@ pyforge install sample-datasets ./data
 ### 📊 Excel Files (5 datasets)
 
 #### Superstore Dataset Final
-- **Size**: 550KB → 2.2MB actual (Small)
+- **Size**: 2.2MB (Small)
 - **Format**: CSV (Excel category)
 - **License**: Public Domain
 - **Description**: Business sales data with comprehensive analytics
@@ -74,7 +65,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Global Superstore
-- **Size**: 6MB → 17.4MB actual (Small)
+- **Size**: 17.4MB (Small)
 - **Format**: Excel
 - **License**: Other (specified)
 - **Description**: Global e-commerce sales data 2011-2014
@@ -83,7 +74,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### COVID Dashboard
-- **Size**: 121KB → 250.4KB actual (Small)
+- **Size**: 250.4KB (Small)
 - **Format**: Excel
 - **License**: Public
 - **Description**: Interactive COVID-19 analysis with embedded charts
@@ -92,7 +83,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Financial Sample
-- **Size**: 78KB → 81.5KB actual (Small)
+- **Size**: 81.5KB (Small)
 - **Format**: Excel
 - **License**: Public
 - **Description**: Financial statements and analysis
@@ -101,7 +92,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Bike Buyers Analysis
-- **Size**: 6.8MB → 44.1MB actual (Small)
+- **Size**: 44.1MB (Small)
 - **Format**: Excel
 - **License**: Public
 - **Description**: Customer demographic analysis and segmentation
@@ -109,10 +100,10 @@ pyforge install sample-datasets ./data
 - **Download**: Kaggle API (`unica02/data-on-bike-buyers-by-using-ms-excel`)
 - **Status**: ✅ Working
 
-### 🔗 XML Files (3 datasets)
+### 🔗 XML Files (2 datasets)
 
 #### RSS News Feeds
-- **Size**: 91KB → 347.9KB actual (Small)
+- **Size**: 347.9KB (Small)
 - **Format**: XML
 - **License**: CC0 Public Domain
 - **Description**: 4,000+ RSS feeds for news collection
@@ -121,7 +112,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### USPTO Patent Data
-- **Size**: 104MB → 568.8MB actual (Medium)
+- **Size**: 568.8MB (Medium)
 - **Format**: XML
 - **License**: CC Public Domain Mark 1.0
 - **Description**: Full-text patent grants from USPTO
@@ -129,19 +120,10 @@ pyforge install sample-datasets ./data
 - **Download**: Kaggle API (`uspto/patent-grant-full-text`)
 - **Status**: ✅ Working
 
-#### DBLP Bibliography
-- **Size**: 781MB → 3.5GB actual (Large)
-- **Format**: XML
-- **License**: CC BY-SA 4.0
-- **Description**: Computer science bibliography database
-- **Use Cases**: Academic data processing, large XML handling, bibliographic data
-- **Download**: Kaggle API (`dheerajmpai/dblp2023`)
-- **Status**: ✅ Working
-
 ### 🗃️ Access Database Files (3 datasets)
 
 #### Northwind 2007 (VB.NET)
-- **Size**: 3.5MB actual (Small)
+- **Size**: 3.5MB (Small)
 - **Format**: ACCDB (Access 2007+)
 - **License**: Educational/Sample Use
 - **Description**: Classic Northwind sample database used in VB.NET examples
@@ -150,7 +132,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Sample Database (Dibi)
-- **Size**: 284KB actual (Small)
+- **Size**: 284KB (Small)
 - **Format**: MDB (Access 97/2000/2003)
 - **License**: Open Source
 - **Description**: Small sample database for testing database abstraction layer
@@ -159,7 +141,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Sakila (Access Port)
-- **Size**: 3.8MB actual (Small)
+- **Size**: 3.8MB (Small)
 - **Format**: MDB (Access 97/2000/2003)
 - **License**: BSD License
 - **Description**: MySQL Sakila sample database ported to Access format
@@ -170,7 +152,7 @@ pyforge install sample-datasets ./data
 ### 📋 DBF Files (3 datasets)
 
 #### Census TIGER Sample
-- **Size**: 25MB download → 175KB DBF (Small)
+- **Size**: 175KB (Small)
 - **Format**: DBF (dBase)
 - **License**: Public Domain (US Government)
 - **Description**: US Census TIGER geographic place data
@@ -179,7 +161,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Property Sample
-- **Size**: 8.5MB download → 75MB DBF (Small)
+- **Size**: 75MB (Small)
 - **Format**: DBF (dBase)
 - **License**: Public Domain (US Government)
 - **Description**: US Census tabulation blocks geographic data
@@ -188,7 +170,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### County Geographic
-- **Size**: 350MB download → 970KB DBF (Medium)
+- **Size**: 970KB (Small)
 - **Format**: DBF (dBase)
 - **License**: Public Domain (US Government)
 - **Description**: US Census county geographic boundaries
@@ -199,7 +181,7 @@ pyforge install sample-datasets ./data
 ### 🗄️ MDF Files (2 datasets)
 
 #### AdventureWorks 2012 OLTP LT
-- **Size**: 15MB → 5.9MB actual (Small)
+- **Size**: 5.9MB (Small)
 - **Format**: MDF (SQL Server)
 - **License**: Microsoft Sample Code License
 - **Description**: Microsoft AdventureWorks OLTP lightweight sample database
@@ -208,7 +190,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### AdventureWorks 2012 DW
-- **Size**: 680MB → 201.2MB actual (Medium)
+- **Size**: 201.2MB (Medium)
 - **Format**: MDF (SQL Server)
 - **License**: Microsoft Sample Code License
 - **Description**: Microsoft AdventureWorks Data Warehouse sample database
@@ -216,10 +198,10 @@ pyforge install sample-datasets ./data
 - **Download**: Direct HTTP (Microsoft GitHub)
 - **Status**: ✅ Working
 
-### 📈 CSV Files (6 datasets)
+### 📈 CSV Files (5 datasets)
 
 #### Titanic Dataset
-- **Size**: 100KB → 59.8KB actual (Small)
+- **Size**: 59.8KB (Small)
 - **Format**: CSV
 - **License**: Public Domain
 - **Description**: Classic passenger survival dataset
@@ -228,7 +210,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Wine Quality
-- **Size**: 300KB → 76.2KB actual (Small)
+- **Size**: 76.2KB (Small)
 - **Format**: CSV
 - **License**: Public Domain
 - **Description**: Chemical properties and quality ratings
@@ -237,7 +219,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### UK E-Commerce Data
-- **Size**: 7.5MB → 43.5MB actual (Small)
+- **Size**: 43.5MB (Small)
 - **Format**: CSV
 - **License**: Public Domain
 - **Description**: UK online retail transactions
@@ -246,7 +228,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### Credit Card Fraud
-- **Size**: 66MB → 143.8MB actual (Small)
+- **Size**: 143.8MB (Medium)
 - **Format**: CSV
 - **License**: Open Database License
 - **Description**: European credit card fraud detection dataset
@@ -255,7 +237,7 @@ pyforge install sample-datasets ./data
 - **Status**: ✅ Working
 
 #### PaySim Financial
-- **Size**: 186MB → 470.7MB actual (Medium)
+- **Size**: 470.7MB (Medium)
 - **Format**: CSV
 - **License**: CC BY-SA 4.0
 - **Description**: Synthetic mobile money transactions
@@ -263,33 +245,18 @@ pyforge install sample-datasets ./data
 - **Download**: Kaggle API (`ealaxi/paysim1`)
 - **Status**: ✅ Working
 
-#### NYC Taxi Trips
-- **Size**: 1.9GB → 1.8GB actual (Large)
-- **Format**: CSV
-- **License**: Public Domain
-- **Description**: NYC yellow taxi trip records (2016-03 sample)
-- **Use Cases**: Time series analysis, geographic coordinates, large CSV handling
-- **Download**: Kaggle API (`elemento/nyc-yellow-taxi-trip-data`)
-- **Status**: ✅ Working
-
 ## Download Methods
 
-### Direct HTTP Downloads (12 datasets - 52%)
+### Direct HTTP Downloads (9 datasets - 43%)
 Direct downloads from reliable sources requiring no authentication:
-- Government websites (Census, NIST, DOD)
+- Government websites (Census, NIST)
 - GitHub repositories (Microsoft, open source projects)
-- Archive.org collections
 
-### Kaggle API Downloads (10 datasets - 43%)
+### Kaggle API Downloads (12 datasets - 57%)
 Programmatic access through Kaggle API:
 - Requires Kaggle account and API token
 - Automatic authentication handling
 - Community datasets with clear licensing
-
-### Manual Collection (1 dataset - 5%)
-Requires user intervention or special handling:
-- Interactive downloads
-- Complex authentication requirements
 
 ## License Information
 
@@ -431,27 +398,27 @@ pyforge benchmark ./data/ --compare-formats
 ## Statistics
 
 ### Success Rates
-- **Overall**: 22/23 datasets working (95.7%)
-- **PDF**: 1/2 working (50%)
+- **Overall**: 21/21 datasets working (100%)
+- **PDF**: 1/1 working (100%)
 - **Excel**: 5/5 working (100%)
-- **XML**: 3/3 working (100%)
+- **XML**: 2/2 working (100%)
 - **Access**: 3/3 working (100%)
 - **DBF**: 3/3 working (100%)
 - **MDF**: 2/2 working (100%)
-- **CSV**: 6/6 working (100%)
+- **CSV**: 5/5 working (100%)
 
 ### Size Distribution
-- **Small (<100MB)**: 16 datasets (70%)
-- **Medium (100MB-1GB)**: 5 datasets (22%)
-- **Large (>1GB)**: 2 datasets (8%)
+- **Small (<100MB)**: 16 datasets (76%)
+- **Medium (100MB-1GB)**: 5 datasets (24%)
+- **Large (>1GB)**: 0 datasets (0%)
 
 ### Total Collection Size
-- **Compressed**: ~2.5GB
-- **Uncompressed**: ~8.2GB
-- **Average per dataset**: ~350MB
+- **Compressed**: ~1.5GB
+- **Uncompressed**: ~2.8GB
+- **Average per dataset**: ~130MB
 
 ---
 
-*Last updated: 2025-01-24*
+*Last updated: 2025-06-24*
 *Version: 1.0.0*
 *PyForge CLI Sample Datasets Collection*

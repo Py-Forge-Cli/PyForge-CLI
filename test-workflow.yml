@@ -1,0 +1,13 @@
+name: Test Workflow
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: List files
+      run: ls -la scripts/
+    - name: Test Python
+      run: python --version
