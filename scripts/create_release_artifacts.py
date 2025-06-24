@@ -326,6 +326,63 @@ def create_manifest(config, all_files_data, download_results, archives_info, ver
     
     return manifest
 
+def validate_dataset_collection(config, all_files_data):
+    """Validate that expected datasets were collected"""
+    validation_results = {
+        "total_expected": 0,
+        "total_found": 0,
+        "missing_datasets": [],
+        "format_summary": {},
+        "validation_passed": False
+    }
+    
+    # Count expected datasets from config
+    direct_datasets = config["datasets"]["direct_downloads"]
+    kaggle_datasets = config["datasets"]["kaggle_datasets"]
+    expected_datasets = direct_datasets + kaggle_datasets
+    
+    validation_results["total_expected"] = len(expected_datasets)
+    
+    # Create format mapping
+    format_mapping = {}
+    for dataset in expected_datasets:
+        format_name = dataset["format"].lower()
+        if format_name not in format_mapping:
+            format_mapping[format_name] = []
+        format_mapping[format_name].append(dataset)
+    
+    # Check what we actually collected
+    total_found = 0
+    for format_name, format_data in all_files_data.items():
+        found_count = sum(len(files) for files in format_data.values())
+        expected_count = len(format_mapping.get(format_name, []))
+        
+        validation_results["format_summary"][format_name] = {
+            "expected": expected_count,
+            "found": found_count,
+            "missing": expected_count - found_count
+        }
+        
+        total_found += found_count
+        
+        # Track missing datasets for formats that have missing data
+        if found_count < expected_count:
+            missing_datasets = format_mapping.get(format_name, [])
+            for dataset in missing_datasets:
+                validation_results["missing_datasets"].append({
+                    "id": dataset["id"],
+                    "name": dataset["name"],
+                    "format": dataset["format"],
+                    "source": "kaggle" if "kaggle_id" in dataset else "direct"
+                })
+    
+    validation_results["total_found"] = total_found
+    validation_results["validation_passed"] = (
+        total_found >= (validation_results["total_expected"] * 0.8)  # 80% threshold
+    )
+    
+    return validation_results
+
 def create_release_artifacts(version="v1.0.0", include_large=False):
     """Main function to create all release artifacts"""
     print(f"🚀 PyForge CLI Dataset Release Artifacts Creator")
@@ -348,6 +405,37 @@ def create_release_artifacts(version="v1.0.0", include_large=False):
     # Collect all files
     print("🔍 Collecting dataset files...")
     all_files_data = collect_dataset_files(base_path)
+    
+    # Validate dataset collection
+    print("🔍 Validating dataset collection...")
+    validation = validate_dataset_collection(config, all_files_data)
+    
+    print(f"📊 Dataset Collection Validation:")
+    print(f"   Expected: {validation['total_expected']} datasets")
+    print(f"   Found: {validation['total_found']} datasets")
+    print(f"   Success Rate: {(validation['total_found']/validation['total_expected']*100):.1f}%")
+    print()
+    
+    print("📋 Format Summary:")
+    for format_name, summary in validation["format_summary"].items():
+        status = "✅" if summary["missing"] == 0 else "⚠️" if summary["found"] > 0 else "❌"
+        print(f"   {status} {format_name.upper()}: {summary['found']}/{summary['expected']} datasets")
+    
+    if validation["missing_datasets"]:
+        print(f"\n⚠️  Missing Datasets ({len(validation['missing_datasets'])}):")
+        for dataset in validation["missing_datasets"][:10]:  # Show first 10
+            source_icon = "🌐" if dataset["source"] == "direct" else "📊"
+            print(f"   {source_icon} {dataset['format']}: {dataset['name']} ({dataset['id']})")
+        if len(validation["missing_datasets"]) > 10:
+            print(f"   ... and {len(validation['missing_datasets']) - 10} more")
+    
+    print()
+    
+    if not validation["validation_passed"]:
+        print("⚠️  Warning: Dataset collection validation failed!")
+        print("   Consider investigating missing datasets before creating release.")
+        print("   Continuing with available datasets...")
+        print()
     
     # Load download results
     print("📊 Loading download results...")

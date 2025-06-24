@@ -4,7 +4,7 @@ A comprehensive collection of sample datasets for testing PyForge CLI data proce
 
 ## Overview
 
-The PyForge CLI Sample Datasets collection provides **21 curated datasets** across **7 different formats**, enabling comprehensive testing of data conversion, processing, and analysis workflows. All datasets are automatically downloadable through the PyForge CLI installation command.
+The PyForge CLI Sample Datasets collection provides **19 curated datasets** across **7 different formats**, enabling comprehensive testing of data conversion, processing, and analysis workflows. All datasets are automatically downloadable through the PyForge CLI installation command.
 
 ## Installation
 
@@ -53,16 +53,7 @@ pyforge install sample-datasets ./data
 - **Download**: Direct HTTP
 - **Status**: ✅ Working
 
-### 📊 Excel Files (5 datasets)
-
-#### Superstore Dataset Final
-- **Size**: 2.2MB (Small)
-- **Format**: CSV (Excel category)
-- **License**: Public Domain
-- **Description**: Business sales data with comprehensive analytics
-- **Use Cases**: Business intelligence, sales analysis, data visualization
-- **Download**: Kaggle API (`vivek468/superstore-dataset-final`)
-- **Status**: ✅ Working
+### 📊 Excel Files (3 datasets)
 
 #### Global Superstore
 - **Size**: 17.4MB (Small)
@@ -91,25 +82,7 @@ pyforge install sample-datasets ./data
 - **Download**: Kaggle API (`konstantinognev/financial-samplexlsx`)
 - **Status**: ✅ Working
 
-#### Bike Buyers Analysis
-- **Size**: 44.1MB (Small)
-- **Format**: Excel
-- **License**: Public
-- **Description**: Customer demographic analysis and segmentation
-- **Use Cases**: Market research, demographic analysis, customer segmentation
-- **Download**: Kaggle API (`unica02/data-on-bike-buyers-by-using-ms-excel`)
-- **Status**: ✅ Working
-
-### 🔗 XML Files (2 datasets)
-
-#### RSS News Feeds
-- **Size**: 347.9KB (Small)
-- **Format**: XML
-- **License**: CC0 Public Domain
-- **Description**: 4,000+ RSS feeds for news collection
-- **Use Cases**: RSS processing, news aggregation, syndication XML
-- **Download**: Kaggle API (`ceshine/rss-feeds-from-news-outlets`)
-- **Status**: ✅ Working
+### 🔗 XML Files (1 dataset)
 
 #### USPTO Patent Data
 - **Size**: 568.8MB (Medium)
@@ -247,12 +220,12 @@ pyforge install sample-datasets ./data
 
 ## Download Methods
 
-### Direct HTTP Downloads (9 datasets - 43%)
+### Direct HTTP Downloads (9 datasets - 47%)
 Direct downloads from reliable sources requiring no authentication:
 - Government websites (Census, NIST)
 - GitHub repositories (Microsoft, open source projects)
 
-### Kaggle API Downloads (12 datasets - 57%)
+### Kaggle API Downloads (10 datasets - 53%)
 Programmatic access through Kaggle API:
 - Requires Kaggle account and API token
 - Automatic authentication handling
@@ -398,18 +371,18 @@ pyforge benchmark ./data/ --compare-formats
 ## Statistics
 
 ### Success Rates
-- **Overall**: 21/21 datasets working (100%)
+- **Overall**: 19/19 datasets working (100%)
 - **PDF**: 1/1 working (100%)
-- **Excel**: 5/5 working (100%)
-- **XML**: 2/2 working (100%)
+- **Excel**: 3/3 working (100%)
+- **XML**: 1/1 working (100%)
 - **Access**: 3/3 working (100%)
 - **DBF**: 3/3 working (100%)
 - **MDF**: 2/2 working (100%)
-- **CSV**: 5/5 working (100%)
+- **CSV**: 6/6 working (100%)
 
 ### Size Distribution
-- **Small (<100MB)**: 16 datasets (76%)
-- **Medium (100MB-1GB)**: 5 datasets (24%)
+- **Small (<100MB)**: 13 datasets (68%)
+- **Medium (100MB-1GB)**: 6 datasets (32%)
 - **Large (>1GB)**: 0 datasets (0%)
 
 ### Total Collection Size

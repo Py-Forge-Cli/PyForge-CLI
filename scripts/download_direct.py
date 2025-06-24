@@ -133,6 +133,8 @@ def download_file(url, output_path, chunk_size=8192, timeout=30, max_retries=3):
     """
     last_error = None
     
+    print(f"  🌐 Downloading from: {url}")
+    
     for attempt in range(max_retries):
         try:
             if attempt > 0:
@@ -250,7 +252,16 @@ def download_direct_datasets():
         output_path = get_output_path(dataset, base_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        # Skip if file already exists
+        # For ZIP URLs, we download to a temporary ZIP file first
+        if dataset.get("zip_url", False):
+            # Download to temporary ZIP file
+            zip_filename = dataset["url"].split("/")[-1]
+            temp_zip_path = output_path.parent / zip_filename
+            download_path = temp_zip_path
+        else:
+            download_path = output_path
+        
+        # Skip if final file already exists
         if output_path.exists():
             print(f"  ⏭️  File already exists: {output_path}")
             existing_size = get_file_size(output_path)
@@ -269,7 +280,7 @@ def download_direct_datasets():
             continue
         
         # Download the file
-        result = download_file(dataset["url"], output_path)
+        result = download_file(dataset["url"], download_path)
         result["dataset_id"] = dataset["id"]
         result["output_path"] = str(output_path)
         
@@ -280,31 +291,47 @@ def download_direct_datasets():
         })
         
         if result["success"]:
-            # Handle ZIP extraction for DBF files
-            if dataset["format"] == "DBF" and output_path.suffix.lower() == ".zip":
+            # Handle ZIP extraction for zip_url datasets
+            if dataset.get("zip_url", False):
                 print(f"  ✅ Downloaded ZIP: {result['size_formatted']} in {result['duration_seconds']:.1f}s")
                 
                 # Extract DBF files from ZIP
-                extracted_files = extract_dbf_from_zip(output_path, output_path.parent, dataset)
+                extracted_files = extract_dbf_from_zip(download_path, output_path.parent, dataset)
                 
                 if extracted_files:
+                    # Find the main DBF file that matches our expected filename
+                    main_dbf = None
+                    for extracted_file in extracted_files:
+                        if extracted_file.name == output_path.name:
+                            main_dbf = extracted_file
+                            break
+                    
+                    # If we can't find exact match, rename the first DBF file
+                    if main_dbf is None:
+                        main_dbf = extracted_files[0]
+                        if main_dbf != output_path:
+                            main_dbf.rename(output_path)
+                            main_dbf = output_path
+                    
                     # Update result to reflect the extracted DBF files
-                    total_extracted_size = sum(get_file_size(f) for f in extracted_files)
+                    total_extracted_size = sum(get_file_size(f) for f in extracted_files if f.exists())
                     result["extracted_files"] = [str(f) for f in extracted_files]
                     result["extracted_count"] = len(extracted_files)
                     result["total_extracted_size"] = total_extracted_size
                     result["total_extracted_formatted"] = format_size(total_extracted_size)
                     
                     # Update the primary file info to point to the main DBF
-                    main_dbf = extracted_files[0]
                     result["size_bytes"] = get_file_size(main_dbf)
                     result["size_formatted"] = format_size(result["size_bytes"])
                     result["sha256"] = calculate_file_hash(main_dbf)
                     result["output_path"] = str(main_dbf)
                     
                     print(f"  📦 Extracted {len(extracted_files)} DBF files ({format_size(total_extracted_size)})")
+                    print(f"  📄 Main file: {main_dbf.name}")
                 else:
                     print(f"  ⚠️  No DBF files found in ZIP archive")
+                    result["success"] = False
+                    result["error"] = "No DBF files found in ZIP archive"
             else:
                 print(f"  ✅ Downloaded: {result['size_formatted']} in {result['duration_seconds']:.1f}s")
             
@@ -312,6 +339,8 @@ def download_direct_datasets():
         else:
             failed_downloads += 1
             # Clean up failed download
+            if download_path.exists():
+                download_path.unlink()
             if output_path.exists():
                 output_path.unlink()
         
