@@ -42,8 +42,8 @@ jobs:
       working-directory: scripts
       run: |
         echo "🚀 Starting direct HTTP downloads..."
-        python download_direct.py
-        echo "✅ Direct downloads completed"
+        python download_direct.py || echo "⚠️ Some direct downloads failed, continuing with available datasets"
+        echo "✅ Direct downloads phase completed"
     
     - name: Create release artifacts
       working-directory: scripts
