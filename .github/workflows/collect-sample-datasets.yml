@@ -38,12 +38,28 @@ jobs:
         python -m pip install --upgrade pip
         pip install kagglehub requests urllib3 certifi
     
+    - name: Create Kaggle credentials
+      if: ${{ vars.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
+      run: |
+        mkdir -p ~/.kaggle
+        echo '{"username":"${{ vars.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+        chmod 600 ~/.kaggle/kaggle.json
+        echo "✅ Kaggle credentials configured"
+    
     - name: Download direct HTTP datasets
       working-directory: scripts
       run: |
         echo "🚀 Starting direct HTTP downloads..."
         python download_direct.py || echo "⚠️ Some direct downloads failed, continuing with available datasets"
         echo "✅ Direct downloads phase completed"
+    
+    - name: Download Kaggle datasets
+      if: ${{ vars.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
+      working-directory: scripts
+      run: |
+        echo "🚀 Starting Kaggle API downloads..."
+        python download_kaggle.py || echo "⚠️ Some Kaggle downloads failed, continuing with available datasets"
+        echo "✅ Kaggle downloads phase completed"
     
     - name: Create release artifacts
       working-directory: scripts
