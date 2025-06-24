@@ -39,7 +39,6 @@ jobs:
         pip install kagglehub requests urllib3 certifi
     
     - name: Create Kaggle credentials
-      if: ${{ vars.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
       run: |
         mkdir -p ~/.kaggle
         echo '{"username":"${{ vars.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
@@ -54,7 +53,6 @@ jobs:
         echo "✅ Direct downloads phase completed"
     
     - name: Download Kaggle datasets
-      if: ${{ vars.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
       working-directory: scripts
       run: |
         echo "🚀 Starting Kaggle API downloads..."
