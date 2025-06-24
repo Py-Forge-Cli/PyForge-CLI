@@ -48,7 +48,7 @@ Learn PyForge CLI through hands-on tutorials and real-world examples.
 
 ### For Troubleshooting
 - **[Common Issues](troubleshooting.md)** - Solutions to frequent problems
-- **[Performance Tips](troubleshooting.md#performance)** - Optimize for large files
+- **[Performance Tips](troubleshooting.md)** - Optimize for large files
 
 ## What You'll Learn
 

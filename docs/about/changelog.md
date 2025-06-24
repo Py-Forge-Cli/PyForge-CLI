@@ -5,6 +5,78 @@ All notable changes to PyForge CLI are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-06-24
+
+### 🎉 Major Feature: Sample Datasets Installation
+
+**Comprehensive test dataset collection** - Automated installation of 23 curated datasets across all supported PyForge CLI formats for comprehensive testing and development.
+
+### ✨ Added
+
+#### Sample Datasets Installer (`pyforge install sample-datasets`)
+- **Curated Dataset Collection**: 23 professionally curated datasets across 7 formats
+  - **PDF**: Government documents (NIST, DOD) for document processing testing
+  - **Excel**: Business datasets with multi-sheet structures and complex layouts
+  - **XML**: RSS feeds, patent data, and bibliographic datasets for structure testing
+  - **Access**: Classic business databases (Northwind, Sakila) for relational testing
+  - **DBF**: Geographic and census data for legacy format compatibility
+  - **MDF**: SQL Server sample databases (AdventureWorks) for enterprise testing
+  - **CSV**: Machine learning datasets (Titanic, Wine Quality) for analytics testing
+
+#### GitHub Release Integration
+- **Automated Dataset Distribution**: GitHub Releases API integration for reliable downloads
+  - Version-specific dataset releases with comprehensive metadata
+  - SHA256 checksum verification for data integrity
+  - Progress tracking with rich terminal UI during downloads
+  - Automatic archive extraction and organization
+  - Bandwidth-efficient incremental updates
+
+#### Intelligent Dataset Management
+- **Flexible Installation Options**: Comprehensive command-line interface
+  - Format filtering (`--formats pdf,excel,xml`) for selective installation
+  - Size category filtering (`--sizes small,medium`) for performance testing
+  - Custom target directories with automatic organization
+  - Version pinning for reproducible testing environments
+  - Force overwrite and uninstall capabilities
+
+#### Dataset Organization System
+- **Structured File Layout**: Organized by format and size for easy navigation
+  ```
+  sample-datasets/
+  ├── pdf/small/         # <100MB datasets
+  ├── excel/medium/      # 100MB-1GB datasets  
+  ├── xml/large/         # >1GB datasets
+  └── metadata/          # Manifests and checksums
+  ```
+
+#### Quality Assurance Pipeline
+- **Automated Collection Workflow**: GitHub Actions pipeline for dataset maintenance
+  - Direct HTTP downloads from government and academic sources
+  - Kaggle API integration for community datasets
+  - SSL certificate handling for legacy government websites
+  - Retry logic with exponential backoff for reliability
+  - Comprehensive error handling and reporting
+
+### 📊 Dataset Statistics
+- **Success Rate**: 95.7% (22/23 datasets successfully collected)
+- **Total Size**: ~8.2GB uncompressed, ~2.5GB compressed
+- **Format Coverage**: All 7 supported PyForge CLI formats
+- **Source Diversity**: Government, academic, and community sources
+- **License Compliance**: Public domain, open source, and educational licenses
+
+### 🔧 Technical Implementation
+- **GitHub Releases API**: RESTful API integration with proper error handling
+- **Progress Tracking**: Rich terminal UI with download progress bars
+- **Checksum Verification**: SHA256 integrity checking for all files
+- **Archive Management**: Automatic ZIP extraction and cleanup
+- **Cross-Platform**: Windows, macOS, and Linux compatibility
+
+### 📚 Documentation Updates
+- **Comprehensive Dataset Guide**: Complete documentation of all 23 datasets
+- **Installation Instructions**: Step-by-step setup and usage guides  
+- **CLI Reference**: Updated command documentation with new install options
+- **Quick Start Integration**: Sample dataset usage in getting started guides
+
 ## [0.4.0] - 2025-06-23
 
 ### 🚀 Major Feature: MDF Tools Installer

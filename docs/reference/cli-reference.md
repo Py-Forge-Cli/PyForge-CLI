@@ -4,6 +4,80 @@ Complete reference for all PyForge CLI commands, options, and usage patterns.
 
 ## Main Commands
 
+### `pyforge install`
+
+Install prerequisites and sample datasets for PyForge CLI.
+
+```bash
+pyforge install <component> [options]
+```
+
+#### Available Components
+
+=== "sample-datasets"
+
+    Install curated test datasets for all supported formats.
+
+    ```bash
+    pyforge install sample-datasets [target_directory] [options]
+    ```
+
+    **Examples:**
+    ```bash
+    # Install all datasets to default location
+    pyforge install sample-datasets
+    
+    # Install to custom directory
+    pyforge install sample-datasets ./test-data
+    
+    # Install specific formats only
+    pyforge install sample-datasets --formats pdf,excel,xml
+    
+    # Install small datasets only
+    pyforge install sample-datasets --sizes small
+    
+    # List available releases
+    pyforge install sample-datasets --list-releases
+    
+    # Show installed datasets
+    pyforge install sample-datasets --list-installed
+    
+    # Uninstall datasets
+    pyforge install sample-datasets --uninstall --force
+    ```
+
+    **Options:**
+    
+    | Option | Type | Description |
+    |--------|------|-------------|
+    | `--version <version>` | string | Specific release version (e.g., v1.0.0) |
+    | `--formats <list>` | string | Comma-separated format list (pdf,excel,xml,access,dbf,mdf,csv) |
+    | `--sizes <list>` | string | Size categories (small,medium,large) |
+    | `--list-releases` | flag | List all available dataset releases |
+    | `--list-installed` | flag | Show currently installed datasets |
+    | `--force` | flag | Force overwrite existing datasets |
+    | `--uninstall` | flag | Remove installed datasets |
+
+=== "mdf-tools"
+
+    Install Docker Desktop and SQL Server Express for MDF file processing.
+
+    ```bash
+    pyforge install mdf-tools [options]
+    ```
+
+    **Examples:**
+    ```bash
+    # Interactive installation
+    pyforge install mdf-tools
+    
+    # Custom SQL Server password
+    pyforge install mdf-tools --password "MySecure123!"
+    
+    # Custom port
+    pyforge install mdf-tools --port 1433
+    ```
+
 ### `pyforge convert`
 
 Convert files between different formats.
@@ -17,6 +91,10 @@ pyforge convert <input_file> [output_file] [options]
 ```bash
 # Basic conversion
 pyforge convert document.pdf
+
+# Using sample datasets
+pyforge convert sample-datasets/pdf/small/NIST-CSWP-04162018.pdf
+pyforge convert sample-datasets/excel/small/financial-sample.xlsx
 
 # With custom output
 pyforge convert document.pdf extracted_text.txt

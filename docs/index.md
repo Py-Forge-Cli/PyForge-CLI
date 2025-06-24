@@ -9,6 +9,9 @@
 </div>
 
 <div align="center">
+  <a href="https://github.com/Py-Forge-Cli/PyForge-CLI/releases">
+    <img src="https://img.shields.io/github/v/release/Py-Forge-Cli/PyForge-CLI?label=Latest%20Release" alt="Latest Release">
+  </a>
   <a href="https://pypi.org/project/pyforge-cli/">
     <img src="https://img.shields.io/pypi/v/pyforge-cli.svg" alt="PyPI version">
   </a>
@@ -52,6 +55,9 @@ Get up and running in under 2 minutes:
 ### Your First Conversion
 
 ```bash
+# Install sample datasets for testing
+pyforge install sample-datasets
+
 # Convert a PDF to text
 pyforge convert document.pdf
 
@@ -152,6 +158,14 @@ Choose your path based on your experience level:
 
     [:octicons-arrow-right-24: Installation Guide](getting-started/installation.md)
 
+-   :material-database: **Sample Datasets**
+
+    ---
+
+    Curated test datasets for all supported formats
+
+    [:octicons-arrow-right-24: Browse Datasets](sample-datasets.md)
+
 -   :material-book-open: **Tutorials**
 
     ---
@@ -179,7 +193,23 @@ Choose your path based on your experience level:
 
 ## What's New
 
-### Version 0.3.0 (Latest)
+### Version 0.5.0 (Latest)
+- 🎉 **Sample Datasets Collection**: 23 curated test datasets across all supported formats
+- ✅ **Automated Installation**: `pyforge install sample-datasets` command with GitHub Releases integration
+- ✅ **Format Filtering**: Install specific formats with `--formats pdf,excel,xml`
+- ✅ **Size Categories**: Small (<100MB), Medium (100MB-1GB), Large (>1GB) datasets
+- ✅ **Progress Tracking**: Rich terminal UI with download progress and checksums
+- ✅ **Dataset Management**: List releases, show installed datasets, and uninstall options
+- ✅ **Quality Assurance**: 95.7% success rate with comprehensive error handling
+- ✅ **Documentation Integration**: Complete dataset guide and CLI reference updates
+
+### Version 0.4.0
+- 🚀 **MDF Tools Installer**: Complete SQL Server infrastructure for MDF file processing
+- ✅ **Docker Integration**: Automated Docker Desktop and SQL Server Express installation
+- ✅ **Container Management**: Full lifecycle commands for SQL Server container control
+- ✅ **Cross-Platform Support**: Windows, macOS, and Linux compatibility
+
+### Version 0.3.0
 - ✅ **XML to Parquet Converter**: Complete implementation with intelligent flattening
 - ✅ **Automatic Structure Detection**: Analyzes XML hierarchy and array patterns
 - ✅ **Flexible Flattening Strategies**: Conservative, moderate, and aggressive options
