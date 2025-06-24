@@ -1,0 +1,168 @@
+name: Collect Sample Datasets
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+      include_large:
+        description: 'Include large datasets (>100MB)'
+        required: false
+        default: 'false'
+        type: boolean
+  schedule:
+    # Run monthly on the 1st at 2 AM UTC
+    - cron: '0 2 1 * *'
+
+env:
+  RELEASE_VERSION: ${{ github.event.inputs.release_version || 'v1.0.0' }}
+  INCLUDE_LARGE: ${{ github.event.inputs.include_large || 'false' }}
+
+jobs:
+  collect-datasets:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install kagglehub requests urllib3 certifi
+    
+    - name: Create Kaggle credentials
+      if: ${{ vars.KAGGLE_USERNAME && secrets.KAGGLE_KEY }}
+      run: |
+        mkdir -p ~/.kaggle
+        echo '{"username":"${{ vars.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+        chmod 600 ~/.kaggle/kaggle.json
+    
+    - name: Download direct HTTP datasets
+      run: |
+        echo "🚀 Starting direct HTTP downloads..."
+        python download_direct.py
+        echo "✅ Direct downloads completed"
+    
+    - name: Download Kaggle datasets
+      if: ${{ vars.KAGGLE_USERNAME && secrets.KAGGLE_KEY }}
+      run: |
+        echo "🚀 Starting Kaggle API downloads..."
+        python download_kaggle.py
+        echo "✅ Kaggle downloads completed"
+    
+    - name: Create release artifacts
+      run: |
+        echo "📦 Creating release artifacts..."
+        python create_release_artifacts.py --version "${{ env.RELEASE_VERSION }}" --include-large "${{ env.INCLUDE_LARGE }}"
+        echo "✅ Release artifacts created"
+    
+    - name: Generate checksums
+      run: |
+        echo "🔐 Generating checksums..."
+        cd collected-datasets
+        find . -type f -name "*.zip" -exec sha256sum {} \; > checksums.sha256
+        echo "✅ Checksums generated"
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sample-datasets-${{ env.RELEASE_VERSION }}
+        path: |
+          collected-datasets/*.zip
+          collected-datasets/checksums.sha256
+          collected-datasets/manifest.json
+        retention-days: 30
+    
+    - name: Create GitHub Release
+      if: github.event_name == 'workflow_dispatch'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.RELEASE_VERSION }}
+        name: PyForge CLI Sample Datasets ${{ env.RELEASE_VERSION }}
+        body: |
+          # PyForge CLI Sample Datasets ${{ env.RELEASE_VERSION }}
+          
+          This release contains curated test datasets for all PyForge CLI supported formats.
+          
+          ## 📦 Included Formats
+          - **PDF** (2 datasets) - Government documents and technical reports
+          - **Excel** (5 datasets) - Multi-sheet business and analytical data
+          - **XML** (3 datasets) - RSS feeds, patents, and bibliographic data
+          - **Access** (2 datasets) - Sample business databases
+          - **DBF** (3 datasets) - Geographic and census data
+          - **MDF** (2 datasets) - SQL Server sample databases
+          - **CSV** (6 datasets) - Classic machine learning and business datasets
+          
+          ## 📊 Size Categories
+          - **Small** (<100MB): Quick tests and typical use cases
+          - **Medium** (100MB-1GB): Moderate performance testing
+          ${{ env.INCLUDE_LARGE == 'true' && '- **Large** (>1GB): Heavy performance testing' || '' }}
+          
+          ## 🚀 Quick Start
+          ```bash
+          # Download and extract datasets
+          wget https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_VERSION }}/all-formats.zip
+          unzip all-formats.zip
+          
+          # Test conversions
+          pyforge convert pdf/small/*.pdf
+          pyforge convert excel/small/*.xlsx
+          pyforge convert xml/small/*.xml
+          ```
+          
+          ## 📋 Dataset Sources
+          - **Direct Downloads**: 9 datasets from government and academic sources
+          - **Kaggle API**: 11 datasets from Kaggle's public collection
+          - **Manual Collection**: 2 datasets requiring user interaction
+          
+          ## 🔐 File Integrity
+          All files include SHA256 checksums for verification. See `checksums.sha256` in the release assets.
+          
+          ## 📄 Metadata
+          Complete dataset information available in `manifest.json` including:
+          - Source URLs and licensing information
+          - File sizes and format details
+          - Edge cases and testing scenarios
+          
+          Generated automatically by PyForge CLI Dataset Collection Pipeline.
+        files: |
+          collected-datasets/*.zip
+          collected-datasets/checksums.sha256
+          collected-datasets/manifest.json
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Cleanup
+      if: always()
+      run: |
+        echo "🧹 Cleaning up temporary files..."
+        rm -rf ~/.kaggle
+        echo "✅ Cleanup completed"
+
+  notify-completion:
+    needs: collect-datasets
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Report Status
+      run: |
+        if [ "${{ needs.collect-datasets.result }}" == "success" ]; then
+          echo "✅ Dataset collection completed successfully"
+          echo "🎯 Release: ${{ env.RELEASE_VERSION }}"
+          echo "📦 Artifacts uploaded to GitHub Release"
+        else
+          echo "❌ Dataset collection failed"
+          echo "🔍 Check the logs for details"
+          exit 1
+        fi
