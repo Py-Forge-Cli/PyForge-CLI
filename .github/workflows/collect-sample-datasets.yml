@@ -10,7 +10,7 @@ on:
       include_large:
         description: 'Include large datasets (>100MB)'
         required: false
-        default: 'false'
+        default: false
         type: boolean
   schedule:
     # Run monthly on the 1st at 2 AM UTC
@@ -21,7 +21,7 @@ permissions:
 
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release_version || 'v1.0.0' }}
-  INCLUDE_LARGE: ${{ github.event.inputs.include_large || 'false' }}
+  INCLUDE_LARGE: ${{ github.event.inputs.include_large || false }}
 
 jobs:
   collect-datasets:
@@ -52,14 +52,19 @@ jobs:
       working-directory: scripts
       run: |
         echo "🚀 Starting direct HTTP downloads..."
-        python download_direct.py || echo "⚠️ Some direct downloads failed, continuing with available datasets"
+        python download_direct.py
+        echo "📊 Validating direct downloads..."
+        ls -la collected-datasets/ || echo "No collected-datasets directory found"
+        find collected-datasets/ -name "*.pdf" -o -name "*.mdb" -o -name "*.accdb" -o -name "*.mdf" -o -name "*.dbf" | wc -l | xargs echo "Direct download files found:"
         echo "✅ Direct downloads phase completed"
     
     - name: Download Kaggle datasets
       working-directory: scripts
       run: |
         echo "🚀 Starting Kaggle API downloads..."
-        python download_kaggle.py || echo "⚠️ Some Kaggle downloads failed, continuing with available datasets"
+        python download_kaggle.py
+        echo "📊 Validating Kaggle downloads..."
+        find collected-datasets/ -name "*.xlsx" -o -name "*.csv" -o -name "*.xml" | wc -l | xargs echo "Kaggle download files found:"
         echo "✅ Kaggle downloads phase completed"
     
     - name: Create release artifacts

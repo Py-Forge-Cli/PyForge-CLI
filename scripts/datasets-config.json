@@ -5,17 +5,6 @@
   "datasets": {
     "direct_downloads": [
       {
-        "id": "dod-software-guide",
-        "format": "PDF",
-        "name": "DOD Software Guide",
-        "size": "2.1MB",
-        "size_category": "Small",
-        "url": "https://www.acq.osd.mil/se/docs/DoD-STD-499C.pdf",
-        "filename": "DoD-STD-499C.pdf",
-        "description": "Department of Defense software development standards",
-        "license": "Public Domain (US Government)"
-      },
-      {
         "id": "nist-cybersecurity",
         "format": "PDF", 
         "name": "NIST Cybersecurity Framework",
@@ -66,7 +55,8 @@
         "size": "25MB",
         "size_category": "Small",
         "url": "https://www2.census.gov/geo/tiger/TIGER2024/PLACE/tl_2024_01_place.zip",
-        "filename": "tl_2024_01_place.zip",
+        "filename": "tl_2024_01_place.dbf",
+        "zip_url": true,
         "description": "US Census TIGER geographic place data",
         "license": "Public Domain (US Government)"
       },
@@ -77,7 +67,8 @@
         "size": "8.5MB",
         "size_category": "Small", 
         "url": "https://www2.census.gov/geo/tiger/TIGER2024/TABBLOCK20/tl_2024_06_tabblock20.zip",
-        "filename": "tl_2024_06_tabblock20.zip",
+        "filename": "tl_2024_06_tabblock20.dbf",
+        "zip_url": true,
         "description": "US Census tabulation blocks geographic data",
         "license": "Public Domain (US Government)"
       },
@@ -88,7 +79,8 @@
         "size": "350MB",
         "size_category": "Medium",
         "url": "https://www2.census.gov/geo/tiger/TIGER2024/COUNTY/tl_2024_us_county.zip", 
-        "filename": "tl_2024_us_county.zip",
+        "filename": "tl_2024_us_county.dbf",
+        "zip_url": true,
         "description": "US Census county geographic boundaries",
         "license": "Public Domain (US Government)"
       },
@@ -116,18 +108,6 @@
       }
     ],
     "kaggle_datasets": [
-      {
-        "id": "superstore-final",
-        "format": "Excel",
-        "name": "Superstore Dataset Final",
-        "size": "550KB",
-        "size_category": "Small", 
-        "kaggle_id": "vivek468/superstore-dataset-final",
-        "description": "Business sales data with comprehensive analytics (CSV converted to Excel)",
-        "license": "Public Domain",
-        "edge_cases": ["Business analytics", "Sales data", "Performance metrics"],
-        "note": "Alternative working source - CSV format but downloadable"
-      },
       {
         "id": "global-superstore",
         "format": "Excel",
@@ -160,28 +140,6 @@
         "description": "Financial statements and analysis",
         "license": "Public",
         "edge_cases": ["Financial formulas", "Complex calculations", "Accounting periods"]
-      },
-      {
-        "id": "bike-buyers",
-        "format": "Excel", 
-        "name": "Bike Buyers Analysis",
-        "size": "6.8MB",
-        "size_category": "Small",
-        "kaggle_id": "unica02/data-on-bike-buyers-by-using-ms-excel",
-        "description": "Customer demographic analysis and segmentation",
-        "license": "Public",
-        "edge_cases": ["Market research data", "Demographics", "Segmentation"]
-      },
-      {
-        "id": "rss-feeds",
-        "format": "XML",
-        "name": "RSS News Feeds",
-        "size": "91KB",
-        "size_category": "Small", 
-        "kaggle_id": "ceshine/rss-feeds-from-news-outlets",
-        "description": "4,000+ RSS feeds for news collection",
-        "license": "CC0 Public Domain",
-        "edge_cases": ["Standard RSS format", "Syndication XML"]
       },
       {
         "id": "uspto-patents",
@@ -273,19 +231,14 @@
   ],
   "download_methods": {
     "direct_downloads": {
-      "count": 12,
-      "percentage": 52.0,
+      "count": 9,
+      "percentage": 47.4,
       "description": "Direct HTTP downloads that work immediately"
     },
     "kaggle_api": {
       "count": 10,
-      "percentage": 43.0,
+      "percentage": 52.6,
       "description": "Programmatic access through Kaggle API"
-    },
-    "manual_required": {
-      "count": 1, 
-      "percentage": 5.0,
-      "description": "Requires user intervention or pre-collection"
     }
   }
 }

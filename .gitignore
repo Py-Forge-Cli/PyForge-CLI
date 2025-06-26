@@ -200,3 +200,5 @@ test_install_env/
 # Datasets directories
 collected-datasets/
 datasets-research/
+collected-datasets/
+test-sample-datasets/

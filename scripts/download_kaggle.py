@@ -108,27 +108,57 @@ def move_and_organize_files(download_path, target_path, dataset):
         })
         total_size = file_size
     else:
-        # Directory - move contents with format-specific handling
-        dataset_dir = target_path.parent / f"{dataset['id']}_dataset"
-        dataset_dir.mkdir(exist_ok=True)
+        # Directory - find the primary file based on format and move it to target location
+        main_file_found = False
         
         for item in download_path.iterdir():
             if item.is_file():
                 # Special handling for NYC taxi dataset - only keep 2016-03 file
                 if dataset['id'] == 'nyc-taxi' and 'yellow_tripdata_2016-03.csv' not in item.name:
-                    print(f"  Skipping {item.name} (keeping only 2016-03 data)")
+                    print(f"    Skipping {item.name} (keeping only 2016-03 data)")
                     continue
-                    
-                target_file = dataset_dir / item.name
-                shutil.move(str(item), str(target_file))
-                file_size = get_file_size(target_file)
-                moved_files.append({
-                    "original_path": str(item),
-                    "new_path": str(target_file),
-                    "size": file_size,
-                    "sha256": calculate_file_hash(target_file)
-                })
-                total_size += file_size
+                
+                # Check if this is the main file we want based on extension
+                is_main_file = False
+                if dataset["format"] == "Excel" and item.suffix.lower() in ['.xlsx', '.xls']:
+                    is_main_file = True
+                elif dataset["format"] == "XML" and item.suffix.lower() == '.xml':
+                    is_main_file = True
+                elif dataset["format"] == "CSV" and item.suffix.lower() == '.csv':
+                    is_main_file = True
+                
+                if is_main_file and not main_file_found:
+                    # Move the main file to the target location
+                    shutil.move(str(item), str(target_path))
+                    file_size = get_file_size(target_path)
+                    moved_files.append({
+                        "original_path": str(item),
+                        "new_path": str(target_path),
+                        "size": file_size,
+                        "sha256": calculate_file_hash(target_path)
+                    })
+                    total_size += file_size
+                    main_file_found = True
+                    print(f"    📁 Moved main file: {item.name} -> {target_path.name}")
+                else:
+                    # Move additional files to a subdirectory for reference
+                    extra_dir = target_path.parent / f"{dataset['id']}_extra"
+                    extra_dir.mkdir(exist_ok=True)
+                    target_file = extra_dir / item.name
+                    shutil.move(str(item), str(target_file))
+                    file_size = get_file_size(target_file)
+                    moved_files.append({
+                        "original_path": str(item),
+                        "new_path": str(target_file),
+                        "size": file_size,
+                        "sha256": calculate_file_hash(target_file)
+                    })
+                    total_size += file_size
+                    print(f"    📄 Moved extra file: {item.name} -> {target_file}")
+        
+        # If no main file was found, report an error
+        if not main_file_found:
+            print(f"    ⚠️  No suitable {dataset['format']} file found in downloaded content")
         
         # Remove empty download directory
         if download_path.exists():
@@ -178,6 +208,18 @@ def download_kaggle_dataset(dataset, kagglehub, base_path):
         
         duration = time.time() - start_time
         
+        # Check if we successfully moved at least one file
+        success = len(moved_files) > 0 and target_path.exists()
+        
+        if not success:
+            return {
+                "success": False,
+                "error": f"No files were successfully organized for {dataset['id']}",
+                "download_path": str(download_path),
+                "moved_files": moved_files,
+                "duration_seconds": duration
+            }
+        
         return {
             "success": True,
             "download_path": str(download_path),
@@ -185,6 +227,7 @@ def download_kaggle_dataset(dataset, kagglehub, base_path):
             "total_size_bytes": total_size,
             "total_size_formatted": format_size(total_size),
             "duration_seconds": duration,
+            "target_file": str(target_path),
             "error": None
         }
         
