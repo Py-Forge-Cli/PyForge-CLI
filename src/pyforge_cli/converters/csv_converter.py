@@ -61,7 +61,7 @@ class CSVDialectDetector:
                 'quotechar': quote_char,
                 'quoting': quoting,
                 'has_header': has_header,
-                'lineterminator': '\\n',
+                'lineterminator': '\n',
                 'skipinitialspace': True
             }
             
@@ -71,20 +71,20 @@ class CSVDialectDetector:
     
     def _detect_delimiter(self, sample: str, sniffer: csv.Sniffer) -> str:
         """Detect the delimiter character."""
-        common_delimiters = [',', ';', '\\t', '|', ':', ' ']
+        common_delimiters = [',', ';', '\t', '|', ':', ' ']
         
         try:
             # Try CSV sniffer first
-            dialect = sniffer.sniff(sample, delimiters=',;\\t|')
+            dialect = sniffer.sniff(sample, delimiters=',;\t|')
             return dialect.delimiter
         except:
             # Fallback: count occurrences of common delimiters
             delimiter_counts = {}
-            lines = sample.split('\\n')[:10]  # Check first 10 lines
+            lines = sample.split('\n')[:10]  # Check first 10 lines
             
             for delimiter in common_delimiters:
-                if delimiter == '\\t':
-                    actual_delim = '\\t'
+                if delimiter == '\t':
+                    actual_delim = '\t'
                 else:
                     actual_delim = delimiter
                 
@@ -99,7 +99,7 @@ class CSVDialectDetector:
             
             if delimiter_counts:
                 best_delimiter = max(delimiter_counts, key=delimiter_counts.get)
-                return '\\t' if best_delimiter == '\\t' else best_delimiter
+                return '\t' if best_delimiter == '\t' else best_delimiter
             
             # Final fallback
             return ','
@@ -111,7 +111,7 @@ class CSVDialectDetector:
         for quote_char in quote_chars:
             if quote_char in sample:
                 # Count quoted fields
-                lines = sample.split('\\n')[:5]
+                lines = sample.split('\n')[:5]
                 quoted_fields = 0
                 total_fields = 0
                 
@@ -132,7 +132,7 @@ class CSVDialectDetector:
     
     def _detect_header(self, sample: str, delimiter: str) -> bool:
         """Detect if first row contains headers."""
-        lines = sample.split('\\n')
+        lines = sample.split('\n')
         if len(lines) < 2:
             return False
         
@@ -175,7 +175,7 @@ class CSVDialectDetector:
             'quotechar': '"',
             'quoting': csv.QUOTE_MINIMAL,
             'has_header': True,
-            'lineterminator': '\\n',
+            'lineterminator': '\n',
             'skipinitialspace': True
         }
 
@@ -365,8 +365,8 @@ class CSVConverter(BaseConverter):
             }
             
             # Handle tab delimiter
-            if dialect_params['delimiter'] == '\\t':
-                read_params['sep'] = '\\t'
+            if dialect_params['delimiter'] == '\t':
+                read_params['sep'] = '\t'
             
             if verbose:
                 self.console.print(f"[dim]Reading CSV with parameters: {read_params}[/dim]")
