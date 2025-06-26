@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import logging
 import json
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class XmlFlattener:
         namespace_handling: str = "preserve"
     ) -> List[Dict[str, str]]:
         """
-        Flatten XML file to list of records.
+        Flatten XML file to list of records, supporting both single and multi-document XML.
         
         Args:
             file_path: Path to XML file
@@ -44,22 +45,28 @@ class XmlFlattener:
         self.namespace_handling = namespace_handling
         
         try:
-            # Parse XML
-            tree = ET.parse(file_path)
-            root = tree.getroot()
+            # Check if this is a multi-document XML file
+            is_multi_doc = structure_analysis.get('is_multi_document', False)
             
-            # Get array elements from analysis
-            array_elements = set(structure_analysis.get('array_elements', []))
-            
-            # Flatten based on strategy
-            if flatten_strategy == "conservative":
-                return self._flatten_conservative(root, array_elements)
-            elif flatten_strategy == "moderate":
-                return self._flatten_moderate(root, array_elements)
-            elif flatten_strategy == "aggressive":
-                return self._flatten_aggressive(root, array_elements)
+            if is_multi_doc:
+                return self._flatten_multi_document_file(file_path, structure_analysis)
             else:
-                raise ValueError(f"Unknown flatten strategy: {flatten_strategy}")
+                # Single document - use existing logic
+                tree = ET.parse(file_path)
+                root = tree.getroot()
+                
+                # Get array elements from analysis
+                array_elements = set(structure_analysis.get('array_elements', []))
+                
+                # Flatten based on strategy
+                if flatten_strategy == "conservative":
+                    return self._flatten_conservative(root, array_elements)
+                elif flatten_strategy == "moderate":
+                    return self._flatten_moderate(root, array_elements)
+                elif flatten_strategy == "aggressive":
+                    return self._flatten_aggressive(root, array_elements)
+                else:
+                    raise ValueError(f"Unknown flatten strategy: {flatten_strategy}")
                 
         except ET.ParseError as e:
             logger.error(f"XML parsing error: {e}")
@@ -67,6 +74,122 @@ class XmlFlattener:
         except Exception as e:
             logger.error(f"Error flattening XML: {e}")
             raise
+    
+    def _flatten_multi_document_file(self, file_path: Path, structure_analysis: Dict[str, Any]) -> List[Dict[str, str]]:
+        """
+        Flatten a multi-document XML file by processing each document separately.
+        
+        Args:
+            file_path: Path to multi-document XML file
+            structure_analysis: Analysis results from XmlStructureAnalyzer
+            
+        Returns:
+            List of flattened records from all documents
+        """
+        try:
+            # Split the file into individual documents (reuse logic from analyzer)
+            documents = self._split_xml_documents(file_path)
+            
+            if not documents:
+                logger.warning("No valid XML documents found in multi-document file")
+                return []
+            
+            logger.info(f"Processing {len(documents)} XML documents for flattening")
+            
+            all_records = []
+            array_elements = set(structure_analysis.get('array_elements', []))
+            
+            # Process each document separately
+            for i, doc_content in enumerate(documents):
+                try:
+                    # Parse individual document
+                    root = ET.fromstring(doc_content)
+                    
+                    # Flatten this document based on strategy
+                    if self.flatten_strategy == "conservative":
+                        doc_records = self._flatten_conservative(root, array_elements)
+                    elif self.flatten_strategy == "moderate":
+                        doc_records = self._flatten_moderate(root, array_elements)
+                    elif self.flatten_strategy == "aggressive":
+                        doc_records = self._flatten_aggressive(root, array_elements)
+                    else:
+                        raise ValueError(f"Unknown flatten strategy: {self.flatten_strategy}")
+                    
+                    # Add document metadata to each record
+                    for record in doc_records:
+                        record['_document_id'] = i + 1
+                        record['_document_index'] = i
+                    
+                    all_records.extend(doc_records)
+                    
+                except ET.ParseError as e:
+                    logger.warning(f"Failed to parse document {i+1}: {e}")
+                    # Create an error record for this document
+                    error_record = {
+                        '_document_id': i + 1,
+                        '_document_index': i,
+                        '_parse_error': str(e)
+                    }
+                    all_records.append(error_record)
+                    continue
+                except Exception as e:
+                    logger.warning(f"Error processing document {i+1}: {e}")
+                    continue
+            
+            logger.info(f"Successfully flattened {len(all_records)} records from {len(documents)} documents")
+            return all_records
+            
+        except Exception as e:
+            logger.error(f"Error flattening multi-document XML: {e}")
+            raise ValueError(f"Failed to flatten multi-document XML: {e}")
+    
+    def _split_xml_documents(self, file_path: Path) -> List[str]:
+        """
+        Split a multi-document XML file into individual XML document strings.
+        (Reused from XmlStructureAnalyzer for consistency)
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Split on XML declarations to find document boundaries
+            xml_declaration_pattern = r'<\?xml\s+version\s*=\s*["\'][^"\']*["\']\s*encoding\s*=\s*["\'][^"\']*["\']\s*\?>'
+            
+            # Find all XML declarations
+            declarations = list(re.finditer(xml_declaration_pattern, content, re.IGNORECASE))
+            
+            if len(declarations) <= 1:
+                # Single document or no XML declarations found
+                return [content.strip()]
+            
+            documents = []
+            
+            for i, declaration in enumerate(declarations):
+                start_pos = declaration.start()
+                
+                # Determine end position (start of next declaration or end of file)
+                if i + 1 < len(declarations):
+                    end_pos = declarations[i + 1].start()
+                else:
+                    end_pos = len(content)
+                
+                # Extract document content
+                doc_content = content[start_pos:end_pos].strip()
+                
+                if doc_content:
+                    # Basic validation
+                    try:
+                        ET.fromstring(doc_content)
+                        documents.append(doc_content)
+                    except ET.ParseError:
+                        logger.warning(f"Document {i+1} appears to be invalid, skipping")
+                        continue
+            
+            return documents
+            
+        except Exception as e:
+            logger.error(f"Error splitting XML documents: {e}")
+            return []
     
     def _flatten_conservative(self, root: ET.Element, array_elements: set) -> List[Dict[str, str]]:
         """
