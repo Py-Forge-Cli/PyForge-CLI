@@ -61,6 +61,28 @@ class TestCSVEncodingDetector:
 class TestCSVDialectDetector:
     """Test cases for CSV dialect detection"""
     
+    def test_header_detection_fix_issue_22(self, tmp_path):
+        """Test header detection with newline character fix for Issue #22"""
+        detector = CSVDialectDetector()
+        
+        # Create CSV that mimics Titanic dataset structure
+        test_file = tmp_path / "titanic_like.csv"
+        content = "PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked\n1,0,3,\"Braund, Mr. Owen Harris\",male,22,1,0,A/5 21171,7.25,,S\n2,1,1,\"Cumings, Mrs. John Bradley (Florence Briggs Thayer)\",female,38,1,0,PC 17599,71.2833,C85,C"
+        test_file.write_text(content, encoding='utf-8')
+        
+        dialect = detector.detect_dialect(test_file)
+        
+        # Should correctly detect headers
+        assert dialect['has_header'] == True, "Should detect CSV headers correctly after newline fix"
+        assert dialect['delimiter'] == ','
+        
+        # Test the internal _detect_header method directly to ensure the fix works
+        with open(test_file, 'r', encoding='utf-8', newline='') as f:
+            sample = f.read(8192)
+        
+        header_result = detector._detect_header(sample, ',')
+        assert header_result == True, "Internal _detect_header method should return True for CSV with headers"
+    
     def test_detect_comma_delimiter(self, tmp_path):
         """Test detection of comma delimiter"""
         detector = CSVDialectDetector()
@@ -183,6 +205,39 @@ class TestCSVConverter:
         
         assert converter.validate_input(test_file) == False
     
+    def test_csv_header_preservation_issue_22(self, tmp_path):
+        """Test CSV header preservation fix for Issue #22"""
+        converter = CSVConverter()
+        
+        # Create CSV that reproduces the original issue
+        input_file = tmp_path / "issue_22_test.csv"
+        content = "PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked\n1,0,3,\"Braund, Mr. Owen Harris\",male,22,1,0,A/5 21171,7.25,,S\n2,1,1,\"Cumings, Mrs. John Bradley\",female,38,1,0,PC 17599,71.2833,C85,C"
+        input_file.write_text(content, encoding='utf-8')
+        
+        # Convert to Parquet
+        output_file = tmp_path / "issue_22_test.parquet"
+        result = converter.convert(input_file, output_file)
+        
+        assert result == True
+        assert output_file.exists()
+        
+        # Verify the fix: should have proper column names, not generic ones
+        df = pd.read_parquet(output_file)
+        
+        # Should have 2 data rows (not 3 with header as data)
+        assert len(df) == 2, f"Should have 2 data rows, got {len(df)}"
+        
+        # Should have actual column names, not generic Column_1, Column_2, etc.
+        expected_columns = ['PassengerId', 'Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+        assert list(df.columns) == expected_columns, f"Expected {expected_columns}, got {list(df.columns)}"
+        
+        # First row should be actual data, not header
+        assert df['PassengerId'].iloc[0] == '1', f"First row PassengerId should be '1', got '{df['PassengerId'].iloc[0]}'"
+        assert df['Name'].iloc[0] == 'Braund, Mr. Owen Harris', f"First row Name should be 'Braund, Mr. Owen Harris', got '{df['Name'].iloc[0]}'"
+        
+        # Verify no header data in first row
+        assert df['PassengerId'].iloc[0] != 'PassengerId', "Header should not appear as data in first row"
+
     def test_basic_csv_conversion(self, tmp_path):
         """Test basic CSV to Parquet conversion"""
         converter = CSVConverter()
@@ -219,10 +274,11 @@ class TestCSVConverter:
         ]
         
         for delimiter, content in test_cases:
-            input_file = tmp_path / f"test_{delimiter.replace('\\t', 'tab')}.csv"
+            delimiter_name = delimiter.replace('\t', 'tab')
+            input_file = tmp_path / f"test_{delimiter_name}.csv"
             input_file.write_text(content, encoding='utf-8')
             
-            output_file = tmp_path / f"test_{delimiter.replace('\\t', 'tab')}.parquet"
+            output_file = tmp_path / f"test_{delimiter_name}.parquet"
             result = converter.convert(input_file, output_file)
             
             assert result == True
