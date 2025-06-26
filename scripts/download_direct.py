@@ -144,6 +144,12 @@ def download_file(url, output_path, chunk_size=8192, timeout=30, max_retries=3):
             # Create SSL context with proper certificate verification
             ssl_context = ssl.create_default_context(cafile=certifi.where())
             
+            # For Census.gov domains in CI environments, use less strict SSL verification
+            # This is needed because Census.gov SSL certificates have issues in GitHub Actions
+            if os.environ.get('CI') and 'census.gov' in url.lower():
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+            
             # Create request with user agent and additional headers for better compatibility
             req = Request(url, headers={
                 'User-Agent': 'PyForge-CLI-Dataset-Collector/1.0 (Python urllib)',
