@@ -202,3 +202,7 @@ collected-datasets/
 datasets-research/
 collected-datasets/
 test-sample-datasets/
+
+# Test data directories (temporary test files)
+test_data/
+test_0.5.3/
