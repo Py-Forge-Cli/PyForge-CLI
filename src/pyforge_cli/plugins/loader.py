@@ -25,14 +25,30 @@ class PluginLoader:
         except ImportError as e:
             print(f"Warning: Could not load PDF converter: {e}")
         
-        # Load database converters
+        # Load enhanced MDB converter (with fallback to basic)
         try:
-            from ..converters import MDBConverter, DBFConverter
-            registry.register('mdb', MDBConverter)
-            registry.register('dbf', DBFConverter)
-            self.loaded_plugins.extend(['mdb', 'dbf'])
+            from ..converters.enhanced_mdb_converter import EnhancedMDBConverter
+            registry.register('mdb', EnhancedMDBConverter)
+            self.loaded_plugins.append('mdb')
+            print("✓ Loaded enhanced MDB converter with UCanAccess + pyodbc support")
         except ImportError as e:
-            print(f"Warning: Could not load database converters: {e}")
+            print(f"Warning: Enhanced MDB converter not available: {e}")
+            # Fallback to basic MDB converter
+            try:
+                from ..converters import MDBConverter
+                registry.register('mdb', MDBConverter)
+                self.loaded_plugins.append('mdb')
+                print("✓ Loaded basic MDB converter (fallback)")
+            except ImportError as e2:
+                print(f"Warning: Could not load any MDB converter: {e2}")
+        
+        # Load DBF converter
+        try:
+            from ..converters import DBFConverter
+            registry.register('dbf', DBFConverter)
+            self.loaded_plugins.append('dbf')
+        except ImportError as e:
+            print(f"Warning: Could not load DBF converter: {e}")
         
         # Load Excel converter
         try:
