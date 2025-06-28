@@ -15,16 +15,16 @@ class UCanAccessJARManager:
         
         # Bundled JAR location (shipped with package)
         self.bundled_jar_dir = Path(__file__).parent.parent / 'data' / 'jars'
-        self.bundled_jar_name = 'ucanaccess-5.1.3-uber.jar'
+        self.bundled_jar_name = 'ucanaccess-4.0.4.jar'
         
         # User cache directory for downloaded JARs
         self.cache_jar_dir = Path.home() / '.pyforge' / 'jars'
         self.cache_jar_dir.mkdir(parents=True, exist_ok=True)
-        self.cache_jar_name = 'ucanaccess-5.1.3-uber.jar'
+        self.cache_jar_name = 'ucanaccess-4.0.4.jar'
         
-        # Download configuration
-        self.jar_url = 'https://repo1.maven.org/maven2/io/github/spannm/ucanaccess/5.1.3/ucanaccess-5.1.3-uber.jar'
-        self.expected_size = 3456305  # ~3.3MB for uber JAR
+        # Download configuration - Use Java 8 compatible version
+        self.jar_url = 'https://repo1.maven.org/maven2/net/sf/ucanaccess/ucanaccess/4.0.4/ucanaccess-4.0.4.jar'
+        self.expected_size = 390000  # ~390KB for individual JAR
         # Note: In production, you should verify the SHA256 hash for security
         self.expected_sha256 = None  # Would be actual hash in production
     
@@ -136,9 +136,9 @@ class UCanAccessJARManager:
             if not jar_path.exists():
                 return False
             
-            # Check file size (should be approximately 3.3MB for uber JAR)
+            # Check file size (should be approximately 390KB for individual JAR or 3.3MB for uber JAR)
             size = jar_path.stat().st_size
-            if size < 2_000_000 or size > 5_000_000:  # 2-5MB range for uber JAR
+            if size < 300_000 or size > 5_000_000:  # 300KB-5MB range for JAR files
                 self.logger.warning(f"JAR size {size} outside expected range")
                 return False
             
