@@ -614,6 +614,12 @@ PyForge CLI uses automated versioning with setuptools-scm:
 # Install latest development version
 pip install -i https://test.pypi.org/simple/ pyforge-cli
 
-# Install specific development version
-pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.7.dev4
+# Install specific development version  
+pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.7.dev5
 ```
+
+### CI/CD Pipeline
+
+- **Trigger**: Every push to `main` branch automatically builds and deploys to PyPI Test
+- **Release**: Create a Git tag to trigger deployment to PyPI Production
+- **Testing**: Use `pyforge-cli` from test.pypi.org for validation before release
