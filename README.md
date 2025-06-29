@@ -597,4 +597,23 @@ If you encounter any issues or have questions:
 - File metadata extraction
 - Page range support
 - Development tooling setup
-# Test auto-increment
+
+## 🚀 Development & Deployment
+
+### Automated Versioning
+
+PyForge CLI uses automated versioning with setuptools-scm:
+
+- **Development versions**: `1.0.x.devN` - Auto-deployed to [PyPI Test](https://test.pypi.org/project/pyforge-cli/) on every commit to main
+- **Release versions**: `1.0.x` - Deployed to [PyPI](https://pypi.org/project/pyforge-cli/) when Git tags are created
+- **Version increment**: Development versions auto-increment on each commit (dev1 → dev2 → dev3...)
+
+### Installation from Test Repository
+
+```bash
+# Install latest development version
+pip install -i https://test.pypi.org/simple/ pyforge-cli
+
+# Install specific development version
+pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.7.dev4
+```
