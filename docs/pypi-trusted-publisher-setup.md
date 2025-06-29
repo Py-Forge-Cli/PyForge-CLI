@@ -123,9 +123,10 @@ python -c "import pyforge_cli; print(pyforge_cli.__version__)"
 
 ## Expected Version Patterns
 
-Based on current Git state:
-- **Development**: `1.0.6.dev20+ged3c6d1.d20250629`
-- **After this fix**: `1.0.6.dev21+g[NEW_COMMIT]`
+Based on current Git state with PyPI-compatible versioning:
+- **Tagged Release**: `1.0.6` (clean version for PyPI)
+- **Development**: `1.0.7.dev1`, `1.0.7.dev2`, `1.0.7.dev3` (auto-incrementing on each commit)
+- **No Local Identifiers**: Local version identifiers (+gbf76455) are removed for PyPI compatibility
 
 ## Security Benefits of Trusted Publishing
 
