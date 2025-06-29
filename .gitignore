@@ -206,3 +206,10 @@ test-sample-datasets/
 # Test data directories (temporary test files)
 test_data/
 test_0.5.3/
+
+# setuptools-scm generated files
+src/pyforge_cli/_version.py
+**/_version.py
+
+# setuptools-scm cache
+.setuptools_scm/
