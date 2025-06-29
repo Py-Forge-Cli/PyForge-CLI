@@ -19,6 +19,7 @@ class UCanAccessBackend(DatabaseBackend):
         self.connection = None
         self.db_path = None
         self._jaydebeapi = None
+        self._temp_file_path = None  # Track temporary files for cleanup
     
     def is_available(self) -> bool:
         """Check if UCanAccess backend is available.
@@ -73,27 +74,78 @@ class UCanAccessBackend(DatabaseBackend):
             import jaydebeapi
             self._jaydebeapi = jaydebeapi
             
-            self.db_path = os.path.abspath(db_path)
-            jar_path = self.jar_manager.get_jar_path()
+            # Handle Databricks Unity Catalog volume paths
+            # Java/JDBC cannot directly access volumes - must copy to local storage first
+            if db_path.startswith("/Volumes/"):
+                self.logger.info(f"Detected Unity Catalog volume path: {db_path}")
+                self.logger.info("Java/JDBC cannot access volumes directly - copying to local storage")
+                
+                # Create local temp file path
+                import tempfile
+                import shutil
+                temp_dir = tempfile.gettempdir()
+                file_name = os.path.basename(db_path)
+                local_path = os.path.join(temp_dir, f"pyforge_{os.getpid()}_{file_name}")
+                
+                try:
+                    # Copy from volume to local storage using shell command (not dbutils - JVM limitation)
+                    copy_cmd = f"cp '{db_path}' '{local_path}'"
+                    result = subprocess.run(copy_cmd, shell=True, capture_output=True, text=True, timeout=60)
+                    
+                    if result.returncode != 0:
+                        self.logger.error(f"Failed to copy file from volume: {result.stderr}")
+                        raise RuntimeError(f"Cannot copy {db_path} to local storage: {result.stderr}")
+                    
+                    self.db_path = local_path
+                    self._temp_file_path = local_path  # Track for cleanup
+                    self.logger.info(f"Successfully copied volume file to local storage: {local_path}")
+                    
+                except subprocess.TimeoutExpired:
+                    self.logger.error(f"Timeout copying file from volume: {db_path}")
+                    raise RuntimeError(f"Timeout copying {db_path} to local storage")
+                except Exception as e:
+                    self.logger.error(f"Error copying file from volume: {e}")
+                    raise RuntimeError(f"Cannot access volume file {db_path}: {e}")
+            else:
+                self.db_path = os.path.abspath(db_path)
+                self._temp_file_path = None  # No temp file created
+                
+            # Verify file exists at final path
+            if not os.path.exists(self.db_path):
+                self.logger.error(f"Database file not found at: {self.db_path}")
+                raise FileNotFoundError(f"Database file not found: {self.db_path}")
+                
+            # Get all required JAR paths for UCanAccess and dependencies
+            jar_paths = self._get_all_jar_paths()
             
             # Build JDBC connection string
             conn_string = f"jdbc:ucanaccess://{self.db_path}"
+            self.logger.debug(f"JDBC connection string: {conn_string}")
             
-            # Add performance optimizations
-            # Use disk-based mode for better reliability with medium/large databases
-            conn_string += ";memory=false"
+            # Configure for Databricks environment
+            # Use memory mode to avoid file system write issues
+            conn_string += ";memory=true"
+            
+            # Set writable temp directory for Databricks
+            import tempfile
+            temp_dir = tempfile.gettempdir()
+            conn_string += f";tempDirPath={temp_dir}"
+            
+            # Disable features that require write access
+            conn_string += ";immediatelyReleaseResources=true"
+            conn_string += ";openExclusive=false"
             
             # Set up connection properties
             connection_props = ["", ""]  # [username, password]
             if password:
                 connection_props = [password, ""]
             
-            # Establish JDBC connection
+            # Establish JDBC connection with all JAR dependencies
             self.connection = jaydebeapi.connect(
                 "net.ucanaccess.jdbc.UcanaccessDriver",
                 conn_string,
                 connection_props,
-                jar_path
+                jar_paths
             )
             
             # Test connection by getting database metadata
@@ -183,6 +235,16 @@ class UCanAccessBackend(DatabaseBackend):
             finally:
                 self.connection = None
                 self.db_path = None
+        
+        # Clean up temporary file if it exists
+        if self._temp_file_path and os.path.exists(self._temp_file_path):
+            try:
+                os.remove(self._temp_file_path)
+                self.logger.debug(f"Cleaned up temporary file: {self._temp_file_path}")
+            except Exception as e:
+                self.logger.warning(f"Error cleaning up temporary file {self._temp_file_path}: {e}")
+            finally:
+                self._temp_file_path = None
     
     def _check_java(self) -> bool:
         """Check if Java runtime is available.
@@ -222,6 +284,37 @@ class UCanAccessBackend(DatabaseBackend):
         except ImportError:
             self.logger.debug("JayDeBeApi not available")
             return False
+    
+    def _get_all_jar_paths(self) -> List[str]:
+        """Get paths to all required JAR files for UCanAccess.
+        
+        Returns:
+            List of absolute paths to JAR files
+        """
+        jar_dir = self.jar_manager.bundled_jar_dir
+        jar_paths = []
+        
+        # Required JAR files for UCanAccess 4.0.4
+        required_jars = [
+            'ucanaccess-4.0.4.jar',
+            'commons-lang3-3.8.1.jar', 
+            'commons-logging-1.2.jar',
+            'hsqldb-2.5.0.jar',
+            'jackcess-3.0.1.jar'
+        ]
+        
+        for jar_name in required_jars:
+            jar_path = jar_dir / jar_name
+            if jar_path.exists():
+                jar_paths.append(str(jar_path))
+                self.logger.debug(f"Added JAR: {jar_path}")
+            else:
+                self.logger.warning(f"Required JAR not found: {jar_path}")
+        
+        if len(jar_paths) != len(required_jars):
+            self.logger.warning(f"Missing some required JARs. Expected {len(required_jars)}, found {len(jar_paths)}")
+        
+        return jar_paths
     
     def get_connection_info(self) -> dict:
         """Get information about the current connection.

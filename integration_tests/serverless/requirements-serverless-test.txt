@@ -1,0 +1,29 @@
+# PyForge CLI Serverless Testing Requirements
+# For Databricks Serverless V1 Environment
+
+# Databricks Connect for V1 (Python 3.10 compatible)
+databricks-connect==14.3.7
+
+# Databricks SDK
+databricks-sdk>=0.12.0
+
+# Testing framework
+pytest>=7.0.0
+pytest-timeout>=2.1.0
+unittest-xml-reporting>=3.2.0
+
+# Utility packages
+python-dateutil>=2.8.2
+typing-extensions>=4.5.0
+
+# For nested async operations (if needed)
+nest-asyncio>=1.5.6
+
+# JSON and data handling
+jsonschema>=4.17.0
+
+# Note: The following should be installed via PyForge wheel, not separately:
+# - jaydebeapi>=1.2.3,<1.3.0  (V1 specific version)
+# - jpype1>=1.3.0,<1.4.0       (V1 specific version)
+# - pandas<=1.5.3              (V1 compatible)
+# - pyarrow>=10.0.0            (Both V1 and V2 compatible)

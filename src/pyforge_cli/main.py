@@ -1,6 +1,7 @@
 """Main CLI entry point for PyForge CLI."""
 
 import click
+import logging
 from pathlib import Path
 from typing import Optional
 from rich.console import Console
@@ -84,6 +85,21 @@ def cli(ctx, verbose):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
     
+    # Configure logging based on verbose flag
+    if verbose:
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        logging.getLogger('pyforge_cli').setLevel(logging.DEBUG)
+        console.print("[dim]Debug logging enabled[/dim]")
+    else:
+        logging.basicConfig(
+            level=logging.WARNING,
+            format='%(name)s - %(levelname)s - %(message)s'
+        )
+    
     # Load all available converters
     plugin_loader.load_all()
 
@@ -135,8 +151,10 @@ def cli(ctx, verbose):
               help='XML namespace handling (XML only): preserve, strip, prefix')
 @click.option('--preview-schema', is_flag=True,
               help='Preview XML structure before conversion (XML only)')
+@click.option('--force-pyspark', is_flag=True,
+              help='Force using PySpark for CSV conversion (requires PySpark)')
 @click.pass_context
-def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force, combine, separate, flatten_strategy, array_handling, namespace_handling, preview_schema):
+def convert(ctx, input_file, output_file, output_format, page_range, metadata, password, tables, compression, force, combine, separate, flatten_strategy, array_handling, namespace_handling, preview_schema, force_pyspark):
     """Convert files between different formats.
     
     \b
@@ -270,8 +288,11 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
             console.print(f"[yellow]Output file {output_file} already exists. Use --force to overwrite.[/yellow]")
         return
     
+    # Prepare conversion options
+    options = {}
+    
     # Get converter from registry
-    converter = registry.get_converter(input_file)
+    converter = registry.get_converter(input_file, options)
     
     if not converter:
         console.print(f"[red]Error: Unsupported input format '{input_file.suffix}'[/red]")
@@ -284,9 +305,6 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
                 inputs = ', '.join(format_info['inputs'])
                 console.print(f"[dim]  {inputs}[/dim]")
         return
-    
-    # Prepare conversion options
-    options = {}
     
     # PDF-specific options
     if page_range:
@@ -317,6 +335,13 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         options['namespace_handling'] = namespace_handling
     if preview_schema:
         options['preview_schema'] = True
+        
+    # CSV-specific options
+    if force_pyspark:
+        options['force_pyspark'] = True
+    
+    # Pass verbose flag to converter
+    options['verbose'] = verbose
     
     # Perform conversion
     success = converter.convert(input_file, output_file, **options)

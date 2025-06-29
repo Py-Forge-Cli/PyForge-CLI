@@ -19,7 +19,7 @@ class PluginLoader:
         """Load built-in converters from the converters package."""
         # Load PDF converter
         try:
-            from ..converters import PDFConverter
+            from ..converters.pdf_converter import PDFConverter
             registry.register('pdf', PDFConverter)
             self.loaded_plugins.append('pdf')
         except ImportError as e:

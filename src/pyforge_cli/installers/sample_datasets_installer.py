@@ -139,6 +139,86 @@ class SampleDatasetsInstaller:
             console.print(f"[red]Error extracting {zip_path}: {e}[/red]")
             return False
     
+    def _create_minimal_datasets(self) -> bool:
+        """Create minimal sample datasets when none are available from releases."""
+        try:
+            console.print("[yellow]Creating minimal sample datasets locally...[/yellow]")
+            
+            # Create directory structure
+            csv_dir = self.target_dir / "csv" / "small"
+            csv_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Create a simple CSV sample
+            sample_csv = csv_dir / "sample_data.csv"
+            csv_content = """id,name,category,value,date
+1,Sample Item 1,Category A,100.50,2023-01-01
+2,Sample Item 2,Category B,250.75,2023-01-02
+3,Sample Item 3,Category A,175.25,2023-01-03
+4,Sample Item 4,Category C,90.00,2023-01-04
+5,Sample Item 5,Category B,320.80,2023-01-05"""
+            
+            with open(sample_csv, 'w', encoding='utf-8') as f:
+                f.write(csv_content)
+            
+            # Create XML directory and sample
+            xml_dir = self.target_dir / "xml" / "small"
+            xml_dir.mkdir(parents=True, exist_ok=True)
+            
+            sample_xml = xml_dir / "sample_data.xml"
+            xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <items>
+        <item id="1">
+            <name>Sample Item 1</name>
+            <category>Category A</category>
+            <value>100.50</value>
+            <date>2023-01-01</date>
+        </item>
+        <item id="2">
+            <name>Sample Item 2</name>
+            <category>Category B</category>
+            <value>250.75</value>
+            <date>2023-01-02</date>
+        </item>
+    </items>
+</data>"""
+            
+            with open(sample_xml, 'w', encoding='utf-8') as f:
+                f.write(xml_content)
+            
+            # Create README
+            readme_path = self.target_dir / "README.md"
+            readme_content = """# PyForge CLI Sample Datasets
+
+## Overview
+These are minimal sample datasets created locally for testing PyForge CLI.
+
+## Available Datasets
+
+### CSV Files
+- `csv/small/sample_data.csv` - Simple tabular data with mixed types
+
+### XML Files  
+- `xml/small/sample_data.xml` - Structured XML data
+
+## Notes
+- These are basic samples created when full sample datasets are not available
+- For complete sample datasets, check the PyForge CLI releases on GitHub
+- Use `pyforge install sample-datasets --list-releases` to see available dataset releases
+"""
+            
+            with open(readme_path, 'w', encoding='utf-8') as f:
+                f.write(readme_content)
+            
+            console.print(f"[green]✓ Created minimal sample datasets in {self.target_dir}[/green]")
+            console.print("[dim]Basic CSV and XML samples are now available for testing.[/dim]")
+            
+            return True
+            
+        except Exception as e:
+            console.print(f"[red]Error creating minimal datasets: {e}[/red]")
+            return False
+    
     def install_datasets(self, 
                         version: Optional[str] = None,
                         formats: Optional[List[str]] = None,
@@ -182,8 +262,23 @@ class SampleDatasetsInstaller:
         # Get assets to download
         assets = release.get('assets', [])
         if not assets:
-            console.print("[yellow]No assets found in this release.[/yellow]")
-            return False
+            console.print(f"[yellow]No assets found in release {release['tag_name']}.[/yellow]")
+            
+            # Try to find a release with assets if this one is empty
+            console.print("[dim]Looking for releases with sample datasets...[/dim]")
+            all_releases = self.list_available_releases()
+            for alt_release in all_releases:
+                alt_assets = alt_release.get('assets', [])
+                if alt_assets and any(a['name'].endswith('.zip') for a in alt_assets):
+                    console.print(f"[green]Found datasets in release {alt_release['tag_name']}[/green]")
+                    release = alt_release
+                    assets = alt_assets
+                    break
+            
+            if not assets:
+                console.print("[red]No sample datasets found in any release.[/red]")
+                console.print("[dim]Sample datasets may not be available yet. Check back later.[/dim]")
+                return self._create_minimal_datasets()  # Create some basic sample files
         
         # Filter assets based on user preferences
         download_assets = []
@@ -205,7 +300,8 @@ class SampleDatasetsInstaller:
         
         if not download_assets:
             console.print("[yellow]No matching assets found to download.[/yellow]")
-            return False
+            console.print("[dim]Creating minimal sample datasets instead...[/dim]")
+            return self._create_minimal_datasets()  # Create some basic sample files
         
         # Download assets with progress tracking
         with Progress() as progress:
