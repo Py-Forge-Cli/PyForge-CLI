@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Required for setuptools-scm
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -21,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e ".[dev,test]"
+        pip install -e ".[dev,test]" setuptools-scm
     - name: Run tests (skip for now due to import issues)
       run: echo "Tests temporarily skipped - package name migration in progress"
     - name: Check package can be built
@@ -33,14 +35,24 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Critical for setuptools-scm to access full Git history
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
-    - name: Install pypa/build
-      run: python3 -m pip install build
+    - name: Install build dependencies
+      run: python3 -m pip install build setuptools-scm
+    - name: Verify version generation
+      run: |
+        echo "Generated version: $(python3 -m setuptools_scm)"
+        python3 -c "import setuptools_scm; print(f'Package version: {setuptools_scm.get_version()}')"
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
+    - name: Validate built packages
+      run: |
+        python3 -m pip install twine
+        twine check dist/*
     - name: Store the distribution packages
       uses: actions/upload-artifact@v4
       with:
@@ -54,6 +66,11 @@ jobs:
     needs:
     - build
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pyforge-cli
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
     - name: Download all the dists
@@ -63,9 +80,6 @@ jobs:
         path: dist/
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
 
   github-release:
     name: >-
@@ -97,6 +111,11 @@ jobs:
     needs:
     - build
     runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pyforge-cli
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
     - name: Download all the dists
@@ -109,5 +128,3 @@ jobs:
       with:
         repository-url: https://test.pypi.org/legacy/
         skip-existing: true
-        user: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
