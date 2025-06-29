@@ -43,11 +43,27 @@
 
 ## Installation
 
-### From PyPI
+### Stable Version (Recommended)
 
 ```bash
 pip install pyforge-cli
 ```
+
+### Development Version
+
+To test the latest features and bug fixes before they're officially released:
+
+```bash
+# Install from PyPI Test (latest development version)
+pip install -i https://test.pypi.org/simple/ pyforge-cli
+
+# Or with dependency fallback
+pip install --index-url https://test.pypi.org/simple/ \
+           --extra-index-url https://pypi.org/simple/ \
+           pyforge-cli
+```
+
+> **Note**: Development versions follow the pattern `X.Y.Z.devN+gCOMMIT` and are automatically deployed from the main branch.
 
 ### From Source
 
