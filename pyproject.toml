@@ -42,7 +42,7 @@ classifiers = [
 dependencies = [
     # Core dependencies - pinned to Databricks Serverless V1 versions
     "pandas==1.5.3",  # Databricks V1 has 1.5.3
-    "pyarrow>=8.0.0", # Databricks V1 has 8.0.0, allow newer for CI compatibility
+    "pyarrow==8.0.0", # Databricks V1 has 8.0.0, exact version match
     "numpy==1.23.5",   # Databricks V1 has 1.23.5
     "pytz==2022.7",    # Databricks V1 has 2022.7
     "python-dateutil==2.8.2",  # Databricks V1 has 2.8.2
