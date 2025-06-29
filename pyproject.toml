@@ -215,3 +215,6 @@ dev = [
 
 [tool.setuptools_scm]
 version_file = "src/pyforge_cli/_version.py"
+# Remove local identifiers for PyPI compatibility while keeping dev versions
+local_scheme = "no-local-version"
+# Use default version scheme which generates 1.0.6.devN format for commits after tags
