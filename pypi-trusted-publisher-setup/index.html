@@ -1481,9 +1481,10 @@
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import pyforge_cli; print(pyforge_cli.__version__)&quot;</span>
 </span></code></pre></div>
 <h2 id="expected-version-patterns">Expected Version Patterns<a class="headerlink" href="#expected-version-patterns" title="Permanent link">&para;</a></h2>
-<p>Based on current Git state:
-- <strong>Development</strong>: <code>1.0.6.dev20+ged3c6d1.d20250629</code>
-- <strong>After this fix</strong>: <code>1.0.6.dev21+g[NEW_COMMIT]</code></p>
+<p>Based on current Git state with PyPI-compatible versioning:
+- <strong>Tagged Release</strong>: <code>1.0.6</code> (clean version for PyPI)
+- <strong>Development</strong>: <code>1.0.7.dev1</code>, <code>1.0.7.dev2</code>, <code>1.0.7.dev3</code> (auto-incrementing on each commit)
+- <strong>No Local Identifiers</strong>: Local version identifiers (+gbf76455) are removed for PyPI compatibility</p>
 <h2 id="security-benefits-of-trusted-publishing">Security Benefits of Trusted Publishing<a class="headerlink" href="#security-benefits-of-trusted-publishing" title="Permanent link">&para;</a></h2>
 <h3 id="current-api-tokens">Current (API Tokens)<a class="headerlink" href="#current-api-tokens" title="Permanent link">&para;</a></h3>
 <ul>
