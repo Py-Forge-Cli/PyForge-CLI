@@ -8,6 +8,7 @@ It uses Python's entry points mechanism to enable extensions without modifying c
 from .discovery import PluginDiscovery, plugin_discovery
 from .exceptions import PluginError, PluginLoadError, PluginInitializationError
 from .registry import ExtensionRegistry, extension_registry, PluginState, PluginInfo
+from .lifecycle import ExtensionLifecycleManager, lifecycle_manager
 
 __all__ = [
     "PluginDiscovery",
@@ -18,5 +19,7 @@ __all__ = [
     "ExtensionRegistry",
     "extension_registry",
     "PluginState",
-    "PluginInfo"
+    "PluginInfo",
+    "ExtensionLifecycleManager",
+    "lifecycle_manager"
 ]

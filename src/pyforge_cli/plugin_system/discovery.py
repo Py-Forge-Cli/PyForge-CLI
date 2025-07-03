@@ -131,45 +131,17 @@ class PluginDiscovery:
     
     def initialize_extensions(self) -> Dict[str, bool]:
         """
-        Initialize all discovered extensions with timeout protection.
+        Initialize all discovered extensions using the lifecycle manager.
         
         Returns:
             Dict mapping extension names to initialization success status
         """
-        results = {}
+        from .lifecycle import lifecycle_manager
         
-        with ThreadPoolExecutor(max_workers=1) as executor:
-            for name, extension in self._extensions.items():
-                try:
-                    # Check if extension is available
-                    if not extension.is_available():
-                        self.logger.info(f"Extension {name} is not available in this environment")
-                        results[name] = False
-                        extension_registry.update_state(name, PluginState.DISABLED, "Not available in this environment")
-                        continue
-                    
-                    # Initialize with timeout
-                    future = executor.submit(extension.initialize)
-                    try:
-                        success = future.result(timeout=self.INIT_TIMEOUT)
-                        results[name] = success
-                        if success:
-                            self.logger.info(f"Extension {name} initialized successfully")
-                            extension_registry.update_state(name, PluginState.INITIALIZED)
-                        else:
-                            self.logger.warning(f"Extension {name} initialization returned False")
-                            extension_registry.update_state(name, PluginState.FAILED, "Initialization returned False")
-                    except TimeoutError:
-                        self.logger.error(f"Extension {name} initialization timed out after {self.INIT_TIMEOUT}s")
-                        results[name] = False
-                        extension_registry.update_state(name, PluginState.FAILED, f"Initialization timeout ({self.INIT_TIMEOUT}s)")
-                        
-                except Exception as e:
-                    self.logger.error(f"Error initializing extension {name}: {e}")
-                    results[name] = False
-                    extension_registry.update_state(name, PluginState.FAILED, str(e))
-                    
-        return results
+        return lifecycle_manager.initialize_extensions(
+            self._extensions, 
+            timeout=self.INIT_TIMEOUT * 2  # Give more time for comprehensive lifecycle management
+        )
     
     def get_failed_plugins(self) -> Dict[str, str]:
         """Get information about plugins that failed to load."""
