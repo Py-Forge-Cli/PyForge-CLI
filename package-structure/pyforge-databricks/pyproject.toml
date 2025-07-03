@@ -1,0 +1,172 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyforge-databricks"
+version = "0.1.0"
+description = "Databricks integration for PyForge with Unity Catalog Volume support and serverless optimization"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "PyForge Team", email = "team@pyforge.io"}
+]
+maintainers = [
+    {name = "PyForge Team", email = "team@pyforge.io"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Data Scientists",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Operating System :: OS Independent",
+]
+keywords = [
+    "databricks", 
+    "spark", 
+    "pyforge", 
+    "data-conversion", 
+    "unity-catalog", 
+    "volumes",
+    "serverless",
+    "delta-lake"
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pyforge-core>=0.6.0",
+    "databricks-sdk==0.36.0",
+    # Note: PySpark is pre-installed in Databricks environments
+    # Including it here for local testing only
+    "pyspark>=3.5.0;platform_system!='Darwin' or platform_machine!='arm64'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "pytest-asyncio>=0.21.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.23.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/PyForge/pyforge-databricks"
+"Bug Reports" = "https://github.com/PyForge/pyforge-databricks/issues"
+"Documentation" = "https://pyforge-databricks.readthedocs.io"
+"Source" = "https://github.com/PyForge/pyforge-databricks"
+
+[project.entry-points."pyforge.extensions"]
+databricks = "pyforge_databricks:PyForgeDatabricks"
+
+[project.entry-points."pyforge.converters"]
+databricks_csv = "pyforge_databricks.converters.databricks_csv:DatabricksCSVConverter"
+databricks_json = "pyforge_databricks.converters.databricks_json:DatabricksJSONConverter"
+databricks_xml = "pyforge_databricks.converters.databricks_xml:DatabricksXMLConverter"
+databricks_parquet = "pyforge_databricks.converters.databricks_parquet:DatabricksParquetConverter"
+
+[tool.hatch.version]
+path = "src/pyforge_databricks/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyforge_databricks"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/pyforge_databricks",
+    "tests",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "--strict-markers",
+    "--cov=pyforge_databricks",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+markers = [
+    "databricks: marks tests that require Databricks environment",
+    "serverless: marks tests specific to serverless compute",
+    "integration: marks integration tests",
+]
+
+[tool.coverage.run]
+source = ["src/pyforge_databricks"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "databricks.*",
+    "pyspark.*",
+]
+ignore_missing_imports = true

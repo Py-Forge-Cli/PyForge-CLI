@@ -22,6 +22,7 @@ else:
         from importlib import metadata
 
 from .exceptions import PluginLoadError, PluginInitializationError
+from .registry import extension_registry, PluginState
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +68,10 @@ class PluginDiscovery:
             
             for entry_point in entry_points:
                 try:
+                    # Register as discovered
+                    extension_registry.register_discovered(entry_point.name)
+                    extension_registry.update_state(entry_point.name, PluginState.LOADING)
+                    
                     # Load the extension class
                     extension_class = self._load_entry_point(entry_point)
                     
@@ -74,12 +79,14 @@ class PluginDiscovery:
                     extension = extension_class()
                     
                     self._extensions[entry_point.name] = extension
+                    extension_registry.register_extension(entry_point.name, extension)
                     self.logger.info(f"Loaded extension: {entry_point.name}")
                     
                 except Exception as e:
                     error_msg = f"Failed to load extension {entry_point.name}: {str(e)}"
                     self.logger.warning(error_msg)
                     self._failed_plugins[entry_point.name] = error_msg
+                    extension_registry.update_state(entry_point.name, PluginState.FAILED, error_msg)
                     
         except Exception as e:
             self.logger.error(f"Error discovering extensions: {e}")
@@ -138,6 +145,7 @@ class PluginDiscovery:
                     if not extension.is_available():
                         self.logger.info(f"Extension {name} is not available in this environment")
                         results[name] = False
+                        extension_registry.update_state(name, PluginState.DISABLED, "Not available in this environment")
                         continue
                     
                     # Initialize with timeout
@@ -147,15 +155,19 @@ class PluginDiscovery:
                         results[name] = success
                         if success:
                             self.logger.info(f"Extension {name} initialized successfully")
+                            extension_registry.update_state(name, PluginState.INITIALIZED)
                         else:
                             self.logger.warning(f"Extension {name} initialization returned False")
+                            extension_registry.update_state(name, PluginState.FAILED, "Initialization returned False")
                     except TimeoutError:
                         self.logger.error(f"Extension {name} initialization timed out after {self.INIT_TIMEOUT}s")
                         results[name] = False
+                        extension_registry.update_state(name, PluginState.FAILED, f"Initialization timeout ({self.INIT_TIMEOUT}s)")
                         
                 except Exception as e:
                     self.logger.error(f"Error initializing extension {name}: {e}")
                     results[name] = False
+                    extension_registry.update_state(name, PluginState.FAILED, str(e))
                     
         return results
     

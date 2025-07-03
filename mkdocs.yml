@@ -1,6 +1,6 @@
 site_name: PyForge CLI Documentation
 site_description: A powerful CLI tool for data format conversion and synthetic data generation
-site_url: https://py-forge-cli.github.io/PyForge-CLI/
+site_url: http://127.0.0.1:8000/
 repo_url: https://github.com/Py-Forge-Cli/PyForge-CLI
 repo_name: Py-Forge-Cli/PyForge-CLI
 edit_uri: edit/main/docs/
@@ -117,6 +117,9 @@ nav:
     - First Conversion: getting-started/first-conversion.md
     - Tools Prerequisites: getting-started/tools-prerequisites.md
   - Sample Datasets: sample-datasets.md
+  - Databricks Notebooks:
+    - PyForge Core Guide: notebooks/pyforge-core-databricks-guide.md
+    - PyForge Databricks Guide: notebooks/pyforge-databricks-volume-guide.md
   - Converters:
     - Overview: converters/index.md
     - PDF to Text: converters/pdf-to-text.md

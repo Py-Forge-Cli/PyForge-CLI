@@ -53,9 +53,12 @@ dependencies = [
     "openpyxl>=3.1.5",
     "docker>=6.1.0",
     "requests>=2.28.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.14",
 ]
 
 [project.optional-dependencies]
+# Development tools
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -82,6 +85,20 @@ docs = [
     "mkdocs-mermaid2-plugin>=0.6.0",
 ]
 
+# Databricks extension
+databricks = [
+    "databricks-sdk>=0.36.0", 
+    "pyspark>=3.5.0; platform_system!='Darwin' or platform_machine!='arm64'",
+]
+
+# Future cloud platform integrations
+# aws = ["boto3>=1.26.0", "s3fs>=2023.1.0"]
+# azure = ["azure-storage-blob>=12.17.0", "azure-identity>=1.13.0"]
+# gcp = ["google-cloud-storage>=2.10.0", "gcsfs>=2023.1.0"]
+
+# Convenience bundles
+all = ["pyforge-cli[dev,docs]"]
+
 [project.urls]
 Homepage = "https://github.com/Py-Forge-Cli/PyForge-CLI"
 Repository = "https://github.com/Py-Forge-Cli/PyForge-CLI"
@@ -91,6 +108,25 @@ Changelog = "https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pyforge = "pyforge_cli.main:cli"
+
+[project.entry-points."pyforge.extensions"]
+# Databricks extension entry point (will be active when extension is implemented)
+# databricks = "pyforge_cli.extensions.databricks:DatabricksExtension"
+
+[project.entry-points."pyforge.converters"]
+# Core converters
+csv = "pyforge_cli.converters.csv_converter:CSVConverter"
+excel = "pyforge_cli.converters.excel_converter:ExcelConverter"
+xml = "pyforge_cli.converters.xml_converter:XMLConverter"
+pdf = "pyforge_cli.converters.pdf_converter:PDFConverter"
+mdb = "pyforge_cli.converters.mdb_converter:MDBConverter"
+dbf = "pyforge_cli.converters.dbf_converter:DBFConverter"
+
+# Extension converters (will be active when extensions are implemented)
+# spark_csv = "pyforge_cli.extensions.databricks.converters.spark_csv:SparkCSVConverter"
+# spark_excel = "pyforge_cli.extensions.databricks.converters.spark_excel:SparkExcelConverter"
+# spark_xml = "pyforge_cli.extensions.databricks.converters.spark_xml:SparkXMLConverter"
+# delta = "pyforge_cli.extensions.databricks.converters.delta_converter:DeltaConverter"
 
 [tool.hatch.build]
 sources = ["src"]

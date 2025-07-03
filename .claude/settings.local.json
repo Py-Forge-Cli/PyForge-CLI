@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(gh repo view:*)",
+      "Bash(pyforge convert:*)",
+      "Bash(gh issue create:*)",
+      "Bash(mkdir:*)",
+      "Bash(pyforge install:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:py-forge-cli.github.io)",
+      "Bash(unzip:*)",
+      "Bash(find:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(git checkout:*)",
+      "Bash(python:*)",
+      "Bash(cp:*)",
+      "Bash(chmod:*)",
+      "Bash(pip install:*)",
+      "Bash(rm:*)",
+      "Bash(git stash:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:docs.databricks.com)",
+      "Bash(uv sync:*)",
+      "Bash(uv add:*)",
+      "Bash(mkdocs serve:*)",
+      "Bash(uv run mkdocs serve:*)",
+      "Bash(uv run:*)",
+      "Bash(curl:*)",
+      "Bash(kill:*)",
+      "Bash(grep:*)",
+      "Bash(git reset:*)"
+    ],
+    "deny": []
+  }
+}

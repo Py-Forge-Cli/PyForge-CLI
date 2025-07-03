@@ -1,0 +1,157 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyforge-core"
+version = "0.6.0"
+description = "Core data format conversion functionality for PyForge"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "PyForge Team", email = "team@pyforge.io"}
+]
+maintainers = [
+    {name = "PyForge Team", email = "team@pyforge.io"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Archiving :: Compression",
+    "Topic :: Text Processing :: General",
+]
+keywords = ["data", "conversion", "format", "csv", "excel", "pdf", "xml", "parquet"]
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.1.0,<9.0.0",
+    "rich>=13.0.0,<14.0.0",
+    "pandas==1.5.3",
+    "pyarrow==14.0.1",
+    "numpy==1.23.5",
+    "openpyxl>=3.1.0,<4.0.0",
+    "PyMuPDF>=1.23.0,<2.0.0",
+    "chardet>=5.0.0,<6.0.0",
+    "lxml>=4.9.0,<5.0.0",
+    "pyodbc>=4.0.0,<5.0.0",
+    "dbfread>=2.0.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.23.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/PyForge/pyforge-core"
+"Bug Reports" = "https://github.com/PyForge/pyforge-core/issues"
+"Documentation" = "https://pyforge.readthedocs.io"
+"Source" = "https://github.com/PyForge/pyforge-core"
+
+[project.scripts]
+pyforge = "pyforge_core.cli.main:cli"
+
+[project.entry-points."pyforge.converters"]
+csv = "pyforge_core.converters.csv_converter:CSVConverter"
+excel = "pyforge_core.converters.excel_converter:ExcelConverter"
+pdf = "pyforge_core.converters.pdf_converter:PDFConverter"
+xml = "pyforge_core.converters.xml_converter:XMLConverter"
+json = "pyforge_core.converters.json_converter:JSONConverter"
+mdb = "pyforge_core.converters.mdb_converter:MDBConverter"
+dbf = "pyforge_core.converters.dbf_converter:DBFConverter"
+parquet = "pyforge_core.converters.parquet_converter:ParquetConverter"
+
+[tool.hatch.version]
+path = "src/pyforge_core/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyforge_core"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/pyforge_core",
+    "tests",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "--strict-markers",
+    "--cov=pyforge_core",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+
+[tool.coverage.run]
+source = ["src/pyforge_core"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311"]
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+]
+ignore = [
+    "E501",  # line too long
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
