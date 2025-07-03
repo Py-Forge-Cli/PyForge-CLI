@@ -22,5 +22,17 @@ Example:
 """
 
 from .base import BaseExtension
+from .discovery import ExtensionDiscovery
+from .loader import ExtensionLoader
+from .manager import ExtensionManager, get_extension_manager
+from .registry import ExtensionRegistry, ExtensionState
 
-__all__ = ['BaseExtension']
+__all__ = [
+    'BaseExtension',
+    'ExtensionDiscovery',
+    'ExtensionLoader',
+    'ExtensionManager',
+    'ExtensionRegistry',
+    'ExtensionState',
+    'get_extension_manager',
+]

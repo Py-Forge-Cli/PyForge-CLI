@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(PYTHONPATH=/Users/santoshdandey/Documents/code/PyForge-CLI/src python tests/test_databricks_extension.py)",
+      "Bash(export PYARROW_IGNORE_TIMEZONE=1)",
+      "Bash(python:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

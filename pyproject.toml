@@ -81,6 +81,10 @@ docs = [
     "mkdocs-material>=9.0.0",
     "mkdocs-mermaid2-plugin>=0.6.0",
 ]
+databricks = [
+    "pyspark>=3.5.0",
+    "delta-spark>=3.1.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/Py-Forge-Cli/PyForge-CLI"
@@ -91,6 +95,9 @@ Changelog = "https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pyforge = "pyforge_cli.main:cli"
+
+[project.entry-points."pyforge_cli.extensions"]
+databricks = "pyforge_cli.extensions.databricks:DatabricksExtension"
 
 [tool.hatch.build]
 sources = ["src"]
@@ -162,11 +169,18 @@ addopts = [
     "--cov-report=html",
     "--cov-report=xml",
 ]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
 
 [dependency-groups]
 dev = [
     "bandit>=1.7.10",
+    "databricks-sdk==0.19.0",
+    "delta-spark==3.1.0",
     "mypy>=1.14.1",
+    "numpy<2.0",
+    "pyspark==3.5.2",
     "pytest>=8.3.5",
     "pytest-cov>=5.0.0",
     "ruff>=0.12.0",

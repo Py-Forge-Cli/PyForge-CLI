@@ -8,6 +8,8 @@ from rich.table import Table
 
 from . import __version__
 from .plugins import registry, plugin_loader
+from .extensions import get_extension_manager
+from .extensions.logging import setup_extension_logging, configure_verbose_logging
 
 
 console = Console()
@@ -84,8 +86,19 @@ def cli(ctx, verbose):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
     
+    # Configure extension logging
+    if verbose:
+        configure_verbose_logging()
+    else:
+        setup_extension_logging()
+    
     # Load all available converters
     plugin_loader.load_all()
+    
+    # Initialize extension manager
+    extension_manager = get_extension_manager()
+    extension_manager.initialize()
+    ctx.obj['extension_manager'] = extension_manager
 
 
 @cli.command()
@@ -238,6 +251,7 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
         • Use --verbose flag for detailed conversion information
     """
     verbose = ctx.obj.get('verbose', False)
+    extension_manager = ctx.obj.get('extension_manager')
     
     if verbose:
         console.print(f"[dim]Input file: {input_file}[/dim]")
@@ -318,12 +332,51 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
     if preview_schema:
         options['preview_schema'] = True
     
-    # Perform conversion
-    success = converter.convert(input_file, output_file, **options)
+    # Execute pre-conversion hooks from extensions
+    if extension_manager:
+        hook_results = extension_manager.execute_hook(
+            'hook_pre_conversion',
+            input_file=input_file,
+            output_file=output_file,
+            converter=converter,
+            options=options
+        )
+        if verbose and hook_results:
+            console.print(f"[dim]Pre-conversion hooks executed: {len(hook_results)}[/dim]")
     
-    if not success:
-        console.print("[red]Conversion failed![/red]")
-        raise click.Abort()
+    # Perform conversion
+    try:
+        success = converter.convert(input_file, output_file, **options)
+        
+        # Execute post-conversion hooks on success
+        if success and extension_manager:
+            hook_results = extension_manager.execute_hook(
+                'hook_post_conversion',
+                input_file=input_file,
+                output_file=output_file,
+                converter=converter,
+                options=options,
+                success=True
+            )
+            if verbose and hook_results:
+                console.print(f"[dim]Post-conversion hooks executed: {len(hook_results)}[/dim]")
+        
+        if not success:
+            console.print("[red]Conversion failed![/red]")
+            raise click.Abort()
+            
+    except Exception as e:
+        # Execute error handling hooks
+        if extension_manager:
+            hook_results = extension_manager.execute_hook(
+                'hook_error_handling',
+                input_file=input_file,
+                output_file=output_file,
+                converter=converter,
+                options=options,
+                error=e
+            )
+        raise
 
 
 @cli.command()
@@ -451,6 +504,105 @@ def info(input_file, output_format):
             table.add_row(display_key, display_value)
         
         console.print(table)
+
+
+@cli.command()
+@click.pass_context
+def list_extensions(ctx):
+    """List all available extensions and their status.
+    
+    \b
+    DESCRIPTION:
+        Display information about all discovered PyForge CLI extensions,
+        including their load status, version, and any errors encountered.
+    
+    \b
+    OUTPUT:
+        • Extension name and version
+        • Load status (loaded, failed, disabled)
+        • Load time for successful extensions
+        • Error details for failed extensions
+        • Dependencies information
+    
+    \b
+    EXAMPLES:
+        # List all extensions
+        pyforge list-extensions
+        
+        # Use with verbose for more details
+        pyforge --verbose list-extensions
+    
+    \b
+    NOTES:
+        • Extensions are discovered via Python entry points
+        • Failed extensions show error details
+        • Disabled extensions can be re-enabled
+    """
+    extension_manager = ctx.obj.get('extension_manager')
+    if not extension_manager:
+        console.print("[yellow]Extension system not initialized[/yellow]")
+        return
+    
+    extension_info = extension_manager.get_extension_info()
+    
+    if not extension_info:
+        console.print("[yellow]No extensions discovered[/yellow]")
+        return
+    
+    table = Table(title="PyForge CLI Extensions")
+    table.add_column("Extension", style="blue")
+    table.add_column("Version", style="cyan")
+    table.add_column("Status", style="bold")
+    table.add_column("Load Time", style="dim")
+    table.add_column("Details", style="dim")
+    
+    for name, info in extension_info.items():
+        # Format status with color
+        status = info['state']
+        if status == 'loaded':
+            status_str = "[green]✓ Loaded[/green]"
+        elif status == 'failed':
+            status_str = "[red]✗ Failed[/red]"
+        elif status == 'disabled':
+            status_str = "[yellow]- Disabled[/yellow]"
+        else:
+            status_str = f"[dim]{status}[/dim]"
+        
+        # Format load time
+        load_time_str = ""
+        if info['load_time']:
+            load_time_str = f"{info['load_time']:.2f}s"
+        
+        # Format details
+        details = []
+        if info['description']:
+            details.append(info['description'][:50] + "..." if len(info['description']) > 50 else info['description'])
+        if info['error']:
+            details.append(f"[red]Error: {info['error']}[/red]")
+        if not info['enabled'] and status == 'loaded':
+            details.append("[yellow]Disabled by user[/yellow]")
+        
+        details_str = "\n".join(details) if details else ""
+        
+        table.add_row(
+            name,
+            info['version'] or "Unknown",
+            status_str,
+            load_time_str,
+            details_str
+        )
+    
+    console.print(table)
+    
+    # Show summary
+    loaded_count = sum(1 for info in extension_info.values() if info['state'] == 'loaded')
+    failed_count = sum(1 for info in extension_info.values() if info['state'] == 'failed')
+    
+    console.print(f"\n[dim]Total: {len(extension_info)} extension(s) discovered, "
+                  f"{loaded_count} loaded, {failed_count} failed[/dim]")
+    
+    if ctx.obj.get('verbose'):
+        console.print("\n[dim]Entry points checked: pyforge_cli.extensions[/dim]")
 
 
 @cli.command()
