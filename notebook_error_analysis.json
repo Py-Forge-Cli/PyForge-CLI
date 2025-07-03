@@ -1,0 +1,12 @@
+{
+  "errors": [],
+  "file_failures": [],
+  "success_rate": null,
+  "test_counts": {
+    "success": 0,
+    "failed": 0,
+    "timeout": 0,
+    "error": 0
+  },
+  "unique_error_types": []
+}

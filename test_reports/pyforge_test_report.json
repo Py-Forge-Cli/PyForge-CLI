@@ -1,0 +1,127 @@
+{
+  "timestamp": "2025-07-02 20:11:49",
+  "test_results": {
+    "basic_commands": {
+      "version": {
+        "success": true,
+        "stdout": "pyforge, version 1.0.7\n",
+        "stderr": "",
+        "command": "pyforge --version"
+      },
+      "help": {
+        "success": true,
+        "stdout": "Usage: pyforge [OPTIONS] COMMAND [ARGS]...\n\n  PyForge CLI - A powerful data format conversion and synthetic data\n  generation tool.\n\n  DESCRIPTION:\n      Convert between various data formats with ease and precision.\n      Features beautiful terminal output, progress tracking, and extensible\n      plugin architecture for adding new format converters.\n\n  CURRENTLY SUPPORTED FORMATS:\n      \u2022 PDF to Text conversion with advanced options\n      \u2022 Excel (.xlsx) to Parquet conversion with multi-sheet su",
+        "stderr": "",
+        "command": "pyforge --help"
+      },
+      "formats": {
+        "success": true,
+        "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n                   Supported Formats                    \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Converter \u2503 Input Formats           \u2503 Output Formats \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529\n\u2502 Mdb       \u2502 .accdb, .mdb            \u2502 .parquet       \u2502\n\u2502 Dbf       \u2502 .dbf                    \u2502 .parquet       \u2502\n\u2502 Excel     \u2502 .xlsx            ",
+        "stderr": "",
+        "command": "pyforge formats"
+      }
+    },
+    "file_info": {
+      "sample-datasets/csv/small/sample_data.csv": {
+        "info": {
+          "success": true,
+          "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n     File Information: sample_data.csv      \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Property            \u2503 Value              \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+          "stderr": ""
+        },
+        "validate": {
+          "success": true,
+          "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n\u2713 sample_data.csv is a valid .CSV file\n",
+          "stderr": ""
+        }
+      },
+      "sample-datasets/xml/small/sample_data.xml": {
+        "info": {
+          "success": true,
+          "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n                File Information: sample_data.xml                \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Property          \u2503 Value              ",
+          "stderr": ""
+        },
+        "validate": {
+          "success": true,
+          "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n\u2713 sample_data.xml is a valid .XML file\n",
+          "stderr": ""
+        }
+      }
+    },
+    "conversions": {
+      "sample-datasets/csv/small/sample_data.csv": {
+        "success": false,
+        "command": "pyforge convert sample-datasets/csv/small/sample_data.csv test_output/sample_csv_to_parquet.parquet --format parquet",
+        "description": "CSV to Parquet (known to fail in v1.0.7)",
+        "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n",
+        "stderr": "Traceback (most recent call last):\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/bin/pyforge\", line 8, in <module>\n    sys.exit(cli())\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/lib/python3.10/site-packages/click/core.py\", line 1130, in __call__\n    return self.main(*a",
+        "output_created": false,
+        "output_size": 0,
+        "known_issue": true,
+        "expected_to_fail": true
+      },
+      "sample-datasets/xml/small/sample_data.xml": {
+        "success": false,
+        "command": "pyforge convert sample-datasets/xml/small/sample_data.xml test_output/sample_xml_to_parquet.parquet --format parquet",
+        "description": "XML to Parquet (known to fail in v1.0.7)",
+        "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n",
+        "stderr": "Traceback (most recent call last):\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/bin/pyforge\", line 8, in <module>\n    sys.exit(cli())\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/lib/python3.10/site-packages/click/core.py\", line 1130, in __call__\n    return self.main(*a",
+        "output_created": false,
+        "output_size": 0,
+        "known_issue": true,
+        "expected_to_fail": true
+      }
+    },
+    "advanced_options": {
+      "force_overwrite": {
+        "success": false,
+        "command": "pyforge convert sample-datasets/csv/small/sample_data.csv test_output/force_test.txt --force",
+        "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n",
+        "stderr": "Traceback (most recent call last):\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/bin/pyforge\", line 8, in <module>\n    sys.exit(cli())\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/lib/python3.10/site-packages/click/core.py\", line 1130, in __call__\n    return self.main(*a",
+        "known_issue": true,
+        "expected_failure": false
+      },
+      "compression_test_known_to_fail": {
+        "success": false,
+        "command": "pyforge convert sample-datasets/csv/small/sample_data.csv test_output/compressed_test.parquet --compression gzip",
+        "stdout": "Warning: Could not load PDF converter: No module named 'fitz'\n\u2713 Loaded enhanced MDB converter with UCanAccess + pyodbc support\n",
+        "stderr": "Traceback (most recent call last):\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/bin/pyforge\", line 8, in <module>\n    sys.exit(cli())\n  File \"/Users/sdandey/Documents/code/cortexpy-cli/test_env/lib/python3.10/site-packages/click/core.py\", line 1130, in __call__\n    return self.main(*a",
+        "known_issue": true,
+        "expected_failure": true
+      }
+    },
+    "sample_datasets": {
+      "csv/small/sample_data.csv": {
+        "file_exists": true,
+        "info_command_success": true,
+        "file_size": 251,
+        "success": true
+      },
+      "xml/small/sample_data.xml": {
+        "file_exists": true,
+        "info_command_success": true,
+        "file_size": 460,
+        "success": true
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 13,
+    "passed_tests": 9,
+    "failed_tests": 4,
+    "known_issues": 4,
+    "success_rate": 69.23,
+    "pyforge_version": "1.0.7",
+    "test_environment": "Python virtual environment",
+    "major_bugs_found": {
+      "convert_command": "TypeError in ConverterRegistry.get_converter()",
+      "missing_pdf_support": "No module named 'fitz'"
+    }
+  },
+  "known_issues": {
+    "convert_command_bug": "TypeError: ConverterRegistry.get_converter() takes 2 positional arguments but 3 were given",
+    "missing_dependencies": [
+      "fitz",
+      "requests"
+    ]
+  }
+}

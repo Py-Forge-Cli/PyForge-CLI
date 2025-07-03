@@ -144,6 +144,12 @@ def download_file(url, output_path, chunk_size=8192, timeout=30, max_retries=3):
             # Create SSL context with proper certificate verification
             ssl_context = ssl.create_default_context(cafile=certifi.where())
             
+            # For Census.gov domains in CI environments, use less strict SSL verification
+            # This is needed because Census.gov SSL certificates have issues in GitHub Actions
+            if os.environ.get('CI') and 'census.gov' in url.lower():
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+            
             # Create request with user agent and additional headers for better compatibility
             req = Request(url, headers={
                 'User-Agent': 'PyForge-CLI-Dataset-Collector/1.0 (Python urllib)',
@@ -381,7 +387,7 @@ def download_direct_datasets():
                 result = result_entry["result"]
                 output_path = get_output_path(dataset, base_path)
                 relative_path = output_path.relative_to(base_path)
-                f.write(f"{result['sha256']}  {relative_path}\\n")
+                f.write(f"{result['sha256']}  {relative_path}\n")
     
     print(f"🔐 Checksums saved to: {checksums_file}")
     
@@ -392,7 +398,7 @@ if __name__ == "__main__":
         success = download_direct_datasets()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\\n❌ Download interrupted by user")
+        print("\n❌ Download interrupted by user")
         sys.exit(1)
     except Exception as e:
         print(f"❌ Fatal error: {e}")

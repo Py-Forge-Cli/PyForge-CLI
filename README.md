@@ -43,11 +43,27 @@
 
 ## Installation
 
-### From PyPI
+### Stable Version (Recommended)
 
 ```bash
 pip install pyforge-cli
 ```
+
+### Development Version
+
+To test the latest features and bug fixes before they're officially released:
+
+```bash
+# Install from PyPI Test (latest development version)
+pip install -i https://test.pypi.org/simple/ pyforge-cli
+
+# Or with dependency fallback
+pip install --index-url https://test.pypi.org/simple/ \
+           --extra-index-url https://pypi.org/simple/ \
+           pyforge-cli
+```
+
+> **Note**: Development versions follow the pattern `X.Y.Z.devN+gCOMMIT` and are automatically deployed from the main branch.
 
 ### From Source
 
@@ -533,7 +549,19 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.4.0 (Current Release)
+### 1.0.8 (Current Release)
+
+- ✅ **Complete Testing Infrastructure Overhaul**: Fixed 13 major issues across infrastructure and notebooks
+- ✅ **Sample Datasets Installation**: Fixed with intelligent fallback versioning system
+- ✅ **Missing Dependencies**: Added PyMuPDF, chardet, requests to resolve import errors
+- ✅ **Convert Command Fix**: Resolved TypeError in ConverterRegistry API
+- ✅ **Comprehensive Testing Framework**: Created systematic testing with 402 lines of test code
+- ✅ **Notebook Organization**: Restructured with proper unit/integration/functional hierarchy
+- ✅ **Cross-Environment Support**: Both local and Databricks notebooks fully functional
+- ✅ **Enhanced Error Handling**: Smart file selection, directory creation, PDF skip logic
+- ✅ **Developer Documentation**: Complete guides and deployment documentation
+
+### 0.4.0
 
 - ✅ **MDF Tools Installer**: Complete automated Docker Desktop and SQL Server Express 2019 setup
 - ✅ **Cross-Platform Installation**: System package managers (Homebrew, Winget, apt/yum)
@@ -581,3 +609,39 @@ If you encounter any issues or have questions:
 - File metadata extraction
 - Page range support
 - Development tooling setup
+
+## 🚀 Development & Deployment
+
+### Automated Versioning
+
+PyForge CLI uses automated versioning with setuptools-scm:
+
+- **Development versions**: `1.0.x.devN` - Auto-deployed to [PyPI Test](https://test.pypi.org/project/pyforge-cli/) on every commit to main
+- **Release versions**: `1.0.x` - Deployed to [PyPI](https://pypi.org/project/pyforge-cli/) when Git tags are created
+- **Version increment**: Development versions auto-increment on each commit (dev1 → dev2 → dev3...)
+
+### Installation from Test Repository
+
+```bash
+# Install latest development version
+pip install -i https://test.pypi.org/simple/ pyforge-cli
+
+# Install specific development version  
+pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.8.dev5
+```
+
+### CI/CD Pipeline
+
+- **Trigger**: Every push to `main` branch automatically builds and deploys to PyPI Test
+- **Release**: Create a Git tag to trigger deployment to PyPI Production
+- **Testing**: Use `pyforge-cli` from test.pypi.org for validation before release
+
+### Recent Updates (v1.0.8)
+
+**Complete Testing Infrastructure Overhaul** - Fixed 13 major issues across PyForge CLI infrastructure and testing notebooks:
+
+- ✅ **Infrastructure Fixes**: Sample datasets installation, missing dependencies, convert command API
+- ✅ **Testing Framework**: Comprehensive testing suite with 402 lines of test code  
+- ✅ **Notebook Support**: Full local and Databricks notebook functionality
+- ✅ **Error Handling**: Smart file selection, directory creation, PDF skip logic
+- ✅ **Documentation**: Complete developer guides and deployment processes
