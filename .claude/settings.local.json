@@ -24,7 +24,8 @@
       "Bash(git push:*)",
       "Bash(gh workflow:*)",
       "Bash(gh run list:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "WebFetch(domain:learn.microsoft.com)"
     ],
     "deny": []
   }
