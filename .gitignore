@@ -77,6 +77,11 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Notebook outputs and temporary files
+notebooks/**/*-checkpoint.ipynb
+notebooks/**/*-Copy*.ipynb
 
 # IPython
 profile_default/
@@ -206,6 +211,11 @@ test-sample-datasets/
 # Test data directories (temporary test files)
 test_data/
 test_0.5.3/
+
+# PyForge CLI testing environment
+test_env/
+test_output/
+sample-datasets/
 
 # setuptools-scm generated files
 src/pyforge_cli/_version.py

@@ -292,7 +292,7 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
     options = {}
     
     # Get converter from registry
-    converter = registry.get_converter(input_file, options)
+    converter = registry.get_converter(input_file)
     
     if not converter:
         console.print(f"[red]Error: Unsupported input format '{input_file.suffix}'[/red]")
