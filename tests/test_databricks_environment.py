@@ -65,7 +65,8 @@ class TestDatabricksEnvironment:
             'DATABRICKS_CLUSTER_ID': 'cluster-123',
             'DATABRICKS_WORKSPACE_ID': 'workspace-456',
             'DATABRICKS_RUNTIME_EDITION': 'serverless',
-            'NON_DATABRICKS_VAR': 'should-not-be-included'
+            'UNRELATED_VAR': 'should-not-be-included',
+            'ANOTHER_DATABRICKS_VAR': 'should-be-included'
         }
         
         env = DatabricksEnvironment(env_vars, is_databricks=True, version='10.4')
@@ -79,7 +80,8 @@ class TestDatabricksEnvironment:
         assert 'python_version' in info
         assert 'env_vars' in info
         assert 'DATABRICKS_RUNTIME_VERSION' in info['env_vars']
-        assert 'NON_DATABRICKS_VAR' not in info['env_vars']
+        assert 'ANOTHER_DATABRICKS_VAR' in info['env_vars']
+        assert 'UNRELATED_VAR' not in info['env_vars']
 
 
 class TestDatabricksDetection:
@@ -119,12 +121,15 @@ class TestDatabricksDetection:
         assert env.version == '10.4'
     
     @patch('os.environ', {'SPARK_HOME': '/opt/spark'})
-    @patch('pyforge_cli.databricks.environment.pyspark')
-    def test_detect_databricks_from_spark(self, mock_pyspark):
+    def test_detect_databricks_from_spark(self):
         """Test detection from Spark version."""
+        # Mock the pyspark module
+        mock_pyspark = MagicMock()
         mock_pyspark.version = 'Databricks Runtime 10.4'
-        env = detect_databricks_environment()
-        assert env.is_databricks
+        
+        with patch.dict('sys.modules', {'pyspark': mock_pyspark}):
+            env = detect_databricks_environment()
+            assert env.is_databricks
     
     @patch('os.environ', {
         'DATABRICKS_RUNTIME_VERSION': '10.4',
