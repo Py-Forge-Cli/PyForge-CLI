@@ -248,6 +248,34 @@ These are minimal sample datasets created locally for testing PyForge CLI.
                 console.print("[red]No releases found.[/red]")
                 return False
         
+        # Check if the release has sample dataset assets (zip files), if not try to find a release with assets
+        assets = release.get('assets', [])
+        has_sample_datasets = any(a['name'].endswith('.zip') for a in assets)
+        
+        if not has_sample_datasets:
+            console.print(f"[yellow]Release {release['tag_name']} has no sample dataset assets.[/yellow]")
+            
+            # Try known versions with assets first
+            fallback_versions = ['v1.0.5', 'v1.0.4', 'v1.0.3']
+            for fallback_version in fallback_versions:
+                console.print(f"[dim]Trying fallback version {fallback_version}...[/dim]")
+                fallback_release = self.get_release_by_version(fallback_version)
+                if fallback_release and fallback_release.get('assets'):
+                    fallback_assets = fallback_release.get('assets', [])
+                    if any(a['name'].endswith('.zip') for a in fallback_assets):
+                        console.print(f"[green]Found sample datasets in {fallback_version}[/green]")
+                        release = fallback_release
+                        break
+            else:
+                # If fallback versions don't work, search all releases
+                console.print("[dim]Searching all releases for sample datasets...[/dim]")
+                all_releases = self.list_available_releases()
+                for alt_release in all_releases:
+                    if alt_release.get('assets') and any(a['name'].endswith('.zip') for a in alt_release.get('assets', [])):
+                        console.print(f"[green]Found sample datasets in {alt_release['tag_name']}[/green]")
+                        release = alt_release
+                        break
+        
         console.print(f"[bold]Installing datasets from release: {release['tag_name']}[/bold]")
         
         # Check if target directory exists
@@ -262,23 +290,10 @@ These are minimal sample datasets created locally for testing PyForge CLI.
         # Get assets to download
         assets = release.get('assets', [])
         if not assets:
-            console.print(f"[yellow]No assets found in release {release['tag_name']}.[/yellow]")
-            
-            # Try to find a release with assets if this one is empty
-            console.print("[dim]Looking for releases with sample datasets...[/dim]")
-            all_releases = self.list_available_releases()
-            for alt_release in all_releases:
-                alt_assets = alt_release.get('assets', [])
-                if alt_assets and any(a['name'].endswith('.zip') for a in alt_assets):
-                    console.print(f"[green]Found datasets in release {alt_release['tag_name']}[/green]")
-                    release = alt_release
-                    assets = alt_assets
-                    break
-            
-            if not assets:
-                console.print("[red]No sample datasets found in any release.[/red]")
-                console.print("[dim]Sample datasets may not be available yet. Check back later.[/dim]")
-                return self._create_minimal_datasets()  # Create some basic sample files
+            console.print(f"[yellow]No assets found in release {release['tag_name']} after fallback search.[/yellow]")
+            console.print("[red]No sample datasets found in any release.[/red]")
+            console.print("[dim]Sample datasets may not be available yet. Check back later.[/dim]")
+            return self._create_minimal_datasets()  # Create some basic sample files
         
         # Filter assets based on user preferences
         download_assets = []

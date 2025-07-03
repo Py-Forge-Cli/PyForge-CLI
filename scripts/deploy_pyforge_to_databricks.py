@@ -6,7 +6,7 @@ This script builds the PyForge CLI wheel package and deploys it to Databricks
 using the Databricks CLI, following the proven CortexPy deployment pattern.
 
 Usage:
-    python deploy_pyforge.py [options]
+    python scripts/deploy_pyforge_to_databricks.py [options]
 
 Options:
     -u, --username <username>   Override Databricks username detection
@@ -32,9 +32,9 @@ class PyForgeDeployer:
     def __init__(self, profile: str = "DEFAULT", verbose: bool = False):
         self.profile = profile
         self.verbose = verbose
-        # Get project root (parent of integration_tests/serverless directory)
+        # Get project root (parent of scripts directory)
         self.script_dir = Path(__file__).parent.absolute()
-        self.project_root = self.script_dir.parent.parent.absolute()
+        self.project_root = self.script_dir.parent.absolute()
         self.dist_dir = self.project_root / "dist"
         
         # Setup logging
@@ -228,30 +228,63 @@ class PyForgeDeployer:
         
         self.logger.info(f"Uploading test notebooks to: {workspace_path}")
         
-        # Get list of test notebook files from our serverless directory
-        notebook_files = [
-            self.script_dir / "PyForge_Integration_Testing_Notebook.py",
-            self.script_dir / "PyForge_V1_Testing_Notebook.py",
-            self.script_dir / "Enhanced_Pyforge_Testing_Notebook.py",
-            self.script_dir / "CSV_Testing_Notebook.py"
-        ]
+        # Get list of test notebook files from organized notebooks directory
+        notebooks_dir = self.project_root / "notebooks" / "testing"
+        notebook_files = []
+        
+        # Collect all notebook files from testing subdirectories (excluding test environments)
+        for subdir in ["unit", "integration", "functional", "exploratory"]:
+            subdir_path = notebooks_dir / subdir
+            if subdir_path.exists():
+                # Find .py and .ipynb files directly in subdir (not recursive to avoid test_env)
+                for pattern in ["*.py", "*.ipynb"]:
+                    for file_path in subdir_path.glob(pattern):
+                        # Skip files in test environments or hidden directories
+                        if not any(part.startswith('.') or 'test_env' in part or '__pycache__' in part 
+                                 for part in file_path.parts):
+                            notebook_files.append(file_path)
         
         uploaded_count = 0
         for notebook_file in notebook_files:
             if notebook_file.exists():
-                notebook_dest = f"{workspace_path}{notebook_file.name}"
+                # Preserve directory structure in workspace
+                relative_path = notebook_file.relative_to(notebooks_dir)
+                notebook_dest = f"{workspace_path}{relative_path}"
+                
+                # Determine format and language based on file extension
+                if notebook_file.suffix == ".ipynb":
+                    format_type = "JUPYTER"
+                    language = "PYTHON"
+                elif notebook_file.suffix == ".py":
+                    format_type = "SOURCE"
+                    language = "PYTHON"
+                else:
+                    self.logger.warning(f"Skipping unsupported file type: {notebook_file.name}")
+                    continue
                 
                 try:
+                    # Create parent directories first
+                    parent_dir = "/".join(notebook_dest.split("/")[:-1])
+                    try:
+                        self.run_command([
+                            "databricks", "workspace", "mkdirs", parent_dir,
+                            "--profile", self.profile
+                        ])
+                    except subprocess.CalledProcessError:
+                        # Directory might already exist, that's okay
+                        pass
+                    
+                    # Upload the notebook
                     self.run_command([
                         "databricks", "workspace", "import", notebook_dest,
                         "--file", str(notebook_file), "--profile", self.profile, 
-                        "--overwrite", "--format", "SOURCE", "--language", "PYTHON"
+                        "--overwrite", "--format", format_type, "--language", language
                     ])
-                    self.logger.info(f"✓ Uploaded notebook: {notebook_file.name}")
+                    self.logger.info(f"✓ Uploaded notebook: {relative_path}")
                     uploaded_count += 1
                     
                 except subprocess.CalledProcessError as e:
-                    self.logger.error(f"Failed to upload {notebook_file.name}: {e}")
+                    self.logger.error(f"Failed to upload {relative_path}: {e}")
                     # Continue with other notebooks
         
         if uploaded_count == 0:
