@@ -6,8 +6,8 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from cortexpy_cli.converters.mdb_converter import MDBConverter
-from cortexpy_cli.converters.dbf_converter import DBFConverter
+from pyforge_cli.converters.mdb_converter import MDBConverter
+from pyforge_cli.converters.dbf_converter import DBFConverter
 
 
 class TestMDBConverter:
@@ -166,7 +166,7 @@ class TestConverterIntegration:
     
     def test_file_detection_integration(self):
         """Test integration with file detection"""
-        from cortexpy_cli.detectors import detect_database_file, DatabaseType
+        from pyforge_cli.detectors import detect_database_file, DatabaseType
         
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -195,7 +195,7 @@ class TestConverterIntegration:
     
     def test_converter_factory_pattern(self):
         """Test that converters can be selected by file type"""
-        from cortexpy_cli.detectors import get_database_type, DatabaseType
+        from pyforge_cli.detectors import get_database_type, DatabaseType
         
         def get_converter_for_file(file_path):
             """Factory function to get appropriate converter"""

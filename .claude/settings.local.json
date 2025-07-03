@@ -6,7 +6,20 @@
       "Bash(export PYARROW_IGNORE_TIMEZONE=1)",
       "Bash(python:*)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git fetch:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git merge:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(mv:*)",
+      "Bash(unset:*)",
+      "Bash(java:*)",
+      "Bash(echo $JAVA_HOME)",
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

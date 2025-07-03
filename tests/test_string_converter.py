@@ -8,7 +8,7 @@ from decimal import Decimal
 import numpy as np
 import pytest
 
-from cortexpy_cli.converters.string_database_converter import (
+from pyforge_cli.converters.string_database_converter import (
     StringTypeConverter,
     ConversionStats,
     StringDatabaseConverter
@@ -153,7 +153,7 @@ class TestStringDatabaseConverter:
     def test_instantiation(self):
         """Test base converter instantiation"""
         # StringDatabaseConverter is abstract, so we test with a concrete subclass
-        from cortexpy_cli.converters.mdb_converter import MDBConverter
+        from pyforge_cli.converters.mdb_converter import MDBConverter
         
         converter = MDBConverter()
         assert converter is not None
@@ -162,8 +162,8 @@ class TestStringDatabaseConverter:
     
     def test_supported_formats(self):
         """Test supported formats method"""
-        from cortexpy_cli.converters.mdb_converter import MDBConverter
-        from cortexpy_cli.converters.dbf_converter import DBFConverter
+        from pyforge_cli.converters.mdb_converter import MDBConverter
+        from pyforge_cli.converters.dbf_converter import DBFConverter
         
         mdb_converter = MDBConverter()
         dbf_converter = DBFConverter()
@@ -174,7 +174,7 @@ class TestStringDatabaseConverter:
     
     def test_conversion_report(self):
         """Test conversion report generation"""
-        from cortexpy_cli.converters.mdb_converter import MDBConverter
+        from pyforge_cli.converters.mdb_converter import MDBConverter
         
         converter = MDBConverter()
         

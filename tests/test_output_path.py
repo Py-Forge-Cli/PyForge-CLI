@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
 from click.testing import CliRunner
 
-from cortexpy_cli.main import cli
+from pyforge_cli.main import cli
 
 
 class TestOutputPathGeneration:
@@ -26,9 +26,9 @@ class TestOutputPathGeneration:
             expected_output = temp_path / "test_document.txt"
             
             # Mock the converter and file operations
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 # Setup mocks
                 mock_converter = Mock()
@@ -62,9 +62,9 @@ class TestOutputPathGeneration:
             input_file = subdir / "report.pdf"
             expected_output = subdir / "report.txt"
             
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 mock_converter = Mock()
                 mock_converter.convert.return_value = True
@@ -91,9 +91,9 @@ class TestOutputPathGeneration:
             input_file = temp_path / "input.pdf"
             explicit_output = temp_path / "custom" / "output.txt"
             
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 mock_converter = Mock()
                 mock_converter.convert.return_value = True
@@ -119,9 +119,9 @@ class TestOutputPathGeneration:
             input_file = temp_path / "verbose_test.pdf"
             expected_output = temp_path / "verbose_test.txt"
             
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 mock_converter = Mock()
                 mock_converter.convert.return_value = True
@@ -148,9 +148,9 @@ class TestOutputPathGeneration:
             input_file = temp_path / "document.pdf"
             expected_output = temp_path / "document.txt"  # Default format is txt
             
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 mock_converter = Mock()
                 mock_converter.convert.return_value = True
@@ -178,9 +178,9 @@ class TestOutputPathGeneration:
             input_file = temp_path / "my.document.with.dots.and spaces.pdf"
             expected_output = temp_path / "my.document.with.dots.and spaces.txt"
             
-            with patch('cortexpy_cli.main.registry') as mock_registry, \
+            with patch('pyforge_cli.main.registry') as mock_registry, \
                  patch('pathlib.Path.exists') as mock_exists, \
-                 patch('cortexpy_cli.main.plugin_loader'):
+                 patch('pyforge_cli.main.plugin_loader'):
                 
                 mock_converter = Mock()
                 mock_converter.convert.return_value = True

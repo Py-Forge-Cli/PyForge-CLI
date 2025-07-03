@@ -3,7 +3,7 @@
 import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
-from cortexpy_cli.converters.pdf_converter import PDFConverter
+from pyforge_cli.converters.pdf_converter import PDFConverter
 
 
 class TestPDFConverter:

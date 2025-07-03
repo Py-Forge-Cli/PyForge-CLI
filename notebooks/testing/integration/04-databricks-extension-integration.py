@@ -504,40 +504,45 @@ try:
             'error': str(e)
         }
     
-    # Test CLI command integration (if possible)
-    print("🖥️ Testing CLI integration...")
+    # Test PyForgeDatabricks API integration
+    print("🖥️ Testing PyForgeDatabricks API integration...")
     
     try:
-        # Test the main CLI components
-        from pyforge_cli.main import cli
-        from pyforge_cli.plugins import registry
+        # Test PyForgeDatabricks API integration
+        from pyforge_cli.extensions.databricks.pyforge_databricks import PyForgeDatabricks
         
-        # Test format listing
-        formats = registry.list_supported_formats()
-        print(f"✅ CLI format listing: {len(formats)} formats available")
+        # Initialize PyForge Databricks API
+        forge = PyForgeDatabricks(auto_init=True)
+        print("✅ PyForgeDatabricks API initialized")
         
-        # Test converter selection
-        from pathlib import Path
-        test_path = Path(test_csv_path)
-        converter = registry.get_converter(test_path)
+        # Test environment info
+        env_info = forge.get_environment_info()
+        print(f"✅ Environment info: {env_info['compute_type']} ({env_info['runtime_version']})")
         
-        if converter:
-            print(f"✅ Converter selection successful for {test_path.suffix}")
-            workflow_results['cli_integration'] = {
-                'format_listing_success': True,
-                'converter_selection_success': True,
-                'available_formats': len(formats)
-            }
-        else:
-            print(f"❌ No converter found for {test_path.suffix}")
-            workflow_results['cli_integration'] = {
-                'format_listing_success': True,
-                'converter_selection_success': False
-            }
+        # Test file info method
+        file_info = forge.get_info(test_csv_path)
+        print(f"✅ File info: {file_info['format']}, {file_info.get('size', 'unknown')} bytes")
+        
+        # Test conversion method
+        parquet_output_path = f"{TEST_OUTPUT_PATH}/api_converted.parquet"
+        conversion_result = forge.convert(test_csv_path, parquet_output_path)
+        
+        print(f"✅ API conversion successful:")
+        print(f"   Engine used: {conversion_result['engine_used']}")
+        print(f"   Rows processed: {conversion_result['rows_processed']}")
+        
+        workflow_results['api_integration'] = {
+            'initialization_success': True,
+            'environment_detection': True,
+            'file_info_success': True,
+            'conversion_success': True,
+            'engine_used': conversion_result['engine_used'],
+            'rows_processed': conversion_result['rows_processed']
+        }
         
     except Exception as e:
-        print(f"❌ CLI integration test failed: {e}")
-        workflow_results['cli_integration'] = {
+        print(f"❌ PyForgeDatabricks API integration test failed: {e}")
+        workflow_results['api_integration'] = {
             'success': False,
             'error': str(e)
         }

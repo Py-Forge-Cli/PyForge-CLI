@@ -7,7 +7,7 @@ from pathlib import Path
 import struct
 import pytest
 
-from cortexpy_cli.detectors.database_detector import (
+from pyforge_cli.detectors.database_detector import (
     DatabaseFileDetector, 
     DatabaseType, 
     detect_database_file,

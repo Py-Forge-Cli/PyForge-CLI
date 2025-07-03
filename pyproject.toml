@@ -240,6 +240,19 @@ dev = [
     "twine>=6.1.0",
 ]
 
+# Testing dependencies for PySpark local development
+test-pyspark = [
+    "pyspark==3.5.2",
+    "delta-spark==3.1.0",
+    "databricks-sdk==0.19.0",
+    "pytest>=8.3.5",
+    "pytest-mock>=3.10.0",
+    "pytest-cov>=5.0.0",
+    "pytest-xdist>=3.0.0",  # Parallel test execution
+    "findspark>=2.0.1",     # PySpark discovery utility
+    "py4j>=0.10.9.7",       # Python-Java bridge
+]
+
 [tool.setuptools_scm]
 version_file = "src/pyforge_cli/_version.py"
 # Remove local identifiers for PyPI compatibility while keeping dev versions

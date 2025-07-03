@@ -6,8 +6,8 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from cortexpy_cli.readers.mdb_reader import MDBTableDiscovery
-from cortexpy_cli.readers.dbf_reader import DBFTableDiscovery
+from pyforge_cli.readers.mdb_reader import MDBTableDiscovery
+from pyforge_cli.readers.dbf_reader import DBFTableDiscovery
 
 
 class TestMDBTableDiscovery:
@@ -109,7 +109,7 @@ class TestConvenienceFunctions:
     
     def test_mdb_convenience_functions(self):
         """Test MDB convenience functions"""
-        from cortexpy_cli.readers import discover_mdb_tables, get_mdb_summary
+        from pyforge_cli.readers import discover_mdb_tables, get_mdb_summary
         
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -124,7 +124,7 @@ class TestConvenienceFunctions:
     
     def test_dbf_convenience_functions(self):
         """Test DBF convenience functions"""
-        from cortexpy_cli.readers import discover_dbf_table, get_dbf_summary, validate_dbf_file
+        from pyforge_cli.readers import discover_dbf_table, get_dbf_summary, validate_dbf_file
         
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
