@@ -466,6 +466,138 @@ def info(input_file, output_format):
 
 
 @cli.command()
+def extensions():
+    """List all available PyForge extensions and their status.
+    
+    \\b
+    DESCRIPTION:
+        Display a comprehensive table of all discovered PyForge extensions
+        showing their current status, versions, and availability information.
+        This helps diagnose extension loading issues and verify which
+        extensions are ready for use.
+    
+    \\b
+    OUTPUT INFORMATION:
+        • Extension Name: Plugin identifier
+        • Version: Extension version number
+        • Status: Current state (loaded, failed, disabled, etc.)
+        • Description: Brief description of extension functionality
+        • Dependencies: Whether required dependencies are available
+    
+    \\b
+    POSSIBLE STATES:
+        Discovered   Extension found but not yet loaded
+        Loading      Currently being loaded
+        Loaded       Successfully loaded but not initialized
+        Initialized  Ready for use
+        Failed       Loading or initialization failed
+        Disabled     Manually disabled by configuration
+    
+    \\b
+    EXAMPLES:
+        # List all extensions
+        pyforge extensions
+        
+        # Use with grep to find specific extensions
+        pyforge extensions | grep databricks
+    
+    \\b
+    TROUBLESHOOTING:
+        If an extension shows as 'Failed':
+        • Check that all dependencies are installed
+        • Verify the extension is compatible with your Python version
+        • Check logs for detailed error messages
+        • Try reinstalling the extension package
+    
+    \\b
+    NOTES:
+        • Extensions are discovered automatically using entry points
+        • Failed extensions don't prevent the CLI from working
+        • New extensions can be added by installing packages with pyforge entry points
+    """
+    from .plugin_system import extension_registry
+    
+    # Get all registered plugins
+    all_plugins = extension_registry.get_all_plugins()
+    
+    if not all_plugins:
+        console.print("[yellow]No extensions discovered.[/yellow]")
+        console.print("[dim]Extensions can be installed as separate packages with pyforge entry points.[/dim]")
+        return
+    
+    # Create extensions table
+    table = Table(title="PyForge Extensions")
+    table.add_column("Extension", style="blue", no_wrap=True)
+    table.add_column("Version", style="cyan")
+    table.add_column("Status", style="bold")
+    table.add_column("Description", style="dim")
+    table.add_column("Available", style="green")
+    
+    # Sort plugins by name for consistent display
+    sorted_plugins = dict(sorted(all_plugins.items()))
+    
+    for name, plugin_info in sorted_plugins.items():
+        # Format status with color coding
+        status = plugin_info.state.value.title()
+        if plugin_info.state.name == "INITIALIZED":
+            status_display = f"[green]{status}[/green]"
+        elif plugin_info.state.name == "FAILED":
+            status_display = f"[red]{status}[/red]"
+        elif plugin_info.state.name == "DISABLED":
+            status_display = f"[yellow]{status}[/yellow]"
+        elif plugin_info.state.name == "LOADED":
+            status_display = f"[blue]{status}[/blue]"
+        else:
+            status_display = f"[dim]{status}[/dim]"
+        
+        # Get version and description from metadata
+        version = plugin_info.metadata.get('version', 'Unknown')
+        description = plugin_info.metadata.get('description', 'No description available')
+        
+        # Check availability
+        if plugin_info.extension and hasattr(plugin_info.extension, 'is_available'):
+            try:
+                is_available = plugin_info.extension.is_available()
+                available_display = "✓ Yes" if is_available else "✗ No"
+            except Exception:
+                available_display = "? Unknown"
+        else:
+            available_display = "? Unknown"
+        
+        table.add_row(
+            name,
+            version,
+            status_display,
+            description,
+            available_display
+        )
+    
+    console.print(table)
+    
+    # Show summary statistics
+    stats = extension_registry.get_plugin_stats()
+    
+    summary_parts = []
+    if stats['initialized'] > 0:
+        summary_parts.append(f"[green]{stats['initialized']} initialized[/green]")
+    if stats['failed'] > 0:
+        summary_parts.append(f"[red]{stats['failed']} failed[/red]")
+    if stats['disabled'] > 0:
+        summary_parts.append(f"[yellow]{stats['disabled']} disabled[/yellow]")
+    
+    if summary_parts:
+        summary = f"\\n[dim]Total: {stats['total']} extensions ({', '.join(summary_parts)})[/dim]"
+        console.print(summary)
+    
+    # Show failed plugins with error details
+    failed_plugins = extension_registry.get_failed_plugins()
+    if failed_plugins:
+        console.print("\\n[bold red]Failed Extensions:[/bold red]")
+        for name, error in failed_plugins.items():
+            console.print(f"[red]• {name}:[/red] [dim]{error}[/dim]")
+
+
+@cli.command()
 def formats():
     """List all supported input and output formats.
     
