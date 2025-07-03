@@ -549,7 +549,19 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.4.0 (Current Release)
+### 1.0.8 (Current Release)
+
+- ✅ **Complete Testing Infrastructure Overhaul**: Fixed 13 major issues across infrastructure and notebooks
+- ✅ **Sample Datasets Installation**: Fixed with intelligent fallback versioning system
+- ✅ **Missing Dependencies**: Added PyMuPDF, chardet, requests to resolve import errors
+- ✅ **Convert Command Fix**: Resolved TypeError in ConverterRegistry API
+- ✅ **Comprehensive Testing Framework**: Created systematic testing with 402 lines of test code
+- ✅ **Notebook Organization**: Restructured with proper unit/integration/functional hierarchy
+- ✅ **Cross-Environment Support**: Both local and Databricks notebooks fully functional
+- ✅ **Enhanced Error Handling**: Smart file selection, directory creation, PDF skip logic
+- ✅ **Developer Documentation**: Complete guides and deployment documentation
+
+### 0.4.0
 
 - ✅ **MDF Tools Installer**: Complete automated Docker Desktop and SQL Server Express 2019 setup
 - ✅ **Cross-Platform Installation**: System package managers (Homebrew, Winget, apt/yum)
@@ -615,7 +627,7 @@ PyForge CLI uses automated versioning with setuptools-scm:
 pip install -i https://test.pypi.org/simple/ pyforge-cli
 
 # Install specific development version  
-pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.7.dev6
+pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.8.dev5
 ```
 
 ### CI/CD Pipeline
@@ -623,4 +635,13 @@ pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.7.dev6
 - **Trigger**: Every push to `main` branch automatically builds and deploys to PyPI Test
 - **Release**: Create a Git tag to trigger deployment to PyPI Production
 - **Testing**: Use `pyforge-cli` from test.pypi.org for validation before release
-# Release v1.0.7 completed successfully!
+
+### Recent Updates (v1.0.8)
+
+**Complete Testing Infrastructure Overhaul** - Fixed 13 major issues across PyForge CLI infrastructure and testing notebooks:
+
+- ✅ **Infrastructure Fixes**: Sample datasets installation, missing dependencies, convert command API
+- ✅ **Testing Framework**: Comprehensive testing suite with 402 lines of test code  
+- ✅ **Notebook Support**: Full local and Databricks notebook functionality
+- ✅ **Error Handling**: Smart file selection, directory creation, PDF skip logic
+- ✅ **Documentation**: Complete developer guides and deployment processes
