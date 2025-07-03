@@ -2,7 +2,7 @@
 
 **Generated From**: PRD-Databricks-Extension-Revised.md v3.0  
 **Created**: 2025-01-03  
-**Total Tasks**: 53  
+**Total Tasks**: 54  
 **Estimated Duration**: 10 weeks  
 
 ---
@@ -10,7 +10,7 @@
 ## Task Overview by Phase
 
 ### Phase Summary
-- **Phase 1 - Foundation**: 15 tasks (3 weeks)
+- **Phase 1 - Foundation**: 16 tasks (3 weeks)
 - **Phase 2 - Databricks Extension**: 28 tasks (5 weeks)  
 - **Phase 3 - Testing & Release**: 10 tasks (2 weeks)
 
@@ -152,16 +152,35 @@
 - [ ] Test lifecycle management
 - [ ] Mock extension loading
 
+#### TASK-011.5: Setup Notebooks Testing Infrastructure 🔴
+**Priority**: Critical  
+**Effort**: 3 hours  
+**Dependencies**: TASK-011  
+**Description**: Create notebooks testing directory structure following established patterns
+**Acceptance Criteria**:
+- [ ] Create `notebooks/testing/functional/` directory structure
+- [ ] Create `notebooks/testing/integration/` directory structure  
+- [ ] Create `notebooks/testing/unit/` directory for unit test scripts
+- [ ] Create notebook template for Databricks extension testing following `01-test-cli-end-to-end.ipynb` pattern
+- [ ] Create integration test script template following `03-enhanced-pyforge-testing-cleaned.py` pattern
+- [ ] Add notebook configuration cells with widget parameters for serverless/classic environments
+- [ ] Setup error handling and comprehensive logging patterns
+- [ ] Document notebook testing guidelines and execution instructions
+
 #### TASK-012: Integration Tests 🔴
 **Priority**: Critical  
 **Effort**: 6 hours  
-**Dependencies**: TASK-011  
-**Description**: Test plugin system with real extensions
+**Dependencies**: TASK-011.5  
+**Description**: Test plugin system with real extensions using new notebooks testing structure
 **Acceptance Criteria**:
-- [ ] Test with valid extension
-- [ ] Test with broken extension
-- [ ] Test multiple extensions
-- [ ] Test CLI integration
+- [ ] Create functional tests in `notebooks/testing/functional/` directory
+- [ ] Create integration tests in `notebooks/testing/integration/` directory  
+- [ ] Test plugin system with valid Databricks extension
+- [ ] Test plugin system with broken extension
+- [ ] Test multiple extensions simultaneously
+- [ ] Test CLI integration with plugins loaded
+- [ ] Follow testing patterns from existing `01-test-cli-end-to-end.ipynb`
+- [ ] Create Python integration test script following `03-enhanced-pyforge-testing-cleaned.py` pattern
 
 #### TASK-013: Extension Developer Guide 🟡
 **Priority**: High  
@@ -467,12 +486,17 @@
 **Priority**: Critical  
 **Effort**: 8 hours  
 **Dependencies**: TASK-031 through TASK-038  
-**Description**: End-to-end testing in Databricks notebooks
+**Description**: End-to-end testing in Databricks notebooks using structured testing approach
 **Acceptance Criteria**:
-- [ ] Test all API methods
-- [ ] Test in serverless
-- [ ] Test in classic compute
-- [ ] Document issues
+- [ ] Create functional notebook tests in `notebooks/testing/functional/` for Databricks extension
+- [ ] Test all Databricks extension API methods (`forge.convert()`, `forge.install_datasets()`)
+- [ ] Test in serverless compute environment with PySpark detection
+- [ ] Test in classic compute environment with fallback behavior
+- [ ] Create integration tests in `notebooks/testing/integration/` for comprehensive scenarios
+- [ ] Follow testing patterns from existing notebooks (widget configuration, error handling)
+- [ ] Test Unity Catalog Volume operations if available
+- [ ] Document issues and environment-specific behaviors
+- [ ] Add comprehensive test reporting and metrics collection
 
 #### TASK-040: Performance Optimization 🔴
 **Priority**: Critical  
@@ -712,6 +736,42 @@ graph TD
 | Databricks API changes | Abstract API calls, version checking | Databricks Lead |
 | Performance targets not met | Early profiling, alternative approaches | Performance Engineer |
 | Low adoption | Developer advocacy, clear docs | Product Manager |
+
+---
+
+## Notebooks Testing Infrastructure
+
+### Testing Directory Structure
+Based on the established testing patterns found in the main branch, the following structure should be implemented:
+
+```
+notebooks/
+├── testing/
+│   ├── functional/           # Functional tests (.ipynb files)
+│   │   ├── 01-databricks-extension-functional.ipynb
+│   │   └── 02-databricks-extension-serverless.ipynb
+│   ├── integration/          # Integration tests (.py files)  
+│   │   ├── 03-databricks-extension-integration.py
+│   │   └── 04-databricks-volume-integration.py
+│   └── unit/                 # Unit test scripts (.py files)
+│       ├── test_databricks_extension.py
+│       └── test_volume_operations.py
+```
+
+### Testing Patterns Established
+- **Functional notebooks**: Use Databricks widgets for environment configuration
+- **Integration scripts**: Follow the enhanced testing pattern with comprehensive error handling
+- **Environment detection**: Automatic serverless vs classic compute detection
+- **Error handling**: Graceful handling of missing dependencies and environment issues
+- **Metrics collection**: Comprehensive test result tracking and reporting
+- **Configuration management**: Consistent parameter handling across test environments
+
+### Key Testing Components
+1. **Widget Configuration**: Environment-specific parameters (serverless/classic)
+2. **Error Analysis**: Detailed logging and issue documentation  
+3. **Performance Metrics**: Timing and resource usage tracking
+4. **Environment Detection**: Automatic PySpark vs pandas fallback testing
+5. **Comprehensive Reporting**: Test summary generation and results export
 
 ---
 
