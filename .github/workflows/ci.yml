@@ -38,6 +38,8 @@ jobs:
         # Install PySpark dependencies
         pip install pyspark==3.5.2 delta-spark==3.1.0 databricks-sdk==0.19.0
         pip install pytest-xdist findspark py4j
+        # Install test reporting dependencies
+        pip install pytest-html pytest-json-report
 
     - name: Set PySpark environment
       run: |
