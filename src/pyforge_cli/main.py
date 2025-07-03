@@ -8,6 +8,7 @@ from rich.table import Table
 
 from . import __version__
 from .plugins import registry, plugin_loader
+from .plugin_system import plugin_discovery
 
 
 console = Console()
@@ -84,8 +85,19 @@ def cli(ctx, verbose):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
     
-    # Load all available converters
+    # Load all available converters (legacy system)
     plugin_loader.load_all()
+    
+    # Discover and initialize extensions (new plugin system)
+    try:
+        extensions = plugin_discovery.discover_extensions()
+        if extensions:
+            plugin_discovery.initialize_extensions()
+            if verbose:
+                console.print(f"[dim]Loaded {len(extensions)} extensions[/dim]")
+    except Exception as e:
+        if verbose:
+            console.print(f"[dim]Extension discovery failed: {e}[/dim]")
 
 
 @cli.command()
