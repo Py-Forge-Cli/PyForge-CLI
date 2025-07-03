@@ -214,6 +214,8 @@ test_0.5.3/
 
 # PyForge CLI testing environment
 test_env/
+test_env_claude/
+test_env_local/
 test_output/
 sample-datasets/
 

@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-07-02T23:16:04.236072",
-  "git_commit": "9444dbfa",
+  "timestamp": "2025-07-03T00:24:49.573338",
+  "git_commit": "f228028c",
   "version": "unknown",
   "profile": "DEFAULT",
   "deployment": {
     "username": "usa-sdandey@deloitte.com",
-    "wheel_path": "dbfs:/Volumes/cortex_dev_catalog/sandbox_testing/pkgs/usa-sdandey@deloitte.com/pyforge_cli-1.0.8.dev2-py3-none-any.whl",
+    "wheel_path": "dbfs:/Volumes/cortex_dev_catalog/sandbox_testing/pkgs/usa-sdandey@deloitte.com/pyforge_cli-1.0.8.dev4-py3-none-any.whl",
     "workspace_path": "/Workspace/CoreDataEngineers/usa-sdandey@deloitte.com/pyforge_notebooks/",
-    "deployed_at": "2025-07-02T23:16:26.101116",
-    "install_command": "%pip install /Volumes/cortex_dev_catalog/sandbox_testing/pkgs/usa-sdandey@deloitte.com/pyforge_cli-1.0.8.dev2-py3-none-any.whl"
+    "deployed_at": "2025-07-03T00:25:21.676155",
+    "install_command": "%pip install /Volumes/cortex_dev_catalog/sandbox_testing/pkgs/usa-sdandey@deloitte.com/pyforge_cli-1.0.8.dev4-py3-none-any.whl"
   }
 }
