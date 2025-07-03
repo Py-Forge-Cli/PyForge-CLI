@@ -7,6 +7,7 @@ the required abstract methods.
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Any
+from pathlib import Path
 import click
 
 
@@ -120,3 +121,88 @@ class BaseExtension(ABC):
             "description": self.description,
             "available": self.is_available()
         }
+    
+    # Hook methods for the new hooks system
+    def hook_pre_conversion(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Pre-conversion hook.
+        
+        Called before conversion begins. Can modify conversion parameters
+        or perform pre-processing operations.
+        
+        Args:
+            data: Dictionary containing input_file, output_file, and options
+            
+        Returns:
+            Optional[Dict[str, Any]]: Modified data or None to leave unchanged
+        """
+        return None
+    
+    def hook_post_conversion(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Post-conversion hook.
+        
+        Called after conversion completes. Can perform post-processing,
+        cleanup, or additional operations.
+        
+        Args:
+            data: Dictionary containing input_file, output_file, conversion_result, and metadata
+            
+        Returns:
+            Optional[Dict[str, Any]]: Additional data or None
+        """
+        return None
+    
+    def hook_parameter_enhancement(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Parameter enhancement hook.
+        
+        Called to enhance or modify conversion parameters based on
+        extension-specific logic.
+        
+        Args:
+            data: Dictionary containing input_file and options
+            
+        Returns:
+            Optional[Dict[str, Any]]: Modified data with enhanced options or None
+        """
+        return None
+    
+    def hook_error_handling(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Error handling hook.
+        
+        Called when an error occurs during conversion. Can provide
+        recovery mechanisms or enhanced error reporting.
+        
+        Args:
+            data: Dictionary containing input_file, output_file, error, and context
+            
+        Returns:
+            Optional[Dict[str, Any]]: Recovery data or None
+        """
+        return None
+    
+    def hook_converter_selection(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Converter selection hook.
+        
+        Called to influence which converter is selected for a file.
+        Can provide enhanced file detection or format-specific logic.
+        
+        Args:
+            data: Dictionary containing input_file and available_converters
+            
+        Returns:
+            Optional[Dict[str, Any]]: Data with selected_converter or None
+        """
+        return None
+    
+    def shutdown(self) -> None:
+        """
+        Shutdown hook called during cleanup.
+        
+        Extensions can override this to perform cleanup operations
+        when the application is shutting down.
+        """
+        pass

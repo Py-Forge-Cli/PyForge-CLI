@@ -34,7 +34,8 @@
       "Bash(git reset:*)",
       "Bash(PYTHONPATH=src python -m pytest tests/unit/plugin_system/test_lifecycle.py::TestExtensionLifecycleManager::test_init -v -s --tb=short)",
       "Bash(PYTHONPATH=src python -c \"\nimport sys\nsys.path.insert(0, ''src'')\nfrom tests.unit.plugin_system.test_lifecycle import TestExtensionLifecycleManager\ntest = TestExtensionLifecycleManager()\ntest.setup_method()\ntest.test_init()\nprint(''✓ test_init passed'')\ntest.teardown_method()\n\")",
-      "Bash(PYTHONPATH=src python -c \"\nimport sys\nsys.path.insert(0, ''src'')\nfrom tests.unit.plugin_system.test_lifecycle import TestExtensionLifecycleManager\ntest = TestExtensionLifecycleManager()\ntest.setup_method()\ntest.test_initialize_extensions_empty()\nprint(''✓ test_initialize_extensions_empty passed'')\ntest.teardown_method()\n\")"
+      "Bash(PYTHONPATH=src python -c \"\nimport sys\nsys.path.insert(0, ''src'')\nfrom tests.unit.plugin_system.test_lifecycle import TestExtensionLifecycleManager\ntest = TestExtensionLifecycleManager()\ntest.setup_method()\ntest.test_initialize_extensions_empty()\nprint(''✓ test_initialize_extensions_empty passed'')\ntest.teardown_method()\n\")",
+      "Bash(PYTHONPATH=src python:*)"
     ],
     "deny": []
   }

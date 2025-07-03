@@ -9,6 +9,7 @@ from rich.table import Table
 from . import __version__
 from .plugins import registry, plugin_loader
 from .plugin_system import plugin_discovery
+from .plugin_system.hooks import hooks_manager
 
 
 console = Console()
@@ -282,7 +283,11 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
             console.print(f"[yellow]Output file {output_file} already exists. Use --force to overwrite.[/yellow]")
         return
     
-    # Get converter from registry
+    # Execute converter selection hooks
+    available_converters = list(registry.list_supported_formats().keys())
+    converter_result = hooks_manager.execute_converter_selection_hooks(input_file, available_converters)
+    
+    # Get converter from registry (potentially influenced by hooks)
     converter = registry.get_converter(input_file)
     
     if not converter:
@@ -330,8 +335,67 @@ def convert(ctx, input_file, output_file, output_format, page_range, metadata, p
     if preview_schema:
         options['preview_schema'] = True
     
-    # Perform conversion
-    success = converter.convert(input_file, output_file, **options)
+    # Execute parameter enhancement hooks
+    param_result = hooks_manager.execute_parameter_enhancement_hooks(input_file, options)
+    if param_result.success and param_result.data is not None:
+        options = param_result.data
+        if verbose and param_result.message:
+            console.print(f"[dim]Parameter enhancement: {param_result.message}[/dim]")
+    
+    # Execute pre-conversion hooks
+    pre_result = hooks_manager.execute_pre_conversion_hooks(input_file, output_file, options)
+    if pre_result.success and pre_result.data is not None:
+        options = pre_result.data
+        if verbose and pre_result.message:
+            console.print(f"[dim]Pre-conversion: {pre_result.message}[/dim]")
+    elif not pre_result.success:
+        console.print(f"[red]Pre-conversion hook failed: {pre_result.message}[/red]")
+        raise click.Abort()
+    
+    # Perform conversion with error handling hooks
+    success = False
+    conversion_metadata = {}
+    
+    try:
+        success = converter.convert(input_file, output_file, **options)
+        
+        # Try to get metadata if converter supports it
+        try:
+            conversion_metadata = converter.get_metadata(input_file) or {}
+        except:
+            conversion_metadata = {}
+            
+    except Exception as e:
+        # Execute error handling hooks
+        error_context = {
+            'converter': converter.__class__.__name__,
+            'options': options,
+            'verbose': verbose
+        }
+        
+        error_result = hooks_manager.execute_error_handling_hooks(
+            input_file, output_file, e, error_context
+        )
+        
+        if error_result.success and error_result.data and error_result.data.get('handled'):
+            # Error was handled by extension
+            success = error_result.data.get('recovery_success', False)
+            if verbose:
+                console.print(f"[dim]Error handled by extension: {error_result.message}[/dim]")
+        else:
+            # Re-raise the original error
+            console.print(f"[red]Conversion error: {str(e)}[/red]")
+            if error_result.message and verbose:
+                console.print(f"[dim]Error handling: {error_result.message}[/dim]")
+            raise click.Abort()
+    
+    # Execute post-conversion hooks
+    post_result = hooks_manager.execute_post_conversion_hooks(
+        input_file, output_file, success, conversion_metadata
+    )
+    
+    if post_result.message and verbose:
+        console.print(f"[dim]Post-conversion: {post_result.message}[/dim]")
     
     if not success:
         console.print("[red]Conversion failed![/red]")

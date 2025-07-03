@@ -9,6 +9,7 @@ from .discovery import PluginDiscovery, plugin_discovery
 from .exceptions import PluginError, PluginLoadError, PluginInitializationError
 from .registry import ExtensionRegistry, extension_registry, PluginState, PluginInfo
 from .lifecycle import ExtensionLifecycleManager, lifecycle_manager
+from .hooks import ExtensionHooksManager, hooks_manager, HookType, HookResult
 
 __all__ = [
     "PluginDiscovery",
@@ -21,5 +22,9 @@ __all__ = [
     "PluginState",
     "PluginInfo",
     "ExtensionLifecycleManager",
-    "lifecycle_manager"
+    "lifecycle_manager",
+    "ExtensionHooksManager",
+    "hooks_manager",
+    "HookType",
+    "HookResult"
 ]
