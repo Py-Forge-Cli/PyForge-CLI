@@ -90,7 +90,12 @@
       "WebFetch(domain:docs.databricks.com)",
       "Bash(cat:*)",
       "Bash(gh pr create:*)",
-      "Bash(gh pr list:*)"
+      "Bash(gh pr list:*)",
+      "Bash(pyforge:*)",
+      "Bash(.venv/bin/pytest -v -k \"test_get_info\" --tb=short)",
+      "Bash(.venv/bin/pytest -v tests/test_excel_converter_improved.py::TestExcelConverterImproved::test_get_info_basic -s)",
+      "Bash(.venv/bin/pytest -v tests/ -k \"test_get_info\" --tb=short)",
+      "Bash(.venv/bin/pytest -v --tb=short)"
     ],
     "deny": []
   },

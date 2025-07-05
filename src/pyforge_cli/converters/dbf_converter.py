@@ -319,3 +319,82 @@ class DBFConverter(StringDatabaseConverter):
     def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """Standard convert method - delegates to progress version"""
         return self.convert_with_progress(input_path, output_path, **options)
+    
+    def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
+        """
+        Extract metadata from DBF file.
+        
+        Args:
+            input_path: Path to DBF file
+            
+        Returns:
+            Dictionary containing file metadata or None if extraction fails
+        """
+        try:
+            # Get basic file info
+            file_stats = input_path.stat()
+            metadata = {
+                "file_name": input_path.name,
+                "file_size": file_stats.st_size,
+                "file_format": "dBase Database File",
+                "file_extension": input_path.suffix,
+                "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
+            }
+            
+            # Detect database type and version
+            db_info = detect_database_file(input_path)
+            
+            if db_info.file_type != DatabaseType.DBF:
+                return metadata  # Return basic metadata only
+            
+            metadata["database_type"] = db_info.file_type.value
+            metadata["database_version"] = db_info.version or "Unknown"
+            
+            # Try to get table information
+            try:
+                discovery = DBFTableDiscovery()
+                
+                # Read DBF header and structure
+                if discovery.connect(input_path):
+                    # Get table info
+                    table_info = discovery.get_table_info()
+                    
+                    if table_info:
+                        metadata["record_count"] = table_info.record_count
+                        metadata["field_count"] = len(table_info.fields) if table_info.fields else 0
+                        metadata["record_length"] = getattr(table_info, 'record_length', 0)
+                        metadata["header_length"] = getattr(table_info, 'header_length', 0)
+                        metadata["last_update"] = getattr(table_info, 'last_update', None)
+                        
+                        # Field information
+                        if table_info.fields:
+                            field_info = []
+                            for field in table_info.fields:
+                                field_info.append({
+                                    "name": field.name,
+                                    "type": field.type,
+                                    "length": field.length,
+                                    "decimal_places": getattr(field, 'decimal_places', 0)
+                                })
+                            metadata["fields"] = field_info
+                        
+                        # Calculate approximate data size
+                        if hasattr(table_info, 'record_length') and table_info.record_count:
+                            metadata["estimated_data_size"] = table_info.record_length * table_info.record_count
+                    else:
+                        metadata["error"] = "Could not read DBF table structure"
+                        
+                    discovery.disconnect()
+                else:
+                    metadata["error"] = "Could not connect to DBF file"
+                    
+            except Exception as e:
+                # If we can't read structure, just include basic metadata
+                metadata["error"] = f"Could not read DBF structure: {str(e)}"
+                
+            return metadata
+            
+        except Exception as e:
+            logging.error(f"Failed to extract DBF metadata: {e}")
+            return None
