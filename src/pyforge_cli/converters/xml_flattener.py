@@ -70,7 +70,7 @@ class XmlFlattener:
 
         except ET.ParseError as e:
             logger.error(f"XML parsing error: {e}")
-            raise ValueError(f"Invalid XML file: {e}")
+            raise ValueError(f"Invalid XML file: {e}") from e
         except Exception as e:
             logger.error(f"Error flattening XML: {e}")
             raise
@@ -147,7 +147,7 @@ class XmlFlattener:
 
         except Exception as e:
             logger.error(f"Error flattening multi-document XML: {e}")
-            raise ValueError(f"Failed to flatten multi-document XML: {e}")
+            raise ValueError(f"Failed to flatten multi-document XML: {e}") from e
 
     def _split_xml_documents(self, file_path: Path) -> List[str]:
         """

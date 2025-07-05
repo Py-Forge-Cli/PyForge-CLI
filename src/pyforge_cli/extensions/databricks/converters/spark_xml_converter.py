@@ -131,7 +131,7 @@ class SparkXMLConverter:
         """Ensure spark-xml package is available."""
         try:
             # Try to load XML package
-            self.spark._jvm.com.databricks.spark.xml.XmlReader
+            _ = self.spark._jvm.com.databricks.spark.xml.XmlReader
         except Exception:
             # Try to add package dynamically
             try:

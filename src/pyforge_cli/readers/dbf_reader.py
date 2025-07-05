@@ -132,7 +132,7 @@ class DBFTableDiscovery:
 
         except Exception as e:
             self.logger.error(f"Failed to connect to DBF file: {e}")
-            raise ConnectionError(f"Cannot open DBF file: {e}")
+            raise ConnectionError(f"Cannot open DBF file: {e}") from e
 
     def _detect_optimal_encoding(self, file_path: Path) -> str:
         """
@@ -314,7 +314,7 @@ class DBFTableDiscovery:
         except Exception as e:
             raise ConnectionError(
                 f"Failed to open DBF with detected encoding {encoding}: {e}"
-            )
+            ) from e
 
     def _open_with_encoding_detection(self, file_path: Path):
         """Open DBF file with automatic encoding detection"""
@@ -349,7 +349,7 @@ class DBFTableDiscovery:
             self.logger.warning("Opened DBF without explicit encoding")
             return dbf
         except Exception as e:
-            raise ConnectionError(f"Could not open DBF with any encoding: {e}")
+            raise ConnectionError(f"Could not open DBF with any encoding: {e}") from e
 
     def _analyze_dbf_structure(self, file_path: Path) -> DBFTableInfo:
         """Analyze DBF file structure by reading header"""
@@ -581,7 +581,7 @@ class DBFTableDiscovery:
             try:
                 samples = self.get_field_sample(field.name, 3)
                 field_info["sample_values"] = samples
-            except:
+            except Exception:
                 field_info["sample_values"] = []
 
             fields_info.append(field_info)

@@ -438,7 +438,7 @@ class RuntimeVersionDetector:
 
         # Check for ML library imports
         try:
-            import mlflow
+            import mlflow  # noqa: F401
 
             return True
         except ImportError:

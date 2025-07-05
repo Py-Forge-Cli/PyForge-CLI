@@ -228,7 +228,7 @@ class VolumeOperations:
             if created:
                 try:
                     volume_info.created_at = datetime.fromisoformat(created)
-                except:
+                except Exception:
                     pass
 
             # Get volume statistics
@@ -291,7 +291,7 @@ class VolumeOperations:
                         dbutils.fs.ls(volume_path)
                         self.logger.error(f"Destination already exists: {volume_path}")
                         return False
-                    except:
+                    except Exception:
                         pass  # File doesn't exist, proceed
 
                 # Copy file

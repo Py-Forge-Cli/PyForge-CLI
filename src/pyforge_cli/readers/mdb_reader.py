@@ -158,8 +158,8 @@ class MDBTableDiscovery:
             self._connection = pyodbc.connect(conn_str)
             return True
 
-        except ImportError:
-            raise ImportError("pyodbc not available")
+        except ImportError as e:
+            raise ImportError("pyodbc not available") from e
         except Exception as e:
             self.logger.debug(f"pyodbc connection failed: {e}")
             return False
@@ -185,8 +185,8 @@ class MDBTableDiscovery:
             self._connection = str(file_path)  # Store file path as connection
             return True
 
-        except ImportError:
-            raise ImportError("pandas-access not available")
+        except ImportError as e:
+            raise ImportError("pandas-access not available") from e
         except Exception as e:
             self.logger.debug(f"pandas-access connection failed: {e}")
             return False
@@ -557,7 +557,7 @@ class MDBTableDiscovery:
         if self._connection and hasattr(self._connection, "close"):
             try:
                 self._connection.close()
-            except:
+            except Exception:
                 pass
         self._connection = None
         self.connection_info = None

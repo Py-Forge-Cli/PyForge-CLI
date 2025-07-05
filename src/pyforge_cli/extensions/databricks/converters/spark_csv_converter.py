@@ -407,7 +407,7 @@ class SparkCSVConverter:
             # Use streaming for files > 1GB
             if file_size > 1024 * 1024 * 1024:
                 return True
-        except:
+        except Exception:
             pass
 
         # Check if user specified large file handling

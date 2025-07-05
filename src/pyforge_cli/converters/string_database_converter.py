@@ -254,7 +254,7 @@ class StringTypeConverter:
             # Convert entire column
             col_dtype = str(df[column].dtype)
             string_column = df[column].apply(
-                lambda x: self.convert_value(x, source_type=col_dtype)
+                lambda x, dtype=col_dtype: self.convert_value(x, source_type=dtype)
             )
 
             string_df[column] = string_column

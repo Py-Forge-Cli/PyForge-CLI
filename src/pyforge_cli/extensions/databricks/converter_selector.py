@@ -425,7 +425,7 @@ class ConverterSelector:
             try:
                 first_line = sample.split(b"\n")[0].decode(encoding)
                 column_count = len(first_line.split(","))
-            except:
+            except Exception:
                 column_count = None
 
             return {
@@ -490,7 +490,7 @@ class ConverterSelector:
                 "total_memory": f"{psutil.virtual_memory().total / (1024**3):.1f}GB",
                 "available_memory_gb": psutil.virtual_memory().available / (1024**3),
             }
-        except:
+        except Exception:
             return {
                 "total_cores": os.cpu_count() or 1,
                 "total_memory": "unknown",
@@ -519,7 +519,7 @@ class ConverterSelector:
                 if numbers:
                     total_gb = sum(float(n) for n in numbers)
                     return total_gb * 0.7  # Assume 70% available
-            except:
+            except Exception:
                 pass
 
         return 4.0  # Conservative default

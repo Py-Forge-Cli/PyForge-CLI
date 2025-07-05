@@ -593,7 +593,7 @@ class PyForgeDatabricks:
                 df = self.spark.read.option("header", "true").csv(str(file_path))
                 return df.count()
             # Add other formats as needed
-        except:
+        except Exception:
             pass
         return None
 
@@ -607,7 +607,7 @@ class PyForgeDatabricks:
                 "excel_sheets": excel_file.sheet_names,
                 "sheet_count": len(excel_file.sheet_names),
             }
-        except:
+        except Exception:
             return {}
 
     def _get_csv_info(self, file_path: Path) -> Dict[str, Any]:
@@ -635,7 +635,7 @@ class PyForgeDatabricks:
                 "delimiter": delimiter,
                 "has_header": True,  # Assume header
             }
-        except:
+        except Exception:
             return {}
 
     def _get_parquet_info(self, file_path: Path) -> Dict[str, Any]:
@@ -647,7 +647,7 @@ class PyForgeDatabricks:
                 "column_count": len(df.columns),
                 "schema": df.schema.simpleString(),
             }
-        except:
+        except Exception:
             return {}
 
     def _generic_spark_convert(
