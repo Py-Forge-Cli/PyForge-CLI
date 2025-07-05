@@ -361,7 +361,7 @@ class FallbackManager:
         # Check dependencies
         if converter_type == ConverterType.SPARK:
             try:
-                import pyspark
+                import pyspark  # noqa: F401
 
                 return True
             except ImportError:
@@ -369,7 +369,7 @@ class FallbackManager:
 
         elif converter_type == ConverterType.PANDAS:
             try:
-                import pandas
+                import pandas  # noqa: F401
 
                 return True
             except ImportError:
@@ -377,7 +377,7 @@ class FallbackManager:
 
         elif converter_type == ConverterType.PYARROW:
             try:
-                import pyarrow
+                import pyarrow  # noqa: F401
 
                 return True
             except ImportError:
