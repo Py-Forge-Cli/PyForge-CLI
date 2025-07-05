@@ -186,6 +186,8 @@ extend-exclude = '''
 [tool.ruff]
 target-version = "py38"
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -199,6 +201,8 @@ ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
+    "B019",  # Use of functools.lru_cache on methods (intentional for performance)
+    "B027",  # Empty method in abstract base class without abstract decorator (intentional for optional hooks)
 ]
 
 [tool.mypy]
