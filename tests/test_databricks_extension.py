@@ -445,9 +445,7 @@ class TestConverterSelector:
         selector = ConverterSelector()
 
         with create_temp_file(suffix=".csv", content=b"test,data\n1,2\n") as tmp_name:
-            recommendation = selector.select_converter(
-                Path(tmp_name), "parquet", {}
-            )
+            recommendation = selector.select_converter(Path(tmp_name), "parquet", {})
 
             assert isinstance(recommendation, ConverterRecommendation)
             assert recommendation.converter_type in [
@@ -476,7 +474,9 @@ class TestConverterSelector:
         """Test file characteristics analysis."""
         selector = ConverterSelector()
 
-        with create_temp_file(suffix=".csv", content=b"col1,col2,col3\n1,2,3\n4,5,6\n") as tmp_name:
+        with create_temp_file(
+            suffix=".csv", content=b"col1,col2,col3\n1,2,3\n4,5,6\n"
+        ) as tmp_name:
             chars = selector._analyze_file(Path(tmp_name))
 
             assert chars.format == "csv"
@@ -579,7 +579,9 @@ class TestPyForgeDatabricks:
         """Test basic conversion."""
         forge = PyForgeDatabricks(auto_init=False)
 
-        with create_temp_file(suffix=".csv", content=b"col1,col2\n1,2\n3,4\n") as tmp_name:
+        with create_temp_file(
+            suffix=".csv", content=b"col1,col2\n1,2\n3,4\n"
+        ) as tmp_name:
             # Mock converter execution
             with patch.object(
                 forge.fallback_manager, "execute_with_fallback"
@@ -754,7 +756,9 @@ class TestIntegration:
         # Get notebook API
         forge = ext.get_notebook_api()
 
-        with create_temp_file(suffix=".csv", content=b"id,name,value\n1,test,100\n2,example,200\n") as tmp_name:
+        with create_temp_file(
+            suffix=".csv", content=b"id,name,value\n1,test,100\n2,example,200\n"
+        ) as tmp_name:
             # Mock the actual conversion
             with patch.object(
                 forge.fallback_manager, "execute_with_fallback"
