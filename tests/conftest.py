@@ -10,8 +10,9 @@ This module configures pytest for the test suite, including:
 
 import os
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 # Add project root to Python path
 project_root = Path(__file__).parent.parent
@@ -24,18 +25,10 @@ os.environ.setdefault("SPARK_LOCAL_IP", "127.0.0.1")
 
 def pytest_configure(config):
     """Configure pytest with custom markers."""
-    config.addinivalue_line(
-        "markers", "pyspark: mark test as requiring PySpark"
-    )
-    config.addinivalue_line(
-        "markers", "databricks: mark test as Databricks-specific"
-    )
-    config.addinivalue_line(
-        "markers", "integration: mark test as integration test"
-    )
-    config.addinivalue_line(
-        "markers", "slow: mark test as slow-running"
-    )
+    config.addinivalue_line("markers", "pyspark: mark test as requiring PySpark")
+    config.addinivalue_line("markers", "databricks: mark test as Databricks-specific")
+    config.addinivalue_line("markers", "integration: mark test as integration test")
+    config.addinivalue_line("markers", "slow: mark test as slow-running")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -44,11 +37,11 @@ def pytest_collection_modifyitems(config, items):
         # Auto-mark PySpark tests
         if "pyspark" in item.nodeid.lower():
             item.add_marker(pytest.mark.pyspark)
-        
+
         # Auto-mark Databricks tests
         if "databricks" in item.nodeid.lower():
             item.add_marker(pytest.mark.databricks)
-        
+
         # Auto-mark integration tests
         if "integration" in item.nodeid.lower():
             item.add_marker(pytest.mark.integration)
@@ -59,18 +52,19 @@ def spark_session():
     """Provide a Spark session for tests that need it."""
     try:
         from pyspark.sql import SparkSession
-        
-        spark = SparkSession.builder \
-            .appName("PyForgeTest") \
-            .master("local[1]") \
-            .config("spark.driver.bindAddress", "127.0.0.1") \
-            .config("spark.ui.enabled", "false") \
-            .config("spark.sql.adaptive.enabled", "false") \
-            .config("spark.sql.adaptive.coalescePartitions.enabled", "false") \
+
+        spark = (
+            SparkSession.builder.appName("PyForgeTest")
+            .master("local[1]")
+            .config("spark.driver.bindAddress", "127.0.0.1")
+            .config("spark.ui.enabled", "false")
+            .config("spark.sql.adaptive.enabled", "false")
+            .config("spark.sql.adaptive.coalescePartitions.enabled", "false")
             .getOrCreate()
-        
+        )
+
         yield spark
-        
+
         spark.stop()
     except ImportError:
         pytest.skip("PySpark not available")
@@ -82,6 +76,7 @@ def mock_dbutils():
     # Import or create mock dbutils
     try:
         from tests.utils.mock_dbutils import dbutils
+
         return dbutils
     except ImportError:
         # Create a simple mock
@@ -90,20 +85,20 @@ def mock_dbutils():
                 @staticmethod
                 def text(name, default_value="", label=""):
                     pass
-                
+
                 @staticmethod
                 def get(name):
                     return ""
-            
+
             class fs:
                 @staticmethod
                 def ls(path):
                     return []
-                
+
                 @staticmethod
                 def mkdirs(path):
                     return True
-        
+
         return MockDBUtils()
 
 
@@ -113,11 +108,11 @@ def setup_test_environment(monkeypatch):
     # Clear any problematic environment variables
     if "SPARK_HOME" in os.environ:
         monkeypatch.delenv("SPARK_HOME", raising=False)
-    
+
     # Set test environment variables
     monkeypatch.setenv("PYARROW_IGNORE_TIMEZONE", "1")
     monkeypatch.setenv("SPARK_LOCAL_IP", "127.0.0.1")
-    
+
     # For CI environment, set additional configs
     if os.environ.get("CI") == "true":
         monkeypatch.setenv("PYSPARK_PYTHON", sys.executable)
@@ -127,16 +122,10 @@ def setup_test_environment(monkeypatch):
 def pytest_addoption(parser):
     """Add custom command line options."""
     parser.addoption(
-        "--run-pyspark",
-        action="store_true",
-        default=False,
-        help="run PySpark tests"
+        "--run-pyspark", action="store_true", default=False, help="run PySpark tests"
     )
     parser.addoption(
-        "--run-slow",
-        action="store_true",
-        default=False,
-        help="run slow tests"
+        "--run-slow", action="store_true", default=False, help="run slow tests"
     )
 
 
@@ -147,7 +136,7 @@ def pytest_runtest_setup(item):
         # In CI, always run PySpark tests
         if os.environ.get("CI") != "true":
             pytest.skip("need --run-pyspark option to run")
-    
+
     # Skip slow tests unless explicitly requested
     if "slow" in item.keywords and not item.config.getoption("--run-slow"):
         pytest.skip("need --run-slow option to run")
@@ -155,12 +144,14 @@ def pytest_runtest_setup(item):
 
 # Import mock dbutils into pyspark namespace for tests
 try:
-    import pyspark
-    from tests.utils.mock_dbutils import dbutils
-    
     # Create mock pyspark.dbutils module
     import types
-    pyspark.dbutils = types.ModuleType('pyspark.dbutils')
+
+    import pyspark
+
+    from tests.utils.mock_dbutils import dbutils
+
+    pyspark.dbutils = types.ModuleType("pyspark.dbutils")
     pyspark.dbutils.DBUtils = lambda spark: dbutils
 except ImportError:
     # PySpark or mock_dbutils not available, skip

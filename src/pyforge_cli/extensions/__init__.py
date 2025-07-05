@@ -12,11 +12,11 @@ The extension system supports:
 
 Example:
     from pyforge_cli.extensions.base import BaseExtension
-    
+
     class MyExtension(BaseExtension):
         def is_available(self) -> bool:
             return True
-            
+
         def initialize(self) -> bool:
             return True
 """
@@ -28,11 +28,11 @@ from .manager import ExtensionManager, get_extension_manager
 from .registry import ExtensionRegistry, ExtensionState
 
 __all__ = [
-    'BaseExtension',
-    'ExtensionDiscovery',
-    'ExtensionLoader',
-    'ExtensionManager',
-    'ExtensionRegistry',
-    'ExtensionState',
-    'get_extension_manager',
+    "BaseExtension",
+    "ExtensionDiscovery",
+    "ExtensionLoader",
+    "ExtensionManager",
+    "ExtensionRegistry",
+    "ExtensionState",
+    "get_extension_manager",
 ]

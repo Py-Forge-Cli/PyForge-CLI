@@ -90,7 +90,10 @@
       "WebFetch(domain:docs.databricks.com)",
       "Bash(cat:*)",
       "Bash(gh pr create:*)",
-      "Bash(gh pr list:*)"
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(ruff check:*)",
+      "Bash(black:*)"
     ],
     "deny": []
   },
