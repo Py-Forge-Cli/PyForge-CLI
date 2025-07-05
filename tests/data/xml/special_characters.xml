@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<special_chars>
+  <escaped>Special chars: &lt; &gt; &amp; &quot; ' © ™</escaped>
+  <unicode>Hello 世界 Привет مرحبا שלום</unicode>
+  <whitespace>Line1
+Line2	Tabbed
+CRLF</whitespace>
+  <math>∑ ∏ ∫ ∂ ∇ ∈ ∉ ∞ π</math>
+  <emoji>😀 🚀 🌟 ❤️ 🔥</emoji>
+  <cdata_content>&lt;![CDATA[This contains &lt;unescaped&gt; XML &amp; special chars]]&gt;</cdata_content>
+</special_chars>

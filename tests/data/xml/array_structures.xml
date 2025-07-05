@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<data>
+  <simple_array>
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+  </simple_array>
+  <attributed_array>
+    <item index="0" type="number">0</item>
+    <item index="1" type="number">10</item>
+    <item index="2" type="number">20</item>
+    <item index="3" type="number">30</item>
+    <item index="4" type="number">40</item>
+  </attributed_array>
+  <matrix>
+    <row index="0">
+      <col index="0">0</col>
+      <col index="1">1</col>
+      <col index="2">2</col>
+    </row>
+    <row index="1">
+      <col index="0">3</col>
+      <col index="1">4</col>
+      <col index="2">5</col>
+    </row>
+    <row index="2">
+      <col index="0">6</col>
+      <col index="1">7</col>
+      <col index="2">8</col>
+    </row>
+  </matrix>
+  <mixed_array>
+    <item type="string">Hello</item>
+    <item type="number">42</item>
+    <item type="boolean">true</item>
+    <item type="null"/>
+  </mixed_array>
+</data>

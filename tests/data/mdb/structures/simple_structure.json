@@ -1,0 +1,14 @@
+{
+  "tables": {
+    "Customers": {
+      "columns": [
+        "ID",
+        "Name",
+        "Email",
+        "Phone"
+      ],
+      "rows": 100,
+      "primary_key": "ID"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<products>
+  <product id="prod_001" name="Product 1" category="Clothing" price="464.4956109763414" currency="USD" in_stock="true" weight="43.56312689890627" dimensions="14x92x48" manufacturer="Company A" sku="SKU-00001" barcode="3663499849673">
+    <description>Description for product 1</description>
+  </product>
+  <product id="prod_002" name="Product 2" category="Food" price="588.0861754147792" currency="USD" in_stock="true" weight="24.2466031403868" dimensions="7x34x36" manufacturer="Company A" sku="SKU-00002" barcode="4933778019787">
+    <description>Description for product 2</description>
+  </product>
+  <product id="prod_003" name="Product 3" category="Clothing" price="551.4466666041828" currency="USD" in_stock="false" weight="6.272682466500119" dimensions="6x76x43" manufacturer="Company B" sku="SKU-00003" barcode="8745383824117">
+    <description>Description for product 3</description>
+  </product>
+  <product id="prod_004" name="Product 4" category="Clothing" price="472.02182042517666" currency="USD" in_stock="false" weight="42.36363979005229" dimensions="93x22x90" manufacturer="Company A" sku="SKU-00004" barcode="0721422220973">
+    <description>Description for product 4</description>
+  </product>
+  <product id="prod_005" name="Product 5" category="Food" price="119.51429877754155" currency="USD" in_stock="false" weight="37.22801245386907" dimensions="23x80x30" manufacturer="Company C" sku="SKU-00005" barcode="2677426019886">
+    <description>Description for product 5</description>
+  </product>
+</products>

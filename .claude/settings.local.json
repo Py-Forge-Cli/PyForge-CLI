@@ -88,7 +88,9 @@
       "Bash(.venv/bin/pytest tests/test_main_cli.py -v)",
       "Bash(.venv/bin/pytest --tb=no -q --ignore=tests/test_databricks_extension.py --ignore=tests/test_extension_integration.py --ignore=tests/test_extension_system.py --ignore=tests/test_pyspark_csv_converter.py)",
       "WebFetch(domain:docs.databricks.com)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr list:*)"
     ],
     "deny": []
   },

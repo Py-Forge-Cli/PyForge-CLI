@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<catalog:catalog xmlns:book="http://example.com/book" xmlns:catalog="http://example.com/catalog" xmlns:meta="http://example.com/metadata">
+  <book:book book:id="1">
+    <book:title>Book 1</book:title>
+    <book:author>Author 1</book:author>
+    <meta:metadata>
+      <meta:isbn>978-0-001-12345-6</meta:isbn>
+      <meta:language>en</meta:language>
+    </meta:metadata>
+  </book:book>
+  <book:book book:id="2">
+    <book:title>Book 2</book:title>
+    <book:author>Author 2</book:author>
+    <meta:metadata>
+      <meta:isbn>978-0-002-12345-6</meta:isbn>
+      <meta:language>en</meta:language>
+    </meta:metadata>
+  </book:book>
+</catalog:catalog>

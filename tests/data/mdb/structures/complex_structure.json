@@ -1,0 +1,99 @@
+{
+  "tables": {
+    "Customers": {
+      "columns": [
+        "CustomerID",
+        "FirstName",
+        "LastName",
+        "Email",
+        "Phone",
+        "Address",
+        "City",
+        "State",
+        "ZipCode",
+        "Country",
+        "DateJoined"
+      ],
+      "rows": 1000,
+      "primary_key": "CustomerID"
+    },
+    "Orders": {
+      "columns": [
+        "OrderID",
+        "CustomerID",
+        "OrderDate",
+        "ShipDate",
+        "Total",
+        "Status",
+        "PaymentMethod"
+      ],
+      "rows": 5000,
+      "primary_key": "OrderID",
+      "foreign_keys": {
+        "CustomerID": "Customers.CustomerID"
+      }
+    },
+    "OrderDetails": {
+      "columns": [
+        "DetailID",
+        "OrderID",
+        "ProductID",
+        "Quantity",
+        "UnitPrice",
+        "Discount"
+      ],
+      "rows": 15000,
+      "primary_key": "DetailID",
+      "foreign_keys": {
+        "OrderID": "Orders.OrderID",
+        "ProductID": "Products.ProductID"
+      }
+    },
+    "Products": {
+      "columns": [
+        "ProductID",
+        "ProductName",
+        "CategoryID",
+        "UnitPrice",
+        "UnitsInStock",
+        "Discontinued"
+      ],
+      "rows": 200,
+      "primary_key": "ProductID",
+      "foreign_keys": {
+        "CategoryID": "Categories.CategoryID"
+      }
+    },
+    "Categories": {
+      "columns": [
+        "CategoryID",
+        "CategoryName",
+        "Description"
+      ],
+      "rows": 20,
+      "primary_key": "CategoryID"
+    }
+  },
+  "relationships": [
+    {
+      "from": "Orders.CustomerID",
+      "to": "Customers.CustomerID",
+      "type": "many-to-one"
+    },
+    {
+      "from": "OrderDetails.OrderID",
+      "to": "Orders.OrderID",
+      "type": "many-to-one"
+    },
+    {
+      "from": "OrderDetails.ProductID",
+      "to": "Products.ProductID",
+      "type": "many-to-one"
+    },
+    {
+      "from": "Products.CategoryID",
+      "to": "Categories.CategoryID",
+      "type": "many-to-one"
+    }
+  ]
+}
