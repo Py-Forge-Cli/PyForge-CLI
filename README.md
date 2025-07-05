@@ -496,7 +496,7 @@ PyForge-CLI/
 
 ## Requirements
 
-- Python 3.8+ (Python 3.10 recommended for Databricks compatibility)
+- Python 3.10+ (Python 3.10 recommended for Databricks compatibility and CI/CD pipeline)
 - PyMuPDF (for PDF processing)
 - Click (for CLI interface)
 - Rich (for beautiful terminal output)
