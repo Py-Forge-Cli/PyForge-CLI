@@ -4,13 +4,13 @@ Tests for the PySpark CSV converter.
 
 import os
 import pytest
+
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 from pyforge_cli.converters import get_csv_converter
 from pyforge_cli.converters.pyspark_csv_converter import PySparkCSVConverter
 from pyforge_cli.converters.csv_converter import CSVConverter
-
 
 # Skip all tests if PySpark is not available
 pyspark_available = False
@@ -20,7 +20,11 @@ try:
 except ImportError:
     pass
 
-pytestmark = pytest.mark.skipif(not pyspark_available, reason="PySpark not available")
+# Mark all tests in this module as databricks tests and skip if pyspark not available
+pytestmark = [
+    pytest.mark.databricks,
+    pytest.mark.skipif(not pyspark_available, reason="PySpark not available")
+]
 
 
 class TestPySparkCSVConverter:

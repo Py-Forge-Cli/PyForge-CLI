@@ -32,7 +32,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: ["3.9", "3.10"]  # Skip 3.11 due to PyArrow 8.0.0 compatibility
-        spark-version: ["3.5.2"]
+        spark-version: ["3.5.0"]  # Match Databricks Runtime 14.3 LTS
         
     steps:
     - name: Checkout code
@@ -206,7 +206,7 @@ jobs:
 
     - name: Quick PySpark test
       run: |
-        pip install pyspark==3.5.2
+        pip install pyspark==3.5.0  # Match Databricks Runtime 14.3 LTS
         
         python -c "
         from pyspark.sql import SparkSession

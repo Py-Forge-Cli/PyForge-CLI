@@ -38,21 +38,19 @@ class TestMDBConverter:
             
             # Valid extension, non-existent file
             mdb_file = temp_path / "test.mdb"
-            is_valid, message = converter.validate_input(mdb_file)
-            assert not is_valid
-            assert "does not exist" in message
+            is_valid = converter.validate_input(mdb_file)
+            assert not is_valid  # File doesn't exist
             
             # Invalid extension
             txt_file = temp_path / "test.txt"
             txt_file.write_text("Not an MDB file")
-            is_valid, message = converter.validate_input(txt_file)
-            assert not is_valid
-            assert "must be .mdb or .accdb" in message
+            is_valid = converter.validate_input(txt_file)
+            assert not is_valid  # Wrong extension
             
             # Valid MDB file (basic)
             mdb_file.write_bytes(b'\x01\x00\x00\x00' + b'Test MDB' + b'\x00' * 100)
-            is_valid, message = converter.validate_input(mdb_file)
-            assert is_valid
+            is_valid = converter.validate_input(mdb_file)
+            assert is_valid  # Valid extension and file exists
     
     def test_conversion_error_handling(self):
         """Test conversion error handling"""
@@ -113,21 +111,19 @@ class TestDBFConverter:
             
             # Valid extension, non-existent file
             dbf_file = temp_path / "test.dbf"
-            is_valid, message = converter.validate_input(dbf_file)
-            assert not is_valid
-            assert "does not exist" in message
+            is_valid = converter.validate_input(dbf_file)
+            assert not is_valid  # File doesn't exist
             
             # Invalid extension
             txt_file = temp_path / "test.txt"
             txt_file.write_text("Not a DBF file")
-            is_valid, message = converter.validate_input(txt_file)
-            assert not is_valid
-            assert "must be .dbf" in message
+            is_valid = converter.validate_input(txt_file)
+            assert not is_valid  # Wrong extension
             
             # Valid DBF file (basic)
             dbf_file.write_bytes(b'\x03' + b'\x00' * 31 + b'Test DBF' + b'\x00' * 100)
-            is_valid, message = converter.validate_input(dbf_file)
-            assert is_valid
+            is_valid = converter.validate_input(dbf_file)
+            assert is_valid  # Valid extension and file exists
     
     def test_conversion_error_handling(self):
         """Test conversion error handling"""
@@ -179,7 +175,7 @@ class TestConverterIntegration:
             assert info.file_type == DatabaseType.MDB
             
             mdb_converter = MDBConverter()
-            is_valid, _ = mdb_converter.validate_input(mdb_file)
+            is_valid = mdb_converter.validate_input(mdb_file)
             assert is_valid
             
             # Test DBF file
@@ -190,7 +186,7 @@ class TestConverterIntegration:
             assert info.file_type == DatabaseType.DBF
             
             dbf_converter = DBFConverter()
-            is_valid, _ = dbf_converter.validate_input(dbf_file)
+            is_valid = dbf_converter.validate_input(dbf_file)
             assert is_valid
     
     def test_converter_factory_pattern(self):

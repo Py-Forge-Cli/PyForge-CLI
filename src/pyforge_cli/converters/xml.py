@@ -44,15 +44,30 @@ class XmlConverter(BaseConverter):
             return False
             
         # Check if it has a valid XML extension
-        if input_path.suffix.lower() not in {'.xml', '.xml.gz', '.xml.bz2'}:
-            logger.error(f"Invalid file extension: {input_path.suffix}")
+        file_str = str(input_path).lower()
+        valid_extensions = {'.xml', '.xml.gz', '.xml.bz2'}
+        is_valid_extension = any(file_str.endswith(ext) for ext in valid_extensions)
+        
+        if not is_valid_extension:
+            logger.error(f"Invalid file extension: {input_path}")
             return False
             
         # Basic XML validation - check if file starts with XML declaration or root element
         try:
-            with open(input_path, 'rb') as f:
-                # Read first few bytes to check for XML signature
-                header = f.read(100)
+            # Handle compressed files
+            file_str = str(input_path).lower()
+            
+            if file_str.endswith('.gz'):
+                import gzip
+                with gzip.open(input_path, 'rb') as f:
+                    header = f.read(100)
+            elif file_str.endswith('.bz2'):
+                import bz2
+                with bz2.open(input_path, 'rb') as f:
+                    header = f.read(100)
+            else:
+                with open(input_path, 'rb') as f:
+                    header = f.read(100)
                 
             # Decode header, handling potential encoding issues
             try:

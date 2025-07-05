@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 import pandas as pd
 from pathlib import Path
+import sys
 
 
 class TestCSVConverterIntegration:
@@ -22,8 +23,9 @@ class TestCSVConverterIntegration:
         output_file = tmp_path / "test.parquet"
         
         # Run CLI conversion
+        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            "python", "-m", "src.pyforge_cli.main",
+            str(pyforge_path),
             "convert", str(input_file), str(output_file),
             "--format", "parquet"
         ]
@@ -47,7 +49,8 @@ class TestCSVConverterIntegration:
     
     def test_csv_formats_command(self):
         """Test that CSV formats are listed in the formats command"""
-        cmd = ["python", "-m", "src.pyforge_cli.main", "formats"]
+        pyforge_path = Path(sys.executable).parent / "pyforge"
+        cmd = [str(pyforge_path), "formats"]
         
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
         
@@ -63,9 +66,10 @@ class TestCSVConverterIntegration:
         content = "name,age,city,salary\nJohn,25,New York,50000\nJane,30,Boston,75000"
         input_file.write_text(content, encoding='utf-8')
         
+        # Use the installed pyforge command
+        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            "python", "-m", "src.pyforge_cli.main",
-            "info", str(input_file)
+            str(pyforge_path), "info", str(input_file)
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
@@ -81,9 +85,10 @@ class TestCSVConverterIntegration:
         content = "name,age\nJohn,25\nJane,30"
         input_file.write_text(content, encoding='utf-8')
         
+        # Use the installed pyforge command
+        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            "python", "-m", "src.pyforge_cli.main",
-            "validate", str(input_file)
+            str(pyforge_path), "validate", str(input_file)
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
@@ -103,9 +108,10 @@ class TestCSVConverterIntegration:
         for compression in compression_options:
             output_file = tmp_path / f"test_{compression}.parquet"
             
+            # Use the installed pyforge command
+            pyforge_path = Path(sys.executable).parent / "pyforge"
             cmd = [
-                "python", "-m", "src.pyforge_cli.main",
-                "convert", str(input_file), str(output_file),
+                str(pyforge_path), "convert", str(input_file), str(output_file),
                 "--format", "parquet",
                 "--compression", compression
             ]
@@ -128,8 +134,10 @@ class TestCSVConverterIntegration:
         
         output_file = tmp_path / "verbose_test.parquet"
         
+        # Use the installed pyforge command
+        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            "python", "-m", "src.pyforge_cli.main",
+            str(pyforge_path),
             "--verbose",
             "convert", str(input_file), str(output_file),
             "--format", "parquet"
@@ -153,7 +161,7 @@ class TestCSVConverterIntegration:
         output_file = tmp_path / "invalid.parquet"
         
         cmd = [
-            "python", "-m", "src.pyforge_cli.main",
+            sys.executable, "-m", "pyforge_cli",
             "convert", str(input_file), str(output_file),
             "--format", "parquet"
         ]

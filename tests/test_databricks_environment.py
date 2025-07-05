@@ -4,6 +4,9 @@ Tests for the Databricks environment detection module.
 
 import os
 import pytest
+
+# Mark all tests in this module as databricks tests
+pytestmark = pytest.mark.databricks
 from unittest.mock import patch, MagicMock
 
 from pyforge_cli.databricks.environment import (

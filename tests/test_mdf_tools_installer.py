@@ -102,17 +102,17 @@ class TestMdfToolsInstaller:
     
     @patch('builtins.open', new_callable=MagicMock)
     @patch('json.dump')
-    def test_save_configuration(self, mock_json_dump, mock_open):
+    @patch('pathlib.Path.mkdir')
+    def test_save_configuration(self, mock_mkdir, mock_json_dump, mock_open):
         """Test configuration saving."""
         mock_file = MagicMock()
         mock_open.return_value.__enter__.return_value = mock_file
         
-        with patch.object(self.installer.config_path, 'parent') as mock_parent:
-            self.installer._save_configuration()
-            
-            mock_parent.mkdir.assert_called_once_with(parents=True, exist_ok=True)
-            mock_open.assert_called_once()
-            mock_json_dump.assert_called_once()
+        self.installer._save_configuration()
+        
+        mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+        mock_open.assert_called_once()
+        mock_json_dump.assert_called_once()
     
     def test_get_status_no_docker(self):
         """Test status when Docker is not installed."""

@@ -44,29 +44,48 @@ uv --version
 ### 1. Clone Repository
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd cortexpy-cli
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
 
 # Or if already cloned, ensure you're in the project directory
-cd /path/to/cortexpy-cli
+cd /path/to/PyForge-CLI
 ```
 
 ### 2. Set Up Development Environment
-```bash
-# Create and activate virtual environment with uv
-uv sync --dev
 
-# This creates .venv/ directory and installs all dependencies
-# including development tools (pytest, ruff, mypy, etc.)
+#### Automated Setup (Recommended)
+```bash
+# Run the setup script
+python scripts/setup_dev_environment.py
+```
+
+#### Using Make Commands
+```bash
+# Complete development setup
+make setup-dev
+```
+
+#### Manual Setup
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install in development mode
+pip install -e ".[dev,test,all]"
+pip install -r requirements-dev.txt
 ```
 
 ### 3. Verify Development Setup
 ```bash
-# Run basic checks
-uv run python -c "import pyforge_cli; print('Import successful')"
+# Check installation
+pyforge --version
 
-# Test CLI in development mode
-uv run python -m pyforge_cli.main --help
+# Test CLI in development mode  
+pyforge --help
+
+# Run quick tests
+make test-quick
 ```
 
 ---

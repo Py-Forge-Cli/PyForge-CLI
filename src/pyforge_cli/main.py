@@ -791,6 +791,7 @@ def validate(input_file):
         console.print(f"[green]✓ {input_file.name} is a valid {input_file.suffix.upper()} file[/green]")
     else:
         console.print(f"[red]✗ {input_file.name} is not a valid {input_file.suffix.upper()} file[/red]")
+        raise click.Abort()
 
 
 @cli.group()

@@ -5,6 +5,9 @@ This module tests all components of the PyForge CLI Databricks extension.
 """
 
 import pytest
+
+# Mark all tests in this module as databricks tests
+pytestmark = pytest.mark.databricks
 import os
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock

@@ -41,9 +41,10 @@ Extensions are discovered automatically through Python entry points and are load
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.8+ (Python 3.10.12 recommended for Databricks/PySpark extensions)
 - PyForge CLI installed in development mode
 - Basic understanding of Python packaging
+- Java 8 or 11 (for PySpark-based extensions)
 
 ### Development Environment Setup
 
@@ -210,6 +211,13 @@ dependencies = [
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0"
+]
+
+# For PySpark-based extensions (e.g., Databricks)
+pyspark = [
+    "pyspark==3.5.0",  # Match Databricks Runtime 14.3 LTS
+    "delta-spark==3.1.0",
+    "py4j==0.10.9.7"
 ]
 
 # Entry point for PyForge CLI extension discovery

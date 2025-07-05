@@ -143,27 +143,59 @@ class CSVDialectDetector:
             return False
         
         try:
-            # Split rows by delimiter
-            first_fields = [field.strip().strip('"').strip("'") for field in first_row.split(delimiter)]
-            second_fields = [field.strip().strip('"').strip("'") for field in second_row.split(delimiter)]
+            # Use csv reader for proper parsing
+            first_reader = csv.reader([first_row], delimiter=delimiter)
+            second_reader = csv.reader([second_row], delimiter=delimiter)
+            
+            first_fields = next(first_reader)
+            second_fields = next(second_reader)
+            
+            first_fields = [field.strip() for field in first_fields]
+            second_fields = [field.strip() for field in second_fields]
             
             if len(first_fields) != len(second_fields):
                 return True  # Different field count suggests header
             
-            # Check if first row looks like headers (non-numeric, descriptive)
-            header_indicators = 0
+            # Score-based detection
+            header_score = 0
+            data_score = 0
             
-            for field in first_fields:
-                if field:
-                    # Headers are typically non-numeric and descriptive
-                    if not field.replace('.', '').replace('-', '').isdigit():
-                        header_indicators += 1
-                    # Common header patterns
-                    if any(word in field.lower() for word in ['id', 'name', 'date', 'time', 'count', 'total', 'amount']):
-                        header_indicators += 1
+            for i, (first_field, second_field) in enumerate(zip(first_fields, second_fields)):
+                if not first_field and not second_field:
+                    continue
+                    
+                # Check for common header keywords
+                header_keywords = ['id', 'name', 'date', 'time', 'count', 'total', 'amount', 
+                                 'type', 'status', 'code', 'value', 'description', 'title',
+                                 'email', 'phone', 'address', 'city', 'state', 'country']
+                
+                if any(word in first_field.lower() for word in header_keywords):
+                    header_score += 3
+                
+                # Check if fields are numeric
+                first_numeric = first_field.replace('.', '').replace('-', '').replace('+', '').replace(',', '').isdigit()
+                second_numeric = second_field.replace('.', '').replace('-', '').replace('+', '').replace(',', '').isdigit()
+                
+                # Type consistency check
+                if first_numeric and second_numeric:
+                    # Both numeric - likely data rows
+                    data_score += 2
+                elif not first_numeric and second_numeric:
+                    # First is text, second is numeric - likely header
+                    header_score += 2
+                elif not first_numeric and not second_numeric:
+                    # Both text - check patterns
+                    # Headers are often single words, title case, or uppercase
+                    if (first_field.isupper() or first_field.istitle() or 
+                        '_' in first_field or '-' in first_field):
+                        header_score += 1
+                    else:
+                        # If both look like regular data (e.g., names), treat as data
+                        data_score += 1
             
-            # If most fields look like headers, assume it's a header row
-            return header_indicators > len(first_fields) * 0.5
+            # Decision: significant header indicators needed
+            # Need clear evidence of headers, not just mixed data types
+            return header_score > data_score * 1.5 and header_score >= len(first_fields)
             
         except:
             return True  # Default to assuming headers exist

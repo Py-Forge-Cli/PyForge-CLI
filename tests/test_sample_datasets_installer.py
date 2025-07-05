@@ -18,7 +18,9 @@ class TestSampleDatasetsInstaller:
         """Create a temporary directory for testing."""
         temp_path = Path(tempfile.mkdtemp())
         yield temp_path
-        shutil.rmtree(temp_path)
+        # Only remove if it still exists
+        if temp_path.exists():
+            shutil.rmtree(temp_path)
     
     @pytest.fixture
     def installer(self, temp_dir):
@@ -102,14 +104,19 @@ class TestSampleDatasetsInstaller:
         assert releases[0]["tag_name"] == "v1.0.0"
         mock_get.assert_called_once()
     
-    @patch('requests.Session.get')
-    def test_list_available_releases_error(self, mock_get, installer):
+    @patch('pyforge_cli.installers.sample_datasets_installer.console')
+    def test_list_available_releases_error(self, mock_console, installer):
         """Test error handling when listing releases fails."""
-        mock_get.side_effect = Exception("Network error")
-        
-        releases = installer.list_available_releases()
-        
-        assert releases == []
+        # Mock the session.get method on the installer instance
+        import requests
+        with patch.object(installer.session, 'get') as mock_get:
+            mock_get.side_effect = requests.RequestException("Network error")
+            
+            releases = installer.list_available_releases()
+            
+            assert releases == []
+            # Check that error was printed
+            mock_console.print.assert_called()
     
     @patch('requests.Session.get')
     def test_get_latest_release(self, mock_get, installer, mock_release_data):
@@ -142,6 +149,7 @@ class TestSampleDatasetsInstaller:
         assert release is None
     
     @patch('builtins.open', new_callable=mock_open)
+    @pytest.mark.slow
     def test_verify_checksum_success(self, mock_file, installer, temp_dir):
         """Test successful checksum verification."""
         # Create a test file
@@ -232,10 +240,17 @@ class TestSampleDatasetsInstaller:
         # This should read and display the manifest
         installer.list_installed_datasets()
     
-    def test_uninstall_datasets_no_directory(self, installer):
+    @patch('pyforge_cli.installers.sample_datasets_installer.console')
+    def test_uninstall_datasets_no_directory(self, mock_console, installer):
         """Test uninstalling when no datasets are installed."""
+        # Remove the directory to test the "no directory" case
+        if installer.target_dir.exists():
+            shutil.rmtree(installer.target_dir)
+        
         result = installer.uninstall_datasets(force=False)
         assert result is True
+        # Check that warning was printed
+        mock_console.print.assert_called()
     
     def test_uninstall_datasets_without_force(self, installer, temp_dir):
         """Test uninstalling without force flag."""
