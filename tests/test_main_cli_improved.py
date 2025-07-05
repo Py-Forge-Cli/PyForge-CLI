@@ -81,7 +81,7 @@ class TestMainCLIImproved:
         }
         
         # Mock the registry's list_supported_formats to return converter info
-        with patch('pyforge_cli.plugins.registry.registry.list_supported_formats') as mock_list:
+        with patch('pyforge_cli.main.registry') as mock_registry:
             # Transform to match expected format
             mock_formats = {}
             for name, info in mock_converter_info.items():
@@ -89,7 +89,7 @@ class TestMainCLIImproved:
                     'inputs': set(info['input_formats']),
                     'outputs': set(info['output_formats'])
                 }
-            mock_list.return_value = mock_formats
+            mock_registry.list_supported_formats.return_value = mock_formats
             result = runner.invoke(cli, ['formats'])
             assert result.exit_code == 0
             # Check for expected content
@@ -117,7 +117,8 @@ class TestMainCLIImproved:
         mock_converter = MagicMock()
         mock_converter.get_metadata.return_value = mock_info
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             result = runner.invoke(cli, ['info', str(excel_file)])
             assert result.exit_code == 0
             assert 'Excel' in result.output
@@ -138,7 +139,8 @@ class TestMainCLIImproved:
         mock_converter = MagicMock()
         mock_converter.get_metadata.return_value = mock_info
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             result = runner.invoke(cli, ['info', str(test_file), '--format', 'json'])
             assert result.exit_code == 0
             # Extract JSON from output (may have logs before it)
@@ -164,7 +166,8 @@ class TestMainCLIImproved:
             mock_converter = MagicMock()
             mock_converter.validate_input.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, ['validate', str(xml_file)])
                 assert result.exit_code == 0
                 assert 'valid' in result.output.lower()
@@ -180,7 +183,8 @@ class TestMainCLIImproved:
         mock_converter = MagicMock()
         mock_converter.validate_input.return_value = False
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             result = runner.invoke(cli, ['validate', str(invalid_file)])
             assert result.exit_code == 1
             assert 'not a valid' in result.output.lower()
@@ -217,7 +221,8 @@ class TestMainCLIImproved:
             mock_converter.validate_input.return_value = True
             mock_converter.convert.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, ['convert', str(excel_file), str(output_file)])
                 assert result.exit_code == 0
                 mock_converter.convert.assert_called_once()
@@ -232,7 +237,8 @@ class TestMainCLIImproved:
             mock_converter.validate_input.return_value = True
             mock_converter.convert.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, [
                     'convert', 
                     str(xml_file),
@@ -263,7 +269,8 @@ class TestMainCLIImproved:
         mock_converter.convert.return_value = True
         mock_converter.get_output_extension.return_value = '.parquet'
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             # Change to temp directory for output
             with runner.isolated_filesystem():
                 # Copy input file to isolated filesystem
@@ -288,7 +295,8 @@ class TestMainCLIImproved:
         unsupported_file = temp_dir / 'test.xyz'
         unsupported_file.write_text('unsupported content')
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=None):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = None
             result = runner.invoke(cli, ['convert', str(unsupported_file)])
             assert result.exit_code == 0  # Command doesn't exit with error
             assert 'Unsupported input format' in result.output
@@ -303,7 +311,8 @@ class TestMainCLIImproved:
         mock_converter = MagicMock()
         mock_converter.validate_input.return_value = True
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             # Output exists but no --force flag
             result = runner.invoke(cli, ['convert', str(input_file), str(output_file)])
             assert result.exit_code == 0  # Command doesn't exit with error code
@@ -322,7 +331,8 @@ class TestMainCLIImproved:
             mock_converter.validate_input.return_value = True
             mock_converter.convert.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, [
                     'convert',
                     str(excel_file),
@@ -347,7 +357,8 @@ class TestMainCLIImproved:
             mock_converter.validate_input.return_value = True
             mock_converter.convert.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, [
                     'convert',
                     str(mdb_file),
@@ -373,7 +384,8 @@ class TestMainCLIImproved:
             mock_converter.validate_input.return_value = True
             mock_converter.convert.return_value = True
             
-            with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+            with patch('pyforge_cli.main.registry') as mock_registry:
+                mock_registry.get_converter.return_value = mock_converter
                 result = runner.invoke(cli, [
                     'convert',
                     str(excel_file),
@@ -401,7 +413,8 @@ class TestMainCLIImproved:
         mock_converter.validate_input.return_value = True
         mock_converter.convert.side_effect = Exception("Conversion failed due to invalid data")
         
-        with patch('pyforge_cli.plugins.registry.registry.get_converter', return_value=mock_converter):
+        with patch('pyforge_cli.main.registry') as mock_registry:
+            mock_registry.get_converter.return_value = mock_converter
             result = runner.invoke(cli, ['convert', str(xml_file), str(output_file)])
             # The command might exit with error code when conversion fails
             assert result.exit_code == 1
