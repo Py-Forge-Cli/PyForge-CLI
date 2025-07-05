@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog [
+  <!ELEMENT catalog (book+)>
+  <!ELEMENT book (title, author, price)>
+  <!ATTLIST book id CDATA #REQUIRED>
+  <!ELEMENT title (#PCDATA)>
+  <!ELEMENT author (#PCDATA)>
+  <!ELEMENT price (#PCDATA)>
+]>
+<catalog>
+  <book id="1">
+    <title>XML Processing</title>
+    <author>John Doe</author>
+    <price>29.99</price>
+  </book>
+</catalog>

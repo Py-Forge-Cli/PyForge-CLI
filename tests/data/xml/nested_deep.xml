@@ -1,0 +1,192 @@
+<?xml version="1.0" ?>
+<company>
+  <department id="dept_1">
+    <name>Department 1</name>
+    <team id="team_1_1">
+      <name>Team 1</name>
+      <employee id="emp_1_1_1">
+        <name>Employee 1</name>
+        <role>Analyst</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_1_1_2">
+        <name>Employee 2</name>
+        <role>Analyst</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_1_1_3">
+        <name>Employee 3</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+    <team id="team_1_2">
+      <name>Team 2</name>
+      <employee id="emp_1_2_1">
+        <name>Employee 1</name>
+        <role>Analyst</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_1_2_2">
+        <name>Employee 2</name>
+        <role>Developer</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_1_2_3">
+        <name>Employee 3</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+  </department>
+  <department id="dept_2">
+    <name>Department 2</name>
+    <team id="team_2_1">
+      <name>Team 1</name>
+      <employee id="emp_2_1_1">
+        <name>Employee 1</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_2_1_2">
+        <name>Employee 2</name>
+        <role>Developer</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_2_1_3">
+        <name>Employee 3</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+    <team id="team_2_2">
+      <name>Team 2</name>
+      <employee id="emp_2_2_1">
+        <name>Employee 1</name>
+        <role>Developer</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_2_2_2">
+        <name>Employee 2</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_2_2_3">
+        <name>Employee 3</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+  </department>
+  <department id="dept_3">
+    <name>Department 3</name>
+    <team id="team_3_1">
+      <name>Team 1</name>
+      <employee id="emp_3_1_1">
+        <name>Employee 1</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_3_1_2">
+        <name>Employee 2</name>
+        <role>Developer</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_3_1_3">
+        <name>Employee 3</name>
+        <role>Analyst</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+    <team id="team_3_2">
+      <name>Team 2</name>
+      <employee id="emp_3_2_1">
+        <name>Employee 1</name>
+        <role>Developer</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_3_2_2">
+        <name>Employee 2</name>
+        <role>Manager</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+      <employee id="emp_3_2_3">
+        <name>Employee 3</name>
+        <role>Analyst</role>
+        <skills>
+          <skill>Python</skill>
+          <skill>SQL</skill>
+          <skill>XML</skill>
+        </skills>
+      </employee>
+    </team>
+  </department>
+</company>

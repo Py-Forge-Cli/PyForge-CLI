@@ -1,328 +1,355 @@
-# CortexPy CLI - Local Testing Guide
+# PyForge CLI - Testing Guide
 
-Complete guide for testing the CortexPy CLI tool locally before distribution.
+Comprehensive guide for testing PyForge CLI during development and before releases.
 
-## 🚀 Quick Start Testing
+## 🚀 Quick Start
 
-### 1. **Basic Functionality Test**
+### Environment Setup
+
+The recommended way to set up a testing environment:
 
 ```bash
-# Test CLI is working
-uv run cortexpy --version
-uv run cortexpy --help
+# Clone and enter the repository
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
 
-# Test format listing
-uv run cortexpy formats
+# Automated setup (recommended)
+python scripts/setup_dev_environment.py
 
-# Test help for all commands
-uv run cortexpy convert --help
-uv run cortexpy info --help
-uv run cortexpy validate --help
+# Or use make commands
+make setup-dev      # Development environment
+make test-env       # Dedicated test environment
 ```
 
-### 2. **Automated Test Scripts**
-
-We've created several test scripts for different scenarios:
+### Running Tests
 
 ```bash
-# Quick automated test (recommended)
-python simple_test.py
+# Quick tests (recommended for development)
+make test-quick
 
-# Comprehensive test suite
-./test_locally.sh
+# Full test suite with reporting
+make test-all
 
-# Run actual test suite
-make test
+# Specific test categories
+pytest -k "not slow and not integration"
+pytest -m "not pyspark"  # Skip PySpark tests if Java not installed
 ```
 
-## 📄 **PDF Testing (Primary Feature)**
+## 📊 Test Organization
 
-### Find Test PDF Files
+Tests are organized into categories:
 
-The tool automatically looks for PDF files in common locations:
-- Current directory
-- `~/Downloads/`
-- `~/Documents/`
-- `~/Desktop/`
+- **Unit Tests**: Fast, isolated tests for individual components
+- **Integration Tests**: Tests that require external resources
+- **Slow Tests**: Tests that take >1 second (marked with `@pytest.mark.slow`)
+- **PySpark Tests**: Tests requiring Java/PySpark (marked with `@pytest.mark.pyspark`)
 
-### Manual PDF Testing
+### Test Structure
 
-```bash
-# 1. Copy any PDF to current directory
-cp ~/Downloads/your_file.pdf test.pdf
-
-# 2. Validate the PDF
-uv run cortexpy validate test.pdf
-
-# 3. Extract metadata
-uv run cortexpy info test.pdf
-uv run cortexpy info test.pdf --format json
-
-# 4. Convert to text
-uv run cortexpy convert test.pdf
-
-# 5. Test page ranges
-uv run cortexpy convert test.pdf page1.txt --pages "1"
-uv run cortexpy convert test.pdf first5.txt --pages "1-5"
-
-# 6. Test with metadata markers
-uv run cortexpy convert test.pdf with_meta.txt --metadata
-
-# 7. Test verbose mode
-uv run cortexpy --verbose convert test.pdf
+```
+tests/
+├── test_csv_converter.py        # CSV conversion tests
+├── test_pdf_converter.py        # PDF conversion tests
+├── test_excel_converter.py      # Excel conversion tests
+├── test_database_converters.py  # MDB/DBF conversion tests
+├── test_xml_multi_document.py   # XML conversion tests
+├── test_extension_system.py     # Extension system tests
+└── conftest.py                  # Shared fixtures
 ```
 
-## 🧪 **Comprehensive Testing Scenarios**
+## 🧪 Test Commands
 
-### Error Handling Tests
+### Using Make (Recommended)
 
 ```bash
-# Test with non-existent file (should fail gracefully)
-uv run cortexpy validate nonexistent.pdf
+# Environment Management
+make venv           # Create virtual environment
+make test-env       # Create dedicated test environment
 
-# Test with unsupported format
-echo "test" > test.txt
-uv run cortexpy validate test.txt
+# Running Tests
+make test           # Run standard tests
+make test-quick     # Skip slow/integration tests
+make test-all       # Full suite with all reports
+make test-cov       # Run with coverage analysis
+make test-report    # Generate test summary
 
-# Test with corrupted PDF (create empty file with .pdf extension)
-touch corrupted.pdf
-uv run cortexpy validate corrupted.pdf
+# Code Quality
+make lint           # Run linting
+make format         # Format code
+make type-check     # Type checking
+make pre-commit     # All checks before commit
 ```
 
-### Advanced Feature Testing
+### Using pytest Directly
 
 ```bash
-# Test different page ranges
-uv run cortexpy convert test.pdf --pages "1"      # Single page
-uv run cortexpy convert test.pdf --pages "1-3"    # Page range
-uv run cortexpy convert test.pdf --pages "2-"     # From page 2 to end
-uv run cortexpy convert test.pdf --pages "-5"     # First 5 pages
+# Basic test runs
+pytest                          # Run all tests
+pytest -v                       # Verbose output
+pytest -vv                      # Very verbose
+pytest --tb=short               # Short traceback
 
-# Test force overwrite
-uv run cortexpy convert test.pdf output.txt
-uv run cortexpy convert test.pdf output.txt --force
+# Selective testing
+pytest tests/test_csv_converter.py              # Single file
+pytest -k "test_csv_conversion"                  # Pattern matching
+pytest -m "not slow"                            # Exclude markers
 
-# Test JSON metadata export
-uv run cortexpy info test.pdf --format json > metadata.json
-cat metadata.json | jq '.page_count'  # If you have jq installed
+# With coverage
+pytest --cov=pyforge_cli                        # Basic coverage
+pytest --cov=pyforge_cli --cov-report=html      # HTML report
+pytest --cov=pyforge_cli --cov-report=term-missing  # Terminal report
+
+# Parallel execution (if pytest-xdist installed)
+pytest -n auto                  # Use all CPU cores
+pytest -n 4                     # Use 4 workers
 ```
 
-### Batch Processing Testing
+## 📈 Test Reporting
+
+When you run `make test-all`, the following reports are generated:
+
+### 1. HTML Test Report
+- **File**: `pytest_html_report.html`
+- **Contents**: Detailed test results with pass/fail status
+- **Usage**: Open in browser for interactive viewing
+
+### 2. Coverage Report
+- **Directory**: `htmlcov/`
+- **Main file**: `htmlcov/index.html`
+- **Contents**: Line-by-line coverage analysis
+- **Usage**: Identify untested code paths
+
+### 3. JUnit XML Report
+- **File**: `junit/test-results.xml`
+- **Contents**: Machine-readable test results
+- **Usage**: CI/CD integration
+
+### 4. JSON Report
+- **File**: `test-report.json`
+- **Contents**: Detailed test metrics
+- **Usage**: Custom analysis and reporting
+
+### Viewing Reports
 
 ```bash
-# Test multiple files (if you have several PDFs)
-for file in *.pdf; do
-    echo "Processing: $file"
-    uv run cortexpy validate "$file" && \
-    uv run cortexpy convert "$file"
-done
+# Generate all reports
+make test-all
 
-# Test with find command
-find . -name "*.pdf" -exec uv run cortexpy validate {} \;
+# View summary
+make test-report
+
+# Open HTML reports (macOS)
+open pytest_html_report.html
+open htmlcov/index.html
+
+# Open HTML reports (Linux)
+xdg-open pytest_html_report.html
+xdg-open htmlcov/index.html
 ```
 
-## 🔧 **Development Testing**
+## 🔍 Testing Specific Features
 
-### Run Test Suite
+### PDF Conversion Testing
 
 ```bash
-# Install dev dependencies
-uv sync --group dev
+# Create test PDF
+echo "Test content" | pandoc -o test.pdf  # If pandoc installed
 
-# Run tests with coverage
-make test
+# Or use existing PDF
+cp ~/Downloads/sample.pdf test.pdf
 
-# Run individual test categories
-uv run pytest tests/ -v
-uv run pytest tests/test_pdf_converter.py -v
-
-# Code quality checks
-make lint
-make type-check
-make format
+# Test conversions
+pyforge validate test.pdf
+pyforge info test.pdf
+pyforge convert test.pdf
+pyforge convert test.pdf --pages "1-5"
+pyforge convert test.pdf --metadata
 ```
 
-### Build Testing
+### Excel Conversion Testing
 
 ```bash
-# Test build process
-make build
-
-# Verify build artifacts
-ls -la dist/
-
-# Test wheel installation (in separate environment)
-pip install dist/cortexpy_cli-0.1.0-py3-none-any.whl
+# Test multi-sheet Excel
+pyforge convert test_data/multi_sheet.xlsx
+pyforge convert test_data/multi_sheet.xlsx --interactive
+pyforge convert test_data/multi_sheet.xlsx --sheets "Sheet1,Sheet3"
+pyforge convert test_data/multi_sheet.xlsx --merge-sheets
 ```
 
-### Plugin System Testing
+### Database File Testing
 
 ```bash
-# Test plugin loading
-uv run python -c "
-from cortexpy_cli.plugins import plugin_loader, registry
-plugin_loader.load_all()
-print('Loaded plugins:', plugin_loader.get_loaded_plugins())
-print('Formats:', registry.list_supported_formats())
-"
+# Test Access database
+pyforge convert test_data/sample.mdb
+pyforge info test_data/sample.mdb
+
+# Test DBF file
+pyforge convert test_data/legacy.dbf
+pyforge convert test_data/legacy.dbf --encoding cp1252
 ```
 
-## 📊 **Performance Testing**
-
-### Large File Testing
+### CSV Testing
 
 ```bash
-# Test with large PDFs (if available)
-uv run cortexpy --verbose convert large_document.pdf
-
-# Test memory usage (macOS)
-time uv run cortexpy convert large_document.pdf
+# Test various CSV formats
+pyforge convert test_data/comma.csv
+pyforge convert test_data/semicolon.csv
+pyforge convert test_data/tab_separated.tsv
+pyforge convert test_data/international.csv --verbose
 ```
 
-### Benchmark Testing
+### XML Testing
 
 ```bash
-# Time conversion
-time uv run cortexpy convert test.pdf
-
-# Compare with other tools (if available)
-time pdftotext test.pdf comparison.txt
+# Test XML conversion strategies
+pyforge convert test_data/catalog.xml
+pyforge convert test_data/complex.xml --preview-schema
+pyforge convert test_data/nested.xml --flatten-strategy aggressive
+pyforge convert test_data/arrays.xml --array-handling expand
 ```
 
-## 🐛 **Troubleshooting Tests**
+## 🐛 Debugging Tests
 
-### Dependency Issues
+### Running Specific Tests
 
 ```bash
-# Check Python environment
-python --version
-uv --version
+# Run single test method
+pytest tests/test_csv_converter.py::TestCSVConverter::test_basic_csv_conversion -v
 
-# Verify dependencies
-uv run python -c "import fitz; print('PyMuPDF:', fitz.__version__)"
-uv run python -c "import click; print('Click:', click.__version__)"
-uv run python -c "import rich; print('Rich:', rich.__version__)"
+# Run with debugging output
+pytest -vvs tests/test_pdf_converter.py
+
+# Drop into debugger on failure
+pytest --pdb tests/test_excel_converter.py
+
+# Show local variables on failure
+pytest -l tests/test_database_converters.py
 ```
 
-### Installation Issues
+### Common Issues
 
+#### 1. Import Errors
 ```bash
-# Test clean installation
-uv sync --reinstall
+# Ensure package is installed
+pip install -e .
 
-# Test from wheel
-pip uninstall cortexpy-cli
-pip install dist/cortexpy_cli-0.1.0-py3-none-any.whl
-cortexpy --version
+# Check import
+python -c "import pyforge_cli; print(pyforge_cli.__version__)"
 ```
 
-## 📱 **Platform-Specific Testing**
-
-### macOS Testing
-
+#### 2. PySpark Tests Failing
 ```bash
-# Test with system PDFs
-uv run cortexpy convert /System/Library/Documentation/Acknowledgments.pdf
+# Check Java installation
+java -version
 
-# Test with Finder integration
-open -a "Terminal" .
-uv run cortexpy convert "file with spaces.pdf"
+# Skip PySpark tests
+pytest -m "not pyspark"
 ```
 
-### Cross-Platform Testing
-
+#### 3. Slow Tests
 ```bash
-# Test path handling
-uv run cortexpy convert "path/with/subdirs/file.pdf"
+# Skip slow tests during development
+make test-quick
 
-# Test Unicode handling
-uv run cortexpy convert "файл.pdf"  # If you have non-ASCII filenames
+# Or
+pytest -m "not slow"
 ```
 
-## 🧩 **Integration Testing**
+## ✅ Pre-Release Checklist
 
-### Pipeline Testing
+Before releasing, ensure all these pass:
 
-```bash
-# Test with other CLI tools
-uv run cortexpy convert test.pdf | head -10
-uv run cortexpy convert test.pdf | wc -w
-uv run cortexpy info test.pdf --format json | jq '.page_count'
+- [ ] **Environment Setup**: `make setup-dev` completes successfully
+- [ ] **All Tests Pass**: `make test-all` shows no failures
+- [ ] **Coverage**: Maintain >80% coverage
+- [ ] **Linting**: `make lint` shows no errors
+- [ ] **Type Checking**: `make type-check` passes
+- [ ] **Documentation**: All new features documented
+- [ ] **Integration Tests**: Test with real files of each format
+- [ ] **Performance**: Large file handling works properly
+- [ ] **Cross-platform**: Test on Windows, macOS, Linux
 
-# Test output redirection
-uv run cortexpy convert test.pdf > output.txt
-uv run cortexpy info test.pdf --format json > metadata.json
-```
+## 🔄 Continuous Integration
 
-### Scripting Integration
+Our CI pipeline runs automatically on every push:
 
-```bash
-# Test in shell scripts
-#!/bin/bash
-if uv run cortexpy validate "$1"; then
-    uv run cortexpy convert "$1"
-    echo "Conversion completed"
-else
-    echo "Invalid PDF file"
-fi
-```
+1. **Test Matrix**: Python 3.8-3.10 on Ubuntu/macOS/Windows
+2. **Coverage**: Reports sent to Codecov
+3. **Artifacts**: Test reports uploaded for review
+4. **Security**: Bandit and safety checks
 
-## ✅ **Testing Checklist**
-
-Before distribution, ensure all these tests pass:
-
-- [ ] **Basic functionality**: `--version`, `--help`, `formats`
-- [ ] **PDF validation**: Works with valid PDFs, rejects invalid files
-- [ ] **PDF conversion**: Produces readable text output
-- [ ] **Metadata extraction**: Returns accurate file information
-- [ ] **Page ranges**: Correctly extracts specified pages
-- [ ] **Error handling**: Graceful failure with helpful messages
-- [ ] **Help system**: All commands show comprehensive help
-- [ ] **Build system**: `make build` produces valid packages
-- [ ] **Test suite**: All unit tests pass
-- [ ] **Code quality**: Linting and type checking pass
-
-## 🎯 **Expected Results**
-
-### Successful Test Indicators
-
-1. **Version check**: Returns `cortexpy, version 0.1.0`
-2. **Format listing**: Shows PDF to TXT conversion support
-3. **PDF validation**: ✓ or ✗ with appropriate message
-4. **Text conversion**: Creates `.txt` file with extracted content
-5. **Metadata**: Shows document properties in table or JSON format
-6. **Error messages**: Clear, helpful error descriptions
-7. **Progress bars**: Smooth progress indication for large files
-
-### Performance Expectations
-
-- **Small PDFs** (< 1MB): Near-instant conversion
-- **Medium PDFs** (1-10MB): 1-5 seconds with progress bar
-- **Large PDFs** (> 10MB): Progress tracking, reasonable memory usage
-
-## 🔄 **Continuous Testing**
-
-### During Development
+### Local CI Simulation
 
 ```bash
-# Quick development test
+# Run CI-like checks locally
 make pre-commit
 
-# After changes
-python simple_test.py
+# Or manually
+make format
+make lint
+make type-check
 make test
 ```
 
-### Before Releases
+## 📊 Performance Testing
+
+### Memory Usage
 
 ```bash
-# Full test suite
-./test_locally.sh
-make all
-
-# Clean build test
-make clean
-make build
+# Monitor memory during conversion
+pytest tests/test_csv_converter.py::test_large_file_conversion --memprof
 ```
 
-This testing guide ensures your CortexPy CLI tool works correctly across different scenarios and edge cases before distribution!
+### Execution Time
+
+```bash
+# Profile slow tests
+pytest --durations=10
+
+# Time specific operations
+python -m cProfile -o profile.stats $(which pyforge) convert large_file.csv
+```
+
+## 🎯 Test-Driven Development
+
+When adding new features:
+
+1. **Write tests first**
+   ```python
+   def test_new_feature():
+       # Arrange
+       converter = NewConverter()
+       
+       # Act
+       result = converter.convert("input.file")
+       
+       # Assert
+       assert result.success
+       assert Path("output.parquet").exists()
+   ```
+
+2. **Run tests (they should fail)**
+   ```bash
+   pytest tests/test_new_feature.py -v
+   ```
+
+3. **Implement feature**
+
+4. **Run tests again (they should pass)**
+   ```bash
+   pytest tests/test_new_feature.py -v
+   ```
+
+5. **Check coverage**
+   ```bash
+   pytest tests/test_new_feature.py --cov=pyforge_cli.converters.new_converter
+   ```
+
+## 📚 Additional Resources
+
+- [pytest documentation](https://docs.pytest.org/)
+- [Coverage.py documentation](https://coverage.readthedocs.io/)
+- [Test artifacts in CI](.github/workflows/ci.yml)
+- [Development Setup Guide](docs/getting-started/development-setup.md)
+
+Happy testing! 🧪

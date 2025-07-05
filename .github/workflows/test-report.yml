@@ -1,0 +1,41 @@
+name: Test Report
+on:
+  workflow_run:
+    workflows: ['CI']
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event == 'pull_request'
+    steps:
+    - name: Download Test Results
+      uses: actions/download-artifact@v4
+      with:
+        run-id: ${{ github.event.workflow_run.id }}
+        path: artifacts
+        pattern: test-results-*
+        merge-multiple: true
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        check_name: 'Overall Test Results'
+        junit_files: 'artifacts/junit/*.xml'
+        compare_to_earlier_commit: true
+        check_run_annotations: all tests
+        report_individual_runs: true
+        deduplicate_classes_by_file_name: true
+
+    - name: Create Test Summary
+      uses: test-summary/action@v2
+      with:
+        paths: 'artifacts/junit/*.xml'
+        show: all
+      if: always()

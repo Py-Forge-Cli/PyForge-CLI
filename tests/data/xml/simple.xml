@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<catalog>
+  <book id="1">
+    <title>Book Title 1</title>
+    <author>Author 1</author>
+    <price>11.99</price>
+    <publish_date>2023-01-01</publish_date>
+  </book>
+  <book id="2">
+    <title>Book Title 2</title>
+    <author>Author 2</author>
+    <price>12.99</price>
+    <publish_date>2023-02-01</publish_date>
+  </book>
+  <book id="3">
+    <title>Book Title 3</title>
+    <author>Author 3</author>
+    <price>13.99</price>
+    <publish_date>2023-03-01</publish_date>
+  </book>
+</catalog>

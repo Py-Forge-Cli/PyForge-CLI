@@ -2,4 +2,4 @@
 
 from .base import DatabaseBackend
 
-__all__ = ['DatabaseBackend']
+__all__ = ["DatabaseBackend"]

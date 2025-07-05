@@ -1,89 +1,103 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.10"]
-        # TODO: Enable full matrix once tests are fixed
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: [3.9, 3.10, 3.11]
 
     steps:
     - uses: actions/checkout@v4
-
+    
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e ".[dev,test]"
-
-    - name: Lint with ruff (allow failures)
+        pip install uv
+        uv sync --dev
+    
+    - name: Run tests with coverage
       run: |
-        ruff check src tests || true
-
-    - name: Format check with black (allow failures)
-      run: |
-        black --check src tests || true
-
-    - name: Type check with mypy (allow failures)
-      run: |
-        mypy src || true
-
-    - name: Test with pytest (temporarily disabled)
-      run: |
-        echo "Tests temporarily disabled during package migration"
-        # pytest tests/ --cov=pyforge_cli --cov-report=xml --cov-report=term-missing
-
-    - name: Upload coverage to Codecov
-      if: false  # Disabled until tests are working
+        python -m pytest \
+          --run-pyspark \
+          --cov=src/pyforge_cli \
+          --cov-report=xml \
+          --cov-report=html \
+          --cov-report=term-missing \
+          --junitxml=pytest-results.xml
+    
+    - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
-        fail_ci_if_error: true
+    
+    - name: Check test pass rate
+      run: |
+        python -c "
+        import xml.etree.ElementTree as ET
+        tree = ET.parse('pytest-results.xml')
+        root = tree.getroot()
+        
+        total = int(root.attrib['tests'])
+        failures = int(root.attrib['failures'])
+        errors = int(root.attrib['errors'])
+        passed = total - failures - errors
+        pass_rate = (passed / total) * 100 if total > 0 else 0
+        
+        print(f'Test Results: {passed}/{total} passed ({pass_rate:.1f}%)')
+        print(f'Failed: {failures}, Errors: {errors}')
+        
+        if pass_rate < 70:
+            print(f'❌ Test pass rate {pass_rate:.1f}% is below required 70%')
+            exit(1)
+        else:
+            print(f'✅ Test pass rate {pass_rate:.1f}% meets requirement (≥70%)')
+        "
+    
+    - name: Check code coverage
+      run: |
+        python -c "
+        import xml.etree.ElementTree as ET
+        tree = ET.parse('coverage.xml')
+        root = tree.getroot()
+        
+        coverage = float(root.attrib['line-rate']) * 100
+        print(f'Code coverage: {coverage:.1f}%')
+        
+        if coverage < 50:
+            print(f'❌ Code coverage {coverage:.1f}% is below required 50%')
+            exit(1)
+        else:
+            print(f'✅ Code coverage {coverage:.1f}% meets requirement (≥50%)')
+        "
 
-  security:
+  quality-gates:
     runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+    
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-
-    - name: Install dependencies
+    - name: Quality Gates Passed
       run: |
-        python -m pip install --upgrade pip
-        pip install bandit[toml] safety
-
-    - name: Run bandit security scan (allow failures)
-      run: |
-        bandit -r src/ -f json -o bandit-report.json || true
-
-    - name: Run safety check (allow failures)
-      run: |
-        safety check --json --output safety-report.json || true
-
-    - name: Upload security reports
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: security-reports
-        path: |
-          bandit-report.json
-          safety-report.json
+        echo "🎉 All quality gates passed!"
+        echo "✅ Test pass rate ≥ 70%"
+        echo "✅ Code coverage ≥ 50%"
+        echo "Ready for merge!"

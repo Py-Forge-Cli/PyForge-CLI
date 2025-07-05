@@ -116,6 +116,7 @@ nav:
     - Quick Start: getting-started/quick-start.md
     - First Conversion: getting-started/first-conversion.md
     - Tools Prerequisites: getting-started/tools-prerequisites.md
+    - Development Setup: getting-started/development-setup.md
   - Sample Datasets: sample-datasets.md
   - Converters:
     - Overview: converters/index.md
@@ -134,6 +135,9 @@ nav:
     - Troubleshooting: tutorials/troubleshooting.md
   - API:
     - Overview: api/index.md
+  - Testing:
+    - Test Reporting: testing/test-reporting-guide.md
+    - Extension Testing: testing/databricks-extension-testing-guide.md
   - About:
     - Overview: about/index.md
     - Changelog: about/changelog.md

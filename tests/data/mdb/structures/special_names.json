@@ -1,0 +1,25 @@
+{
+  "tables": {
+    "Table With Spaces": {
+      "columns": [
+        "Column With Space",
+        "Normal_Column"
+      ],
+      "rows": 10
+    },
+    "Special!@#$%^&*()": {
+      "columns": [
+        "ID",
+        "Data"
+      ],
+      "rows": 5
+    },
+    "日本語テーブル": {
+      "columns": [
+        "識別子",
+        "データ"
+      ],
+      "rows": 3
+    }
+  }
+}
