@@ -4,7 +4,6 @@ Integration tests for CSV converter through CLI interface.
 
 import subprocess
 import sys
-from pathlib import Path
 
 import pandas as pd
 
@@ -22,9 +21,10 @@ class TestCSVConverterIntegration:
         output_file = tmp_path / "test.parquet"
 
         # Run CLI conversion
-        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            str(pyforge_path),
+            sys.executable,
+            "-m",
+            "pyforge_cli.main",
             "convert",
             str(input_file),
             str(output_file),
@@ -51,8 +51,7 @@ class TestCSVConverterIntegration:
 
     def test_csv_formats_command(self):
         """Test that CSV formats are listed in the formats command"""
-        pyforge_path = Path(sys.executable).parent / "pyforge"
-        cmd = [str(pyforge_path), "formats"]
+        cmd = [sys.executable, "-m", "pyforge_cli.main", "formats"]
 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
 
@@ -69,8 +68,7 @@ class TestCSVConverterIntegration:
         input_file.write_text(content, encoding="utf-8")
 
         # Use the installed pyforge command
-        pyforge_path = Path(sys.executable).parent / "pyforge"
-        cmd = [str(pyforge_path), "info", str(input_file)]
+        cmd = [sys.executable, "-m", "pyforge_cli.main", "info", str(input_file)]
 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
 
@@ -86,8 +84,7 @@ class TestCSVConverterIntegration:
         input_file.write_text(content, encoding="utf-8")
 
         # Use the installed pyforge command
-        pyforge_path = Path(sys.executable).parent / "pyforge"
-        cmd = [str(pyforge_path), "validate", str(input_file)]
+        cmd = [sys.executable, "-m", "pyforge_cli.main", "validate", str(input_file)]
 
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=".")
 
@@ -107,9 +104,10 @@ class TestCSVConverterIntegration:
             output_file = tmp_path / f"test_{compression}.parquet"
 
             # Use the installed pyforge command
-            pyforge_path = Path(sys.executable).parent / "pyforge"
             cmd = [
-                str(pyforge_path),
+                sys.executable,
+                "-m",
+                "pyforge_cli.main",
                 "convert",
                 str(input_file),
                 str(output_file),
@@ -140,9 +138,10 @@ class TestCSVConverterIntegration:
         output_file = tmp_path / "verbose_test.parquet"
 
         # Use the installed pyforge command
-        pyforge_path = Path(sys.executable).parent / "pyforge"
         cmd = [
-            str(pyforge_path),
+            sys.executable,
+            "-m",
+            "pyforge_cli.main",
             "--verbose",
             "convert",
             str(input_file),
@@ -171,7 +170,7 @@ class TestCSVConverterIntegration:
         cmd = [
             sys.executable,
             "-m",
-            "pyforge_cli",
+            "pyforge_cli.main",
             "convert",
             str(input_file),
             str(output_file),

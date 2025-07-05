@@ -294,7 +294,7 @@ class TestCSVConverter:
         ]
 
         for delimiter, content in test_cases:
-            delimiter_name = delimiter.replace("\t", "tab")
+            delimiter_name = delimiter.replace("\t", "tab").replace("|", "pipe")
             input_file = tmp_path / f"test_{delimiter_name}.csv"
             input_file.write_text(content, encoding="utf-8")
 
