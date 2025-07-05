@@ -116,10 +116,10 @@ type-check: ## Run type checking with mypy
 	@echo "$(GREEN)Type checking completed!$(RESET)"
 
 # Testing
-test: ## Run tests with pytest in virtual environment
+test: ## Run tests with pytest in virtual environment (includes PySpark tests)
 	@echo "$(BLUE)Running tests...$(RESET)"
 	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
-		$(VENV_BIN)/pytest -v; \
+		$(VENV_BIN)/pytest -v --run-pyspark; \
 	else \
 		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
 		exit 1; \
@@ -136,10 +136,11 @@ test-quick: ## Run quick tests (exclude slow and integration tests)
 	fi
 	@echo "$(GREEN)Quick tests completed!$(RESET)"
 
-test-all: ## Run all tests using test environment with full reporting
+test-all: ## Run all tests using test environment with full reporting (includes PySpark tests)
 	@echo "$(BLUE)Running all tests with reporting...$(RESET)"
 	@if [ -d ".testenv" ]; then \
 		.testenv/bin/pytest tests/ \
+			--run-pyspark \
 			--junit-xml=junit/test-results.xml \
 			--html=pytest_html_report.html \
 			--self-contained-html \
@@ -217,7 +218,7 @@ test-report: test-all ## Generate test report summary
 	fi
 
 # Pre-commit
-pre-commit: ## Run all pre-commit checks
+pre-commit: ## Run all pre-commit checks (includes PySpark tests)
 	@echo "$(BLUE)Running pre-commit checks...$(RESET)"
 	$(MAKE) format
 	$(MAKE) lint
@@ -345,8 +346,8 @@ docs: docs-serve ## Alias for docs-serve (default docs command)
 ci-install: ## Install dependencies for CI
 	$(UV) pip install -e ".[dev]"
 
-ci-test: ## Run tests for CI
-	$(UV) run pytest -v --cov=$(PACKAGE_NAME) --cov-report=xml
+ci-test: ## Run tests for CI (includes PySpark tests)
+	$(UV) run pytest -v --run-pyspark --cov=$(PACKAGE_NAME) --cov-report=xml
 
 ci-lint: ## Run linting for CI
 	$(UV) run ruff check $(SRC_DIR) $(TEST_DIR)

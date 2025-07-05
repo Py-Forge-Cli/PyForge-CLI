@@ -62,6 +62,7 @@ jobs:
         run: |
           # Full test suite including integration and slow tests
           pytest tests/ \
+            --run-pyspark \
             --cov=pyforge_cli \
             --cov-report=term-missing \
             --cov-report=xml \

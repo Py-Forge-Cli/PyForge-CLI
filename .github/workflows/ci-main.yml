@@ -61,6 +61,7 @@ jobs:
         run: |
           # Focus on core functionality and regression tests
           pytest tests/ -m "not slow and not integration" \
+            --run-pyspark \
             --cov=pyforge_cli \
             --cov-report=term-missing \
             --cov-report=xml \
