@@ -5,7 +5,9 @@ This module tests all components of the PyForge CLI Databricks extension.
 """
 
 import os
+import platform
 import tempfile
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
@@ -35,6 +37,34 @@ from pyforge_cli.extensions.databricks.volume_operations import (
 
 # Mark all tests in this module as databricks tests
 pytestmark = pytest.mark.databricks
+
+
+# Helper for Windows-compatible temporary files
+@contextmanager
+def create_temp_file(suffix=".csv", content=b""):
+    """Create a temporary file that works correctly on Windows."""
+    if platform.system() == "Windows":
+        # On Windows, we need to close the file before it can be used by other processes
+        tmp = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)
+        tmp.write(content)
+        tmp.close()  # Close the file handle on Windows
+        try:
+            yield tmp.name
+        finally:
+            try:
+                os.unlink(tmp.name)
+            except (OSError, PermissionError):
+                # Sometimes Windows still has the file locked
+                pass
+    else:
+        # On Unix, we can keep the file open
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            tmp.write(content)
+            tmp.flush()
+            try:
+                yield tmp.name
+            finally:
+                os.unlink(tmp.name)
 
 
 class TestDatabricksEnvironment:
@@ -414,24 +444,17 @@ class TestConverterSelector:
         """Test converter selection for small files."""
         selector = ConverterSelector()
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"test,data\n1,2\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"test,data\n1,2\n") as tmp_name:
+            recommendation = selector.select_converter(
+                Path(tmp_name), "parquet", {}
+            )
 
-            try:
-                recommendation = selector.select_converter(
-                    Path(tmp.name), "parquet", {}
-                )
-
-                assert isinstance(recommendation, ConverterRecommendation)
-                assert recommendation.converter_type in [
-                    ConverterType.PANDAS,
-                    ConverterType.NATIVE,
-                ]
-                assert recommendation.confidence > 0
-
-            finally:
-                os.unlink(tmp.name)
+            assert isinstance(recommendation, ConverterRecommendation)
+            assert recommendation.converter_type in [
+                ConverterType.PANDAS,
+                ConverterType.NATIVE,
+            ]
+            assert recommendation.confidence > 0
 
     def test_select_converter_large_file(self):
         """Test converter selection for large files."""
@@ -453,18 +476,11 @@ class TestConverterSelector:
         """Test file characteristics analysis."""
         selector = ConverterSelector()
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"col1,col2,col3\n1,2,3\n4,5,6\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"col1,col2,col3\n1,2,3\n4,5,6\n") as tmp_name:
+            chars = selector._analyze_file(Path(tmp_name))
 
-            try:
-                chars = selector._analyze_file(Path(tmp.name))
-
-                assert chars.format == "csv"
-                assert chars.size_bytes > 0
-
-            finally:
-                os.unlink(tmp.name)
+            assert chars.format == "csv"
+            assert chars.size_bytes > 0
 
 
 class TestFallbackManager:
@@ -563,83 +579,55 @@ class TestPyForgeDatabricks:
         """Test basic conversion."""
         forge = PyForgeDatabricks(auto_init=False)
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"col1,col2\n1,2\n3,4\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"col1,col2\n1,2\n3,4\n") as tmp_name:
+            # Mock converter execution
+            with patch.object(
+                forge.fallback_manager, "execute_with_fallback"
+            ) as mock_exec:
+                mock_exec.return_value = Mock(
+                    success=True,
+                    final_converter=ConverterType.PANDAS,
+                    attempts=[],
+                    warnings=[],
+                    output_path=Path("output.parquet"),
+                )
 
-            try:
-                # Mock converter execution
-                with patch.object(
-                    forge.fallback_manager, "execute_with_fallback"
-                ) as mock_exec:
-                    mock_exec.return_value = Mock(
-                        success=True,
-                        final_converter=ConverterType.PANDAS,
-                        attempts=[],
-                        warnings=[],
-                        output_path=Path("output.parquet"),
-                    )
+                result = forge.convert(tmp_name)
 
-                    result = forge.convert(tmp.name)
-
-                    assert result["success"] is True
-                    assert "output_path" in result
-                    assert "duration_seconds" in result
-
-            finally:
-                os.unlink(tmp.name)
+                assert result["success"] is True
+                assert "output_path" in result
+                assert "duration_seconds" in result
 
     def test_get_info(self):
         """Test file info retrieval."""
         forge = PyForgeDatabricks(auto_init=False)
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"test data\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"test data\n") as tmp_name:
+            info = forge.get_info(tmp_name)
 
-            try:
-                info = forge.get_info(tmp.name)
-
-                assert info["exists"] is True
-                assert info["format"] == "csv"
-                assert info["size"] > 0
-
-            finally:
-                os.unlink(tmp.name)
+            assert info["exists"] is True
+            assert info["format"] == "csv"
+            assert info["size"] > 0
 
     def test_validate(self):
         """Test file validation."""
         forge = PyForgeDatabricks(auto_init=False)
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"col1,col2\n1,2\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"col1,col2\n1,2\n") as tmp_name:
+            validation = forge.validate(tmp_name)
 
-            try:
-                validation = forge.validate(tmp.name)
-
-                assert validation["is_valid"] is True
-                assert len(validation["issues"]) == 0
-
-            finally:
-                os.unlink(tmp.name)
+            assert validation["is_valid"] is True
+            assert len(validation["issues"]) == 0
 
     def test_validate_empty_file(self):
         """Test validation of empty file."""
         forge = PyForgeDatabricks(auto_init=False)
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            # Empty file
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"") as tmp_name:
+            validation = forge.validate(tmp_name)
 
-            try:
-                validation = forge.validate(tmp.name)
-
-                assert validation["is_valid"] is False
-                assert "empty" in str(validation["issues"]).lower()
-
-            finally:
-                os.unlink(tmp.name)
+            assert validation["is_valid"] is False
+            assert "empty" in str(validation["issues"]).lower()
 
     def test_get_statistics(self):
         """Test statistics retrieval."""
@@ -766,31 +754,24 @@ class TestIntegration:
         # Get notebook API
         forge = ext.get_notebook_api()
 
-        with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as tmp:
-            tmp.write(b"id,name,value\n1,test,100\n2,example,200\n")
-            tmp.flush()
+        with create_temp_file(suffix=".csv", content=b"id,name,value\n1,test,100\n2,example,200\n") as tmp_name:
+            # Mock the actual conversion
+            with patch.object(
+                forge.fallback_manager, "execute_with_fallback"
+            ) as mock_exec:
+                mock_exec.return_value = Mock(
+                    success=True,
+                    final_converter=ConverterType.SPARK,
+                    attempts=[],
+                    warnings=[],
+                    output_path=Path("output.parquet"),
+                )
 
-            try:
-                # Mock the actual conversion
-                with patch.object(
-                    forge.fallback_manager, "execute_with_fallback"
-                ) as mock_exec:
-                    mock_exec.return_value = Mock(
-                        success=True,
-                        final_converter=ConverterType.SPARK,
-                        attempts=[],
-                        warnings=[],
-                        output_path=Path("output.parquet"),
-                    )
+                # Perform conversion
+                result = forge.convert(tmp_name, format="parquet")
 
-                    # Perform conversion
-                    result = forge.convert(tmp.name, format="parquet")
-
-                    assert result["success"] is True
-                    assert result["converter_used"] == "spark"
-
-            finally:
-                os.unlink(tmp.name)
+                assert result["success"] is True
+                assert result["converter_used"] == "spark"
 
     @pytest.mark.integration
     def test_environment_specific_behavior(self):
