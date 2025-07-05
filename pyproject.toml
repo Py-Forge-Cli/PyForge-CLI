@@ -108,6 +108,8 @@ all = [
     "pandas-access>=0.0.1",
     "docker>=5.0.0",
     "pyodbc>=4.0.0; sys_platform == 'win32'",
+    "pyspark==3.5.0",  # Include for Databricks extension
+    "delta-spark==3.1.0",  # Include for Databricks extension
 ]
 
 # Development dependencies
