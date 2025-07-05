@@ -116,10 +116,14 @@ class UCanAccessBackend(DatabaseBackend):
 
                 except subprocess.TimeoutExpired:
                     self.logger.error(f"Timeout copying file from volume: {db_path}")
-                    raise RuntimeError(f"Timeout copying {db_path} to local storage") from None
+                    raise RuntimeError(
+                        f"Timeout copying {db_path} to local storage"
+                    ) from None
                 except Exception as e:
                     self.logger.error(f"Error copying file from volume: {e}")
-                    raise RuntimeError(f"Cannot access volume file {db_path}: {e}") from e
+                    raise RuntimeError(
+                        f"Cannot access volume file {db_path}: {e}"
+                    ) from e
             else:
                 self.db_path = os.path.abspath(db_path)
                 self._temp_file_path = None  # No temp file created

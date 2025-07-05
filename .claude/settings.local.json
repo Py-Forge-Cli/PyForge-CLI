@@ -93,7 +93,8 @@
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
       "Bash(ruff check:*)",
-      "Bash(black:*)"
+      "Bash(black:*)",
+      "Bash(mypy:*)"
     ],
     "deny": []
   },
