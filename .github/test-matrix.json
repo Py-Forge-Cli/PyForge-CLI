@@ -1,0 +1,44 @@
+{
+  "test-matrix": {
+    "os": ["ubuntu-latest", "macos-latest", "windows-latest"],
+    "python-version": ["3.8", "3.9", "3.10", "3.11"],
+    "spark-version": ["3.5.2"],
+    "java-version": ["11"],
+    "exclude": [
+      {
+        "os": "windows-latest",
+        "python-version": "3.8"
+      }
+    ],
+    "include": [
+      {
+        "os": "ubuntu-latest",
+        "python-version": "3.11",
+        "spark-version": "3.5.2",
+        "java-version": "11",
+        "run-integration-tests": true
+      }
+    ]
+  },
+  "environment": {
+    "PYARROW_IGNORE_TIMEZONE": "1",
+    "SPARK_LOCAL_IP": "127.0.0.1",
+    "PYSPARK_PYTHON": "python",
+    "PYSPARK_DRIVER_PYTHON": "python"
+  },
+  "dependencies": {
+    "core": [
+      "pyspark==3.5.2",
+      "delta-spark==3.1.0",
+      "databricks-sdk==0.19.0"
+    ],
+    "testing": [
+      "pytest>=8.3.5",
+      "pytest-mock>=3.10.0",
+      "pytest-xdist>=3.0.0",
+      "pytest-cov>=5.0.0",
+      "findspark>=2.0.1",
+      "py4j>=0.10.9.7"
+    ]
+  }
+}

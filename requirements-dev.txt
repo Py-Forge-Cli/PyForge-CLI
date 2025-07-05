@@ -5,6 +5,8 @@
 pytest>=7.0.0
 pytest-cov>=4.0.0
 pytest-mock>=3.10.0
+pytest-html>=3.1.0
+pytest-json-report>=1.5.0
 
 # Code formatting and linting
 black>=23.0.0
@@ -34,3 +36,8 @@ mkdocs-mermaid2-plugin>=0.6.0
 # Development utilities
 ipython>=8.0.0
 jupyter>=1.0.0
+
+# Big Data Processing (for Databricks extension tests)
+# PySpark 3.5.0 is used by Databricks Runtime 14.3 LTS (Serverless V1)
+pyspark==3.5.0
+delta-spark==3.1.0

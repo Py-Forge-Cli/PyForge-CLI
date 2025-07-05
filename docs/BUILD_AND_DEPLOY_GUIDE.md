@@ -47,11 +47,23 @@ pip install -r requirements-dev.txt
 
 ### 1. Clone and Navigate to Project
 ```bash
-git clone <repository-url>
-cd cortexpy-cli
+git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
+cd PyForge-CLI
 ```
 
-### 2. Set Up Virtual Environment (Recommended)
+### 2. Set Up Development Environment (Recommended)
+
+#### Automated Setup (Easiest)
+```bash
+python scripts/setup_dev_environment.py
+```
+
+#### Or Use Make Commands
+```bash
+make setup-dev
+```
+
+#### Manual Setup
 ```bash
 # Using venv
 python -m venv venv

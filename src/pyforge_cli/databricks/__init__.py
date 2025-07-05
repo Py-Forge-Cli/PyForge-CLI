@@ -7,12 +7,12 @@ from .environment import (
     DatabricksEnvironment,
     detect_databricks_environment,
     is_running_in_databricks,
-    is_running_in_serverless
+    is_running_in_serverless,
 )
 
 __all__ = [
-    'DatabricksEnvironment',
-    'detect_databricks_environment',
-    'is_running_in_databricks',
-    'is_running_in_serverless'
+    "DatabricksEnvironment",
+    "detect_databricks_environment",
+    "is_running_in_databricks",
+    "is_running_in_serverless",
 ]

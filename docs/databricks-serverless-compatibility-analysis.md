@@ -13,6 +13,9 @@ This document provides a comprehensive analysis of Databricks Serverless Environ
 | **Operating System** | Ubuntu 22.04.4 LTS |
 | **Python Version** | 3.10.12 |
 | **Java Version** | Java 8 (Zulu OpenJDK) |
+| **Apache Spark** | 3.5.0 (from Runtime 14.3 LTS) |
+| **PySpark** | 3.5.0 |
+| **Delta Lake** | 3.1.0 |
 | **Databricks Connect** | 14.3.7 |
 | **Runtime Version** | client.1.13 |
 | **Py4J Version** | 0.10.9.7 |
@@ -31,6 +34,8 @@ This document provides a comprehensive analysis of Databricks Serverless Environ
 | **Operating System** | Ubuntu 22.04.4 LTS |
 | **Python Version** | 3.11.10 |
 | **Java Version** | Java 8 (Zulu OpenJDK) |
+| **Apache Spark** | ~3.5.x (estimated) |
+| **PySpark** | ~3.5.x (estimated) |
 | **Databricks Connect** | 15.4.5 |
 | **Runtime Version** | client.2.5 |
 | **Py4J Version** | 0.10.9.8 |
