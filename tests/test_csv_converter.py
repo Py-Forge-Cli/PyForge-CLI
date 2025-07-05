@@ -530,3 +530,134 @@ class TestCSVConverterIntegration:
             # All columns should be strings
             for col in df.columns:
                 assert df[col].dtype == 'object'
+    
+    def test_get_metadata_semicolon_delimiter(self, tmp_path):
+        """Test metadata extraction from semicolon-delimited CSV"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "semicolon_test.csv"
+        content = "name;age;city\nJohn;25;New York\nJane;30;Boston"
+        input_file.write_text(content, encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['delimiter'] == ';'
+        assert metadata['has_header'] == True
+        assert metadata['estimated_rows'] == 2
+    
+    def test_get_metadata_no_header(self, tmp_path):
+        """Test metadata extraction from CSV without headers"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "no_header_test.csv"
+        content = "John,25,New York\nJane,30,Boston\nBob,35,Chicago"
+        input_file.write_text(content, encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['has_header'] == False
+        assert metadata['estimated_rows'] == 3
+    
+    def test_get_metadata_latin1_encoding(self, tmp_path):
+        """Test metadata extraction from Latin-1 encoded CSV"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "latin1_test.csv"
+        content = "name,city\nJosé,México\nFrançois,Québec"
+        input_file.write_bytes(content.encode('latin-1'))
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['encoding'] in ['latin-1', 'cp1252']  # Both are acceptable
+        assert metadata['estimated_rows'] == 2
+    
+    def test_get_metadata_empty_file(self, tmp_path):
+        """Test metadata extraction from empty CSV file"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "empty_test.csv"
+        input_file.write_text("", encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['estimated_rows'] == 0
+        assert metadata['has_header'] == False
+    
+    def test_get_metadata_large_file(self, tmp_path):
+        """Test metadata extraction from large CSV file"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "large_test.csv"
+        # Create a CSV with many rows
+        lines = ["name,age,city"]  # Header
+        for i in range(10000):
+            lines.append(f"User{i},{20 + (i % 60)},City{i % 100}")
+        content = "\n".join(lines)
+        input_file.write_text(content, encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['estimated_rows'] == 10000
+        assert metadata['has_header'] == True
+        assert metadata['file_size'] > 100000  # Should be substantial
+    
+    def test_get_metadata_quoted_fields(self, tmp_path):
+        """Test metadata extraction from CSV with quoted fields"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "quoted_test.csv"
+        content = 'name,description,city\n"John Doe","Software Engineer, Senior",New York\n"Jane Smith","Product Manager",Boston'
+        input_file.write_text(content, encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['delimiter'] == ','
+        assert metadata['has_header'] == True
+        assert metadata['estimated_rows'] == 2
+    
+    def test_get_metadata_corrupted_file(self, tmp_path):
+        """Test metadata extraction from corrupted CSV file"""
+        converter = CSVConverter()
+        
+        # Create a corrupted CSV file (binary data)
+        input_file = tmp_path / "corrupted_test.csv"
+        input_file.write_bytes(b'\x00\x01\x02\x03\x04\x05Invalid CSV data')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        # Should still return basic metadata even for corrupted files
+        assert metadata is not None
+        assert metadata['file_name'] == 'corrupted_test.csv'
+        assert 'file_size' in metadata
+    
+    def test_get_metadata_nonexistent_file(self):
+        """Test metadata extraction from non-existent file"""
+        converter = CSVConverter()
+        
+        from pathlib import Path
+        nonexistent_file = Path('/nonexistent/file.csv')
+        metadata = converter.get_metadata(nonexistent_file)
+        
+        # Should return None for non-existent files
+        assert metadata is None
+    
+    def test_get_metadata_tab_delimited(self, tmp_path):
+        """Test metadata extraction from tab-delimited file"""
+        converter = CSVConverter()
+        
+        input_file = tmp_path / "tab_test.tsv"
+        content = "name\tage\tcity\nJohn\t25\tNew York\nJane\t30\tBoston"
+        input_file.write_text(content, encoding='utf-8')
+        
+        metadata = converter.get_metadata(input_file)
+        
+        assert metadata is not None
+        assert metadata['delimiter'] == '\t'
+        assert metadata['has_header'] == True
+        assert metadata['estimated_rows'] == 2
