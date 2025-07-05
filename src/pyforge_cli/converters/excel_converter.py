@@ -617,4 +617,91 @@ class ExcelConverter(BaseConverter):
     def get_output_format(self) -> str:
         """Return the output format."""
         return "parquet"
+    
+    def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
+        """
+        Extract metadata from Excel file.
+        
+        Args:
+            input_path: Path to Excel file
+            
+        Returns:
+            Dictionary containing file metadata or None if extraction fails
+        """
+        if not HAS_OPENPYXL:
+            logger.warning("Excel metadata extraction requires 'openpyxl' package")
+            return None
+            
+        try:
+            # Get basic file info
+            file_stats = input_path.stat()
+            metadata = {
+                "file_name": input_path.name,
+                "file_size": file_stats.st_size,
+                "file_format": "Excel Spreadsheet",
+                "file_extension": input_path.suffix,
+                "modified_date": datetime.fromtimestamp(file_stats.st_mtime).isoformat(),
+                "created_date": datetime.fromtimestamp(file_stats.st_ctime).isoformat(),
+            }
+            
+            # Open workbook in read-only mode for faster processing
+            wb = openpyxl.load_workbook(input_path, read_only=True, data_only=True)
+            
+            # Get sheet information
+            sheet_names = wb.sheetnames
+            metadata["sheet_count"] = len(sheet_names)
+            metadata["sheet_names"] = sheet_names
+            
+            # Get document properties if available
+            if hasattr(wb, 'properties') and wb.properties:
+                props = wb.properties
+                metadata["title"] = getattr(props, 'title', None)
+                metadata["author"] = getattr(props, 'creator', None)
+                metadata["subject"] = getattr(props, 'subject', None)
+                metadata["description"] = getattr(props, 'description', None)
+                metadata["keywords"] = getattr(props, 'keywords', None)
+                metadata["category"] = getattr(props, 'category', None)
+                metadata["company"] = getattr(props, 'company', None)
+                metadata["created"] = props.created.isoformat() if hasattr(props, 'created') and props.created else None
+                metadata["modified"] = props.modified.isoformat() if hasattr(props, 'modified') and props.modified else None
+                metadata["last_modified_by"] = getattr(props, 'lastModifiedBy', None)
+            
+            # Get sheet details
+            sheet_info = {}
+            total_rows = 0
+            total_columns = 0
+            
+            for sheet_name in sheet_names:
+                ws = wb[sheet_name]
+                # For read-only mode, we need to estimate dimensions
+                max_row = 0
+                max_col = 0
+                
+                # Sample the first 1000 rows to estimate sheet size
+                for row_idx, row in enumerate(ws.iter_rows(max_row=1000), 1):
+                    if any(cell.value is not None for cell in row):
+                        max_row = row_idx
+                        max_col = max(max_col, len([c for c in row if c.value is not None]))
+                
+                sheet_info[sheet_name] = {
+                    "estimated_rows": max_row,
+                    "estimated_columns": max_col,
+                    "has_data": max_row > 0
+                }
+                
+                total_rows += max_row
+                total_columns = max(total_columns, max_col)
+            
+            metadata["sheet_details"] = sheet_info
+            metadata["total_estimated_rows"] = total_rows
+            metadata["max_columns"] = total_columns
+            
+            # Close workbook
+            wb.close()
+            
+            return metadata
+            
+        except Exception as e:
+            logger.error(f"Failed to extract Excel metadata: {e}")
+            return None
 

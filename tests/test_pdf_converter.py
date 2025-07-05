@@ -184,3 +184,100 @@ class TestPDFConverter:
             assert result is True
             # Should process pages 0, 1, 2 (0-indexed)
             assert mock_doc.__getitem__.call_count >= 3
+    
+    @patch('fitz.open')
+    def test_get_metadata_comprehensive(self, mock_fitz_open):
+        """Test comprehensive metadata extraction with all fields."""
+        mock_doc = Mock()
+        mock_doc.metadata = {
+            'title': 'Comprehensive Test Document',
+            'author': 'Test Author',
+            'subject': 'Test Subject',
+            'creator': 'Test Creator',
+            'producer': 'Test Producer',
+            'creationDate': '2023-01-01T10:00:00Z',
+            'modDate': '2023-06-01T15:30:00Z',
+            'keywords': 'test, metadata, pdf'
+        }
+        mock_doc.__len__ = Mock(return_value=10)
+        mock_fitz_open.return_value = mock_doc
+        
+        with patch('pathlib.Path.stat') as mock_stat:
+            mock_stat.return_value.st_size = 2048576
+            
+            pdf_path = Path("comprehensive.pdf")
+            metadata = self.converter.get_metadata(pdf_path)
+            
+            assert metadata is not None
+            assert metadata['title'] == 'Comprehensive Test Document'
+            assert metadata['author'] == 'Test Author'
+            assert metadata['subject'] == 'Test Subject'
+            assert metadata['creator'] == 'Test Creator'
+            assert metadata['producer'] == 'Test Producer'
+            assert metadata['creation_date'] == '2023-01-01T10:00:00Z'
+            assert metadata['modification_date'] == '2023-06-01T15:30:00Z'
+            assert metadata['keywords'] == 'test, metadata, pdf'
+            assert metadata['page_count'] == 10
+            assert metadata['file_size'] == 2048576
+        
+        mock_doc.close.assert_called_once()
+    
+    @patch('fitz.open')
+    def test_get_metadata_empty_metadata(self, mock_fitz_open):
+        """Test metadata extraction when PDF has empty metadata."""
+        mock_doc = Mock()
+        mock_doc.metadata = {}  # Empty metadata
+        mock_doc.__len__ = Mock(return_value=1)
+        mock_fitz_open.return_value = mock_doc
+        
+        with patch('pathlib.Path.stat') as mock_stat:
+            mock_stat.return_value.st_size = 512
+            
+            pdf_path = Path("empty_metadata.pdf")
+            metadata = self.converter.get_metadata(pdf_path)
+            
+            assert metadata is not None
+            assert metadata['page_count'] == 1
+            assert metadata['file_size'] == 512
+            # Empty fields should be None
+            assert metadata.get('title') is None
+            assert metadata.get('author') is None
+        
+        mock_doc.close.assert_called_once()
+    
+    @patch('fitz.open')
+    def test_get_metadata_malformed_dates(self, mock_fitz_open):
+        """Test metadata extraction with malformed dates."""
+        mock_doc = Mock()
+        mock_doc.metadata = {
+            'title': 'Test Document',
+            'creationDate': 'Invalid Date',
+            'modDate': 'Also Invalid'
+        }
+        mock_doc.__len__ = Mock(return_value=3)
+        mock_fitz_open.return_value = mock_doc
+        
+        with patch('pathlib.Path.stat') as mock_stat:
+            mock_stat.return_value.st_size = 1024
+            
+            pdf_path = Path("malformed_dates.pdf")
+            metadata = self.converter.get_metadata(pdf_path)
+            
+            assert metadata is not None
+            assert metadata['title'] == 'Test Document'
+            assert metadata['page_count'] == 3
+            # Should handle malformed dates gracefully
+            assert 'creation_date' in metadata
+            assert 'modification_date' in metadata
+        
+        mock_doc.close.assert_called_once()
+    
+    def test_get_metadata_nonexistent_file(self):
+        """Test metadata extraction from non-existent file."""
+        from pathlib import Path
+        
+        nonexistent_file = Path('/nonexistent/file.pdf')
+        metadata = self.converter.get_metadata(nonexistent_file)
+        
+        # Should return None for non-existent files
+        assert metadata is None
