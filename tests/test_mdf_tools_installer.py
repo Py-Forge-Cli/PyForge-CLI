@@ -119,7 +119,7 @@ class TestMdfToolsInstaller:
         """Test status when Docker is not installed."""
         # Mock docker.from_env to raise an exception when Docker is not available
         mock_docker_from_env.side_effect = Exception("Docker not available")
-        
+
         with patch.object(self.installer, "_is_docker_installed", return_value=False):
             status = self.installer.get_status()
 
