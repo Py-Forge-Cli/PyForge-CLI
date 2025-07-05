@@ -114,8 +114,12 @@ class TestMdfToolsInstaller:
         mock_open.assert_called_once()
         mock_json_dump.assert_called_once()
 
-    def test_get_status_no_docker(self):
+    @patch("docker.from_env")
+    def test_get_status_no_docker(self, mock_docker_from_env):
         """Test status when Docker is not installed."""
+        # Mock docker.from_env to raise an exception when Docker is not available
+        mock_docker_from_env.side_effect = Exception("Docker not available")
+        
         with patch.object(self.installer, "_is_docker_installed", return_value=False):
             status = self.installer.get_status()
 
