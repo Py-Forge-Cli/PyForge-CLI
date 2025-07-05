@@ -67,16 +67,7 @@ jobs:
       - name: Run comprehensive test suite
         run: |
           # Full test suite including PySpark, integration and slow tests
-          pytest tests/ \
-            --run-pyspark \
-            --cov=pyforge_cli \
-            --cov-report=term-missing \
-            --cov-report=xml \
-            --cov-report=html \
-            --html=pytest_html_report.html \
-            --self-contained-html \
-            -v
-            
+          pytest tests/ --run-pyspark --cov=pyforge_cli --cov-report=term-missing --cov-report=xml --cov-report=html --html=pytest_html_report.html --self-contained-html -v
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v4
