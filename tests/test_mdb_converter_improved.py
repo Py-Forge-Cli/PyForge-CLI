@@ -738,8 +738,8 @@ class TestMDBConverterImproved:
                     return type('TableInfo', (), {
                         'row_count': table_num * 100,
                         'columns': [
-                            type('Column', (), {'name': f'Col_{i}'}),
-                            type('Column', (), {'name': f'Col_{i+1}'})
+                            type('Column', (), {'name': 'Col_1'}),
+                            type('Column', (), {'name': 'Col_2'})
                         ]
                     })()
                 

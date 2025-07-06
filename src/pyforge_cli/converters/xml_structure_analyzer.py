@@ -54,6 +54,14 @@ class XmlStructureAnalyzer:
             Dictionary with structure analysis results
         """
         try:
+            # Read file content for namespace extraction (ElementTree limitation)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    self._file_content = f.read()
+            except UnicodeDecodeError:
+                with open(file_path, 'r', encoding='latin-1') as f:
+                    self._file_content = f.read()
+            
             # First, try to parse as single document
             try:
                 tree = ET.parse(file_path)
@@ -73,7 +81,7 @@ class XmlStructureAnalyzer:
                 self.root_tag = root.tag
 
                 # Analyze structure
-                self._analyze_element(root, "", 0)
+                self._analyze_element(root, "", 1)
 
                 # Detect arrays
                 self._detect_arrays()
@@ -146,7 +154,7 @@ class XmlStructureAnalyzer:
 
                     # Analyze this document's structure
                     doc_prefix = f"doc_{i+1}"
-                    self._analyze_element(root, doc_prefix, 0)
+                    self._analyze_element(root, doc_prefix, 1)
 
                     # Store individual document analysis for reference
                     doc_elements = {}
@@ -325,12 +333,29 @@ class XmlStructureAnalyzer:
     def _extract_namespaces(self, element: ET.Element) -> Dict[str, str]:
         """Extract namespace declarations from element."""
         namespaces = {}
+        
+        # First try the standard ElementTree approach
         for key, value in element.attrib.items():
             if key.startswith("xmlns:"):
                 prefix = key[6:]
                 namespaces[prefix] = value
             elif key == "xmlns":
                 namespaces[""] = value
+        
+        # If that didn't work (ElementTree limitation), fall back to regex parsing
+        if not namespaces and hasattr(self, '_file_content'):
+            import re
+            xmlns_pattern = r'xmlns:([a-zA-Z0-9_-]+)="([^"]+)"'
+            matches = re.findall(xmlns_pattern, self._file_content)
+            for prefix, uri in matches:
+                namespaces[prefix] = uri
+            
+            # Also check for default namespace
+            default_xmlns_pattern = r'xmlns="([^"]+)"'
+            default_match = re.search(default_xmlns_pattern, self._file_content)
+            if default_match:
+                namespaces[""] = default_match.group(1)
+        
         return namespaces
 
     def _analyze_element(self, element: ET.Element, parent_path: str, depth: int):
@@ -456,7 +481,7 @@ class XmlStructureAnalyzer:
             "root_tag": self.root_tag,
             "namespaces": self.namespaces,
             "max_depth": self.max_depth,
-            "total_elements": len(self.elements),
+            "total_elements": sum(elem.occurrences for elem in self.elements.values()),
             "array_elements": list(self.array_elements),
             "elements": {
                 path: {

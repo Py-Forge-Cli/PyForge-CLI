@@ -536,15 +536,18 @@ class MDBConverter(StringDatabaseConverter):
                         for table_name in table_names:
                             try:
                                 info = discovery.get_table_info(table_name)
+                                row_count = info.row_count
+                                columns = info.columns if info.columns else []
                                 table_info[table_name] = {
-                                    "row_count": info.row_count,
-                                    "column_count": len(info.columns) if info.columns else 0,
-                                    "columns": [col.name for col in info.columns] if info.columns else []
+                                    "row_count": row_count,
+                                    "column_count": len(columns),
+                                    "columns": [col.name for col in columns]
                                 }
-                                total_rows += info.row_count
-                                total_columns += len(info.columns) if info.columns else 0
+                                total_rows += row_count
+                                total_columns += len(columns)
                             except Exception as e:
-                                table_info[table_name] = {"error": str(e)}
+                                # Still count failed tables but with 0 rows
+                                table_info[table_name] = {"error": str(e), "row_count": 0, "column_count": 0}
                         
                         metadata["table_details"] = table_info
                         metadata["total_rows"] = total_rows
@@ -553,8 +556,8 @@ class MDBConverter(StringDatabaseConverter):
                         metadata["table_count"] = 0
                         metadata["error"] = "No tables found"
                     
-                    # Disconnect
-                    discovery.disconnect()
+                    # Close connection
+                    discovery.close()
                 else:
                     metadata["error"] = "Connection failed"
                     if getattr(db_info, 'is_encrypted', False):

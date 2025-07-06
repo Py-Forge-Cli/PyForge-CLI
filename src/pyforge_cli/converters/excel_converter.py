@@ -644,27 +644,59 @@ class ExcelConverter(BaseConverter):
                 "created_date": datetime.fromtimestamp(file_stats.st_ctime).isoformat(),
             }
             
-            # Open workbook in read-only mode for faster processing
+            # First, try to read properties in standard mode for better access
+            try:
+                wb_props = openpyxl.load_workbook(input_path, read_only=False)
+                
+                # Get document properties if available
+                if hasattr(wb_props, 'properties') and wb_props.properties:
+                    props = wb_props.properties
+                    metadata["title"] = getattr(props, 'title', None)
+                    metadata["author"] = getattr(props, 'creator', None)
+                    metadata["subject"] = getattr(props, 'subject', None)
+                    metadata["description"] = getattr(props, 'description', None)
+                    metadata["keywords"] = getattr(props, 'keywords', None)
+                    metadata["category"] = getattr(props, 'category', None)
+                    # Note: company property doesn't exist in openpyxl DocumentProperties
+                    metadata["company"] = None
+                    metadata["created"] = props.created.isoformat() if hasattr(props, 'created') and props.created else None
+                    metadata["modified"] = props.modified.isoformat() if hasattr(props, 'modified') and props.modified else None
+                    metadata["last_modified_by"] = getattr(props, 'lastModifiedBy', None)
+                else:
+                    # Initialize properties as None if not available
+                    metadata["title"] = None
+                    metadata["author"] = None
+                    metadata["subject"] = None
+                    metadata["description"] = None
+                    metadata["keywords"] = None
+                    metadata["category"] = None
+                    metadata["company"] = None
+                    metadata["created"] = None
+                    metadata["modified"] = None
+                    metadata["last_modified_by"] = None
+                
+                wb_props.close()
+            except Exception as e:
+                # If properties reading fails, initialize as None
+                metadata["title"] = None
+                metadata["author"] = None
+                metadata["subject"] = None
+                metadata["description"] = None
+                metadata["keywords"] = None
+                metadata["category"] = None
+                metadata["company"] = None
+                metadata["created"] = None
+                metadata["modified"] = None
+                metadata["last_modified_by"] = None
+                logger.warning(f"Could not read Excel properties: {e}")
+            
+            # Now open workbook in read-only mode for faster sheet processing
             wb = openpyxl.load_workbook(input_path, read_only=True, data_only=True)
             
             # Get sheet information
             sheet_names = wb.sheetnames
             metadata["sheet_count"] = len(sheet_names)
             metadata["sheet_names"] = sheet_names
-            
-            # Get document properties if available
-            if hasattr(wb, 'properties') and wb.properties:
-                props = wb.properties
-                metadata["title"] = getattr(props, 'title', None)
-                metadata["author"] = getattr(props, 'creator', None)
-                metadata["subject"] = getattr(props, 'subject', None)
-                metadata["description"] = getattr(props, 'description', None)
-                metadata["keywords"] = getattr(props, 'keywords', None)
-                metadata["category"] = getattr(props, 'category', None)
-                metadata["company"] = getattr(props, 'company', None)
-                metadata["created"] = props.created.isoformat() if hasattr(props, 'created') and props.created else None
-                metadata["modified"] = props.modified.isoformat() if hasattr(props, 'modified') and props.modified else None
-                metadata["last_modified_by"] = getattr(props, 'lastModifiedBy', None)
             
             # Get sheet details
             sheet_info = {}

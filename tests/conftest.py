@@ -131,12 +131,9 @@ def pytest_addoption(parser):
 
 def pytest_runtest_setup(item):
     """Skip tests based on markers and command line options."""
-    # Skip PySpark tests unless explicitly requested
-    if "pyspark" in item.keywords and not item.config.getoption("--run-pyspark"):
-        # In CI, always run PySpark tests
-        if os.environ.get("CI") != "true":
-            pytest.skip("need --run-pyspark option to run")
-
+    # PySpark tests now run by default since issues are fixed
+    # No longer skipping PySpark tests
+    
     # Skip slow tests unless explicitly requested
     if "slow" in item.keywords and not item.config.getoption("--run-slow"):
         pytest.skip("need --run-slow option to run")
