@@ -433,7 +433,9 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                 available_backends.append("pyodbc (Windows native)")
 
             if available_backends:
-                console.print(f"[OK] Available backends: {', '.join(available_backends)}")
+                console.print(
+                    f"[OK] Available backends: {', '.join(available_backends)}"
+                )
             else:
                 console.print("[FAIL] No database backends available!")
                 return False

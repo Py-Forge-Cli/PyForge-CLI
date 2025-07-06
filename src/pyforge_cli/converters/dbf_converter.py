@@ -175,7 +175,9 @@ class DBFConverter(StringDatabaseConverter):
 
         try:
             # Stage 1: Analyzing the file
-            console.print("[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file...")
+            console.print(
+                "[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file..."
+            )
 
             # Validate and detect file
             db_info = detect_database_file(input_path)
@@ -184,13 +186,17 @@ class DBFConverter(StringDatabaseConverter):
                 return False
 
             console.print(f"[OK] File format: {db_info.version}")
-            console.print(f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
+            console.print(
+                f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB"
+            )
             console.print(f"[OK] Encoding: {db_info.encoding}")
             if db_info.creation_date:
                 console.print(f"[OK] Last update: {db_info.creation_date}")
 
             # Stage 2: Listing table
-            console.print("\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing table...")
+            console.print(
+                "\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing table..."
+            )
 
             connection = self._connect_to_database(input_path)
 
@@ -215,7 +221,9 @@ class DBFConverter(StringDatabaseConverter):
                 table_info = self._get_table_info(connection, table_name)
 
                 # Stage 5: Show table overview
-                console.print("\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:")
+                console.print(
+                    "\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:"
+                )
 
                 # Create detailed info display
                 info_table = Table(title=f"DBF File Details: {table_name}")

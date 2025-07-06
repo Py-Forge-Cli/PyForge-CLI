@@ -529,7 +529,9 @@ These are minimal sample datasets created locally for testing PyForge CLI.
             import shutil
 
             shutil.rmtree(self.target_dir)
-            console.print(f"[green][OK] Datasets removed from {self.target_dir}[/green]")
+            console.print(
+                f"[green][OK] Datasets removed from {self.target_dir}[/green]"
+            )
             return True
 
         except Exception as e:

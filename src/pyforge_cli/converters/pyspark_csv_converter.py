@@ -263,7 +263,9 @@ class PySparkCSVConverter(CSVConverter):
             if options.get("verbose"):
                 self._print_native_spark_conversion_summary()
 
-            self.logger.info(f"[OK] Native Spark CSV conversion completed: {output_path}")
+            self.logger.info(
+                f"[OK] Native Spark CSV conversion completed: {output_path}"
+            )
             return True
 
         except Exception as e:

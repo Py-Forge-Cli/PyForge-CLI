@@ -164,7 +164,9 @@ class MDBConverter(StringDatabaseConverter):
 
         try:
             # Stage 1: Analyzing the file
-            console.print("[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file...")
+            console.print(
+                "[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file..."
+            )
 
             # Extract password from options
             self.password = options.get("password")
@@ -176,13 +178,17 @@ class MDBConverter(StringDatabaseConverter):
                 return False
 
             console.print(f"[OK] File format: {db_info.version}")
-            console.print(f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
+            console.print(
+                f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB"
+            )
             console.print(
                 f"[OK] Password protected: {'Yes' if db_info.is_password_protected else 'No'}"
             )
 
             # Stage 2: Listing all tables
-            console.print("\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing all tables...")
+            console.print(
+                "\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing all tables..."
+            )
 
             connection = self._connect_to_database(input_path)
 
@@ -215,7 +221,9 @@ class MDBConverter(StringDatabaseConverter):
                     total_size += info["estimated_size"]
 
                 # Stage 5: Show table overview
-                console.print("\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:")
+                console.print(
+                    "\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:"
+                )
 
                 # Create summary table (without estimated size)
                 summary_table = Table(title="Database Tables Summary")

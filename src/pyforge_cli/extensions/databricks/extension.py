@@ -422,7 +422,9 @@ class DatabricksExtension(BaseExtension):
             if result["success"]:
                 print("[OK] Sample datasets installed successfully")
             else:
-                print(f"[FAIL] Installation failed: {result.get('error', 'Unknown error')}")
+                print(
+                    f"[FAIL] Installation failed: {result.get('error', 'Unknown error')}"
+                )
 
             return result["success"]
 
