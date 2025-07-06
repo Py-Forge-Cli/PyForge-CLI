@@ -339,7 +339,7 @@ class TestExcelConverterImproved:
             sheet_details = metadata['sheet_details']
             assert len(sheet_details) > 1
 
-            for sheet_name, details in sheet_details.items():
+            for _sheet_name, details in sheet_details.items():
                 assert 'estimated_rows' in details
                 assert 'estimated_columns' in details
                 assert 'has_data' in details
@@ -367,7 +367,7 @@ class TestExcelConverterImproved:
         assert metadata['max_columns'] == 0
 
         # Check that all sheets have no data
-        for sheet_name, details in metadata['sheet_details'].items():
+        for _sheet_name, details in metadata['sheet_details'].items():
             assert details['has_data'] is False
             assert details['estimated_rows'] == 0
             assert details['estimated_columns'] == 0

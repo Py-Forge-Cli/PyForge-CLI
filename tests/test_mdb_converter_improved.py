@@ -220,11 +220,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks
                                     mock_list.return_value = ['Customers', 'Orders', 'Products']
                                     mock_read.return_value = pd.DataFrame({'col1': ['val1', 'val2'], 'col2': ['val3', 'val4']})
@@ -254,11 +254,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks
                                     mock_list.return_value = ['Customers', 'Orders', 'Products']
                                     mock_read.return_value = pd.DataFrame({'col1': ['val1'], 'col2': ['val2']})
@@ -312,11 +312,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks
                                     mock_list.return_value = ['Customers', 'Orders', 'Products']
                                     mock_read.return_value = pd.DataFrame({'col1': ['val1'], 'col2': ['val2']})
@@ -348,11 +348,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks for empty tables
                                     mock_list.return_value = list(structure['tables'].keys())
                                     mock_read.return_value = pd.DataFrame()  # Empty DataFrame
@@ -385,11 +385,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks for special names
                                     mock_list.return_value = list(structure['tables'].keys())
                                     mock_read.return_value = pd.DataFrame({'ID': [1, 2], 'Data': ['val1', 'val2']})
@@ -431,11 +431,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks
                                     mock_list.return_value = ['Customers', 'Orders', 'Products']
                                     mock_read.return_value = pd.DataFrame({'col1': ['val1'], 'col2': ['val2']})
@@ -471,11 +471,11 @@ class TestMDBConverterImproved:
                     error_message=None
                 )
 
-                with patch.object(converter, '_connect_to_database') as mock_connect:
+                with patch.object(converter, '_connect_to_database'):
                     with patch.object(converter, '_list_tables') as mock_list:
                         with patch.object(converter, '_read_table') as mock_read:
                             with patch.object(converter, '_get_table_info') as mock_get_info:
-                                with patch.object(converter, '_close_connection') as mock_close:
+                                with patch.object(converter, '_close_connection'):
                                     # Configure mocks
                                     mock_list.return_value = ['TestTable']
                                     mock_read.return_value = pd.DataFrame({'col1': ['val1'], 'col2': ['val2']})

@@ -142,7 +142,8 @@
       "Bash(gh pr create:*)",
       "Bash(gh pr checks:*)",
       "Bash(gh run view:*)",
-      "Bash(ruff check:*)"
+      "Bash(ruff check:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   },
