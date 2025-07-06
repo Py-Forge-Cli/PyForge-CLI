@@ -110,6 +110,9 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     needs: [test, security]
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pyforge-cli
     permissions:
       id-token: write
     steps:
@@ -134,24 +137,19 @@ jobs:
       - name: Show version
         run: |
           python -c "import setuptools_scm; print(f'Version: {setuptools_scm.get_version()}')"
-          echo "VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV
           
-      - name: Check if version exists on TestPyPI
-        run: |
-          pip install --upgrade pip
-          # Check if version already exists
-          if pip index versions -i https://test.pypi.org/simple/ pyforge-cli 2>/dev/null | grep -q "${{ env.VERSION }}"; then
-            echo "Version ${{ env.VERSION }} already exists on TestPyPI"
-            echo "skip_publish=true" >> $GITHUB_ENV
-          else
-            echo "Version ${{ env.VERSION }} does not exist on TestPyPI, will publish"
-            echo "skip_publish=false" >> $GITHUB_ENV
-          fi
-          
-      - name: Publish to TestPyPI
-        if: env.skip_publish == 'false'
+      - name: Publish to TestPyPI (Trusted Publishing)
+        if: vars.USE_TRUSTED_PUBLISHING == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
-          verbose: true
+          
+      - name: Publish to TestPyPI (API Token Fallback)
+        if: vars.USE_TRUSTED_PUBLISHING != 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
