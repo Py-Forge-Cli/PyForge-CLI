@@ -617,21 +617,21 @@ class ExcelConverter(BaseConverter):
     def get_output_format(self) -> str:
         """Return the output format."""
         return "parquet"
-    
+
     def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
         """
         Extract metadata from Excel file.
-        
+
         Args:
             input_path: Path to Excel file
-            
+
         Returns:
             Dictionary containing file metadata or None if extraction fails
         """
         if not HAS_OPENPYXL:
             logger.warning("Excel metadata extraction requires 'openpyxl' package")
             return None
-            
+
         try:
             # Get basic file info
             file_stats = input_path.stat()
@@ -643,11 +643,11 @@ class ExcelConverter(BaseConverter):
                 "modified_date": datetime.fromtimestamp(file_stats.st_mtime).isoformat(),
                 "created_date": datetime.fromtimestamp(file_stats.st_ctime).isoformat(),
             }
-            
+
             # First, try to read properties in standard mode for better access
             try:
                 wb_props = openpyxl.load_workbook(input_path, read_only=False)
-                
+
                 # Get document properties if available
                 if hasattr(wb_props, 'properties') and wb_props.properties:
                     props = wb_props.properties
@@ -674,7 +674,7 @@ class ExcelConverter(BaseConverter):
                     metadata["created"] = None
                     metadata["modified"] = None
                     metadata["last_modified_by"] = None
-                
+
                 wb_props.close()
             except Exception as e:
                 # If properties reading fails, initialize as None
@@ -689,50 +689,50 @@ class ExcelConverter(BaseConverter):
                 metadata["modified"] = None
                 metadata["last_modified_by"] = None
                 logger.warning(f"Could not read Excel properties: {e}")
-            
+
             # Now open workbook in read-only mode for faster sheet processing
             wb = openpyxl.load_workbook(input_path, read_only=True, data_only=True)
-            
+
             # Get sheet information
             sheet_names = wb.sheetnames
             metadata["sheet_count"] = len(sheet_names)
             metadata["sheet_names"] = sheet_names
-            
+
             # Get sheet details
             sheet_info = {}
             total_rows = 0
             total_columns = 0
-            
+
             for sheet_name in sheet_names:
                 ws = wb[sheet_name]
                 # For read-only mode, we need to estimate dimensions
                 max_row = 0
                 max_col = 0
-                
+
                 # Sample the first 1000 rows to estimate sheet size
                 for row_idx, row in enumerate(ws.iter_rows(max_row=1000), 1):
                     if any(cell.value is not None for cell in row):
                         max_row = row_idx
                         max_col = max(max_col, len([c for c in row if c.value is not None]))
-                
+
                 sheet_info[sheet_name] = {
                     "estimated_rows": max_row,
                     "estimated_columns": max_col,
                     "has_data": max_row > 0
                 }
-                
+
                 total_rows += max_row
                 total_columns = max(total_columns, max_col)
-            
+
             metadata["sheet_details"] = sheet_info
             metadata["total_estimated_rows"] = total_rows
             metadata["max_columns"] = total_columns
-            
+
             # Close workbook
             wb.close()
-            
+
             return metadata
-            
+
         except Exception as e:
             logger.error(f"Failed to extract Excel metadata: {e}")
             return None

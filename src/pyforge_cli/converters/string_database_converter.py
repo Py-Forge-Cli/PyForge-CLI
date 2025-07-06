@@ -456,15 +456,15 @@ class StringDatabaseConverter(BaseConverter):
                 "conversion_breakdown": all_conversions,
             },
         }
-    
+
     def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
         """
         Extract basic metadata from database file.
         This is a generic implementation that subclasses can override.
-        
+
         Args:
             input_path: Path to database file
-            
+
         Returns:
             Dictionary containing file metadata or None if extraction fails
         """
@@ -479,29 +479,31 @@ class StringDatabaseConverter(BaseConverter):
                 "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
                 "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
             }
-            
+
             # Try to get additional database information
             try:
                 from ..detectors.database_detector import detect_database_file
-                
+
                 db_info = detect_database_file(input_path)
-                
+
+                from ..detectors.database_detector import DatabaseType
+
                 if db_info and db_info.file_type != DatabaseType.UNKNOWN:
                     metadata["database_type"] = db_info.file_type.value
                     metadata["database_version"] = db_info.version or "Unknown"
                     metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
-                    
+
                     if db_info.error_message:
                         metadata["error"] = db_info.error_message
                 else:
                     metadata["error"] = "Could not detect database type"
-                    
+
             except Exception as e:
                 # If detection fails, just include basic metadata
                 metadata["error"] = f"Could not analyze database: {str(e)}"
-                
+
             return metadata
-            
+
         except Exception as e:
             logging.error(f"Failed to extract database metadata: {e}")
             return None

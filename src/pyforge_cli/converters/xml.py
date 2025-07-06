@@ -94,10 +94,10 @@ class XmlConverter(BaseConverter):
     def _detect_encoding(self, input_path: Path) -> str:
         """
         Detect encoding from XML declaration.
-        
+
         Args:
             input_path: Path to XML file
-            
+
         Returns:
             Detected encoding or 'UTF-8' as default
         """
@@ -105,7 +105,7 @@ class XmlConverter(BaseConverter):
             # Read first few bytes to detect encoding
             with open(input_path, 'rb') as f:
                 header = f.read(200)
-            
+
             # Decode header to check for XML declaration
             try:
                 header_str = header.decode('utf-8')
@@ -117,13 +117,13 @@ class XmlConverter(BaseConverter):
                         header_str = header.decode('latin-1')
                     except UnicodeDecodeError:
                         return 'UTF-8'
-            
+
             # Look for encoding declaration
             import re
             encoding_match = re.search(r'encoding\s*=\s*["\']([^"\']+)["\']', header_str, re.IGNORECASE)
             if encoding_match:
                 return encoding_match.group(1).upper()
-                
+
             return 'UTF-8'
         except Exception:
             return 'UTF-8'
@@ -176,14 +176,14 @@ class XmlConverter(BaseConverter):
         except Exception as e:
             error_msg = str(e)
             logger.warning(f"Could not extract XML metadata: {e}")
-            
+
             # Return None for corrupted/invalid XML files
             if any(phrase in error_msg.lower() for phrase in [
-                'not well-formed', 'invalid token', 'invalid xml', 
+                'not well-formed', 'invalid token', 'invalid xml',
                 'xml declaration not at start', 'parsing error'
             ]):
                 return None
-                
+
             # For other errors, return metadata with error info
             metadata.update(
                 {"schema_detected": False, "error": error_msg, "encoding": encoding}

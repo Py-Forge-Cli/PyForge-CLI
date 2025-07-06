@@ -616,7 +616,7 @@ class CSVConverter(BaseConverter):
                 return None
 
             file_stat = input_path.stat()
-            
+
             # Handle empty files
             if file_stat.st_size == 0:
                 return {

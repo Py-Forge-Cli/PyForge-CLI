@@ -480,14 +480,14 @@ class MDBConverter(StringDatabaseConverter):
     def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """Standard convert method - delegates to progress version"""
         return self.convert_with_progress(input_path, output_path, **options)
-    
+
     def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
         """
         Extract metadata from MDB/ACCDB file.
-        
+
         Args:
             input_path: Path to MDB/ACCDB file
-            
+
         Returns:
             Dictionary containing file metadata or None if extraction fails
         """
@@ -502,37 +502,37 @@ class MDBConverter(StringDatabaseConverter):
                 "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
                 "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
             }
-            
+
             # Detect database type and version
             db_info = detect_database_file(input_path)
-            
+
             if db_info.file_type not in [DatabaseType.MDB, DatabaseType.ACCDB]:
                 return metadata  # Return basic metadata only
-            
+
             metadata["database_type"] = db_info.file_type.value.upper()
             metadata["database_version"] = db_info.version or "Unknown"
             metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
-            
+
             # Try to get table information without full connection
             try:
                 discovery = MDBTableDiscovery()
-                
+
                 # Attempt connection
                 connection_success = discovery.connect(input_path, password=None)
-                
+
                 if connection_success:
                     # List tables
                     table_names = discovery.list_tables(include_system=False)
-                    
+
                     if table_names:
                         metadata["table_count"] = len(table_names)
                         metadata["table_names"] = table_names
-                        
+
                         # Get table details
                         table_info = {}
                         total_rows = 0
                         total_columns = 0
-                        
+
                         for table_name in table_names:
                             try:
                                 info = discovery.get_table_info(table_name)
@@ -548,27 +548,27 @@ class MDBConverter(StringDatabaseConverter):
                             except Exception as e:
                                 # Still count failed tables but with 0 rows
                                 table_info[table_name] = {"error": str(e), "row_count": 0, "column_count": 0}
-                        
+
                         metadata["table_details"] = table_info
                         metadata["total_rows"] = total_rows
                         metadata["total_columns"] = total_columns
                     else:
                         metadata["table_count"] = 0
                         metadata["error"] = "No tables found"
-                    
+
                     # Close connection
                     discovery.close()
                 else:
                     metadata["error"] = "Connection failed"
                     if getattr(db_info, 'is_encrypted', False):
                         metadata["error"] = "Database is password protected"
-                        
+
             except Exception as e:
                 # If we can't connect, just include basic metadata
                 metadata["error"] = f"Could not read database structure: {str(e)}"
-                
+
             return metadata
-            
+
         except Exception as e:
             logging.error(f"Failed to extract MDB metadata: {e}")
             return None
