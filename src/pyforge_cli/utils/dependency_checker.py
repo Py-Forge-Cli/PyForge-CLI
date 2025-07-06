@@ -271,19 +271,19 @@ class DependencyChecker:
         ucanaccess = capabilities["backends"]["ucanaccess"]
         print("UCanAccess Backend (Cross-platform):")
         print(
-            f"  Overall: {'✓ Available' if ucanaccess['available'] else '✗ Not Available'}"
+            f"  Overall: {'[OK] Available' if ucanaccess['available'] else '[FAIL] Not Available'}"
         )
         print(
-            f"  Java: {'✓' if ucanaccess['java']['available'] else '✗'} {ucanaccess['java']['version'] or 'Not found'}"
+            f"  Java: {'[OK]' if ucanaccess['java']['available'] else '[FAIL]'} {ucanaccess['java']['version'] or 'Not found'}"
         )
         print(
-            f"  JayDeBeApi: {'✓' if ucanaccess['jaydebeapi']['available'] else '✗'} {ucanaccess['jaydebeapi']['version'] or 'Not installed'}"
+            f"  JayDeBeApi: {'[OK]' if ucanaccess['jaydebeapi']['available'] else '[FAIL]'} {ucanaccess['jaydebeapi']['version'] or 'Not installed'}"
         )
         print(
-            f"  JPype1: {'✓' if ucanaccess['jpype']['available'] else '✗'} {ucanaccess['jpype']['version'] or 'Not installed'}"
+            f"  JPype1: {'[OK]' if ucanaccess['jpype']['available'] else '[FAIL]'} {ucanaccess['jpype']['version'] or 'Not installed'}"
         )
         print(
-            f"  JAR: {'✓' if ucanaccess['jar']['available'] else '✗'} {'Available' if ucanaccess['jar']['available'] else 'Will download on first use'}"
+            f"  JAR: {'[OK]' if ucanaccess['jar']['available'] else '[FAIL]'} {'Available' if ucanaccess['jar']['available'] else 'Will download on first use'}"
         )
         print()
 
@@ -291,17 +291,17 @@ class DependencyChecker:
         pyodbc = capabilities["backends"]["pyodbc"]
         print("pyodbc Backend (Windows only):")
         print(
-            f"  Overall: {'✓ Available' if pyodbc['available'] else '✗ Not Available'}"
+            f"  Overall: {'[OK] Available' if pyodbc['available'] else '[FAIL] Not Available'}"
         )
         print(
-            f"  pyodbc: {'✓' if pyodbc['pyodbc']['available'] else '✗'} {pyodbc['pyodbc']['version'] or 'Not installed'}"
+            f"  pyodbc: {'[OK]' if pyodbc['pyodbc']['available'] else '[FAIL]'} {pyodbc['pyodbc']['version'] or 'Not installed'}"
         )
         if pyodbc["drivers"]["available"]:
             print(
-                f"  Access Drivers: ✓ {', '.join(pyodbc['drivers']['access_drivers'])}"
+                f"  Access Drivers: [OK] {', '.join(pyodbc['drivers']['access_drivers'])}"
             )
         else:
-            print("  Access Drivers: ✗ Not found")
+            print("  Access Drivers: [FAIL] Not found")
         print()
 
         # Installation instructions

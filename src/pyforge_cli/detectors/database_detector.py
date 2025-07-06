@@ -371,19 +371,19 @@ class DatabaseFileDetector:
     def format_file_info(self, info: DatabaseInfo) -> str:
         """Format DatabaseInfo for display"""
         if info.error_message:
-            return f"❌ Error: {info.error_message}"
+            return f"[FAIL] Error: {info.error_message}"
 
         lines = [
-            f"📁 File Type: {info.file_type.value.upper()}",
-            f"🔧 Version: {info.version or 'Unknown'}",
-            f"🔒 Password Protected: {'Yes' if info.is_password_protected else 'No'}",
-            f"📊 Estimated Size: {info.estimated_size:,} bytes",
-            f"📋 Estimated Tables: {info.estimated_tables}",
-            f"🔤 Encoding: {info.encoding or 'Unknown'}",
+            f"[FILE] File Type: {info.file_type.value.upper()}",
+            f"[CONFIG] Version: {info.version or 'Unknown'}",
+            f"[LOCK] Password Protected: {'Yes' if info.is_password_protected else 'No'}",
+            f"[DATA] Estimated Size: {info.estimated_size:,} bytes",
+            f"[LIST] Estimated Tables: {info.estimated_tables}",
+            f"[TEXT] Encoding: {info.encoding or 'Unknown'}",
         ]
 
         if info.creation_date:
-            lines.append(f"📅 Creation Date: {info.creation_date}")
+            lines.append(f"[DATE] Creation Date: {info.creation_date}")
 
         return "\n".join(lines)
 

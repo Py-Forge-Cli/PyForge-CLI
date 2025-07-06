@@ -127,7 +127,7 @@ class MDBTableDiscovery:
                         connection_type=method_name,
                         is_password_protected=password is not None,
                     )
-                    self.logger.info(f"✓ Connected using {method_name}")
+                    self.logger.info(f"[OK] Connected using {method_name}")
                     return True
 
             except Exception as e:

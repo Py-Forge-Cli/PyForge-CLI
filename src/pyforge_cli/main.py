@@ -663,9 +663,9 @@ def list_extensions(ctx):
         # Format status with color
         status = info["state"]
         if status == "loaded":
-            status_str = "[green]✓ Loaded[/green]"
+            status_str = "[green][OK] Loaded[/green]"
         elif status == "failed":
-            status_str = "[red]✗ Failed[/red]"
+            status_str = "[red][FAIL] Failed[/red]"
         elif status == "disabled":
             status_str = "[yellow]- Disabled[/yellow]"
         else:
@@ -829,9 +829,9 @@ def validate(input_file):
         # Validate multiple files in a script
         for file in *.pdf; do
             if cortexpy validate "$file" >/dev/null 2>&1; then
-                echo "✓ $file is valid"
+                echo "[OK] $file is valid"
             else
-                echo "✗ $file is invalid"
+                echo "[FAIL] $file is invalid"
             fi
         done
 
@@ -849,10 +849,10 @@ def validate(input_file):
     \b
     OUTPUT:
         Valid file:
-        ✓ document.pdf is a valid PDF file
+        [OK] document.pdf is a valid PDF file
 
         Invalid file:
-        ✗ corrupted.pdf is not a valid PDF file
+        [FAIL] corrupted.pdf is not a valid PDF file
 
     \b
     NOTES:
@@ -873,11 +873,11 @@ def validate(input_file):
 
     if is_valid:
         console.print(
-            f"[green]✓ {input_file.name} is a valid {input_file.suffix.upper()} file[/green]"
+            f"[green][OK] {input_file.name} is a valid {input_file.suffix.upper()} file[/green]"
         )
     else:
         console.print(
-            f"[red]✗ {input_file.name} is not a valid {input_file.suffix.upper()} file[/red]"
+            f"[red][FAIL] {input_file.name} is not a valid {input_file.suffix.upper()} file[/red]"
         )
         raise click.Abort()
 
@@ -1239,7 +1239,7 @@ def status():
     status_table.add_column("Details", style="dim")
 
     def format_status(is_ok: bool) -> str:
-        return "[green]✓ OK[/green]" if is_ok else "[red]✗ FAIL[/red]"
+        return "[green][OK] OK[/green]" if is_ok else "[red][FAIL] FAIL[/red]"
 
     status_table.add_row(
         "Docker Installed",
@@ -1312,11 +1312,11 @@ def status():
 
     if all_ok:
         console.print(
-            "\n[bold green]✅ All systems operational - ready for MDF processing![/bold green]"
+            "\n[bold green][OK] All systems operational - ready for MDF processing![/bold green]"
         )
     else:
         console.print(
-            "\n[bold red]❌ System not ready - see status above for issues[/bold red]"
+            "\n[bold red][FAIL] System not ready - see status above for issues[/bold red]"
         )
 
 
@@ -1417,11 +1417,11 @@ def test():
 
     installer = MdfToolsInstaller()
 
-    console.print("🔍 Testing SQL Server connection...")
+    console.print("[ANALYZE] Testing SQL Server connection...")
 
     if not DOCKER_AVAILABLE:
         console.print(
-            "[red]❌ Docker SDK not available. Run 'pyforge install mdf-tools' first.[/red]"
+            "[red][FAIL] Docker SDK not available. Run 'pyforge install mdf-tools' first.[/red]"
         )
         return
 
@@ -1431,13 +1431,13 @@ def test():
         installer.docker_client = docker.from_env()
 
         if installer._test_sql_connection():
-            console.print("[green]✅ SQL Server connection successful![/green]")
+            console.print("[green][OK] SQL Server connection successful![/green]")
         else:
-            console.print("[red]❌ SQL Server connection failed[/red]")
+            console.print("[red][FAIL] SQL Server connection failed[/red]")
             console.print("Try: pyforge mdf-tools restart")
 
     except Exception as e:
-        console.print(f"[red]❌ Connection test failed: {e}[/red]")
+        console.print(f"[red][FAIL] Connection test failed: {e}[/red]")
 
 
 @mdf_tools.command()

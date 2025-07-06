@@ -420,9 +420,9 @@ class DatabricksExtension(BaseExtension):
             result = forge.install_sample_datasets(volume_path)
 
             if result["success"]:
-                print("✅ Sample datasets installed successfully")
+                print("[OK] Sample datasets installed successfully")
             else:
-                print(f"❌ Installation failed: {result.get('error', 'Unknown error')}")
+                print(f"[FAIL] Installation failed: {result.get('error', 'Unknown error')}")
 
             return result["success"]
 
@@ -457,26 +457,26 @@ class DatabricksExtension(BaseExtension):
             print("=" * 50)
 
             if env_info["is_databricks"]:
-                print("✅ Running in Databricks")
+                print("[OK] Running in Databricks")
                 print(f"   Compute Type: {env_info['compute_type']}")
                 print(f"   Runtime Version: {env_info['runtime_version']}")
                 print(f"   Spark Version: {env_info['spark_version']}")
                 print(f"   Python Version: {env_info['python_version']}")
                 print(
-                    f"   Unity Catalog: {'✅' if env_info['has_unity_catalog'] else '❌'}"
+                    f"   Unity Catalog: {'[OK]' if env_info['has_unity_catalog'] else '[FAIL]'}"
                 )
                 print(
-                    f"   PySpark Available: {'✅' if env_info['has_pyspark'] else '❌'}"
+                    f"   PySpark Available: {'[OK]' if env_info['has_pyspark'] else '[FAIL]'}"
                 )
 
                 if env_info["compute_type"] == "serverless":
                     print("\nServerless Features:")
                     features = env_info.get("serverless_features", {})
                     for feature, enabled in features.items():
-                        status = "✅" if enabled else "❌"
+                        status = "[OK]" if enabled else "[FAIL]"
                         print(f"   {feature}: {status}")
             else:
-                print("❌ Not running in Databricks")
+                print("[FAIL] Not running in Databricks")
                 print("   Running in local/standard environment")
 
             return True
@@ -497,7 +497,7 @@ class DatabricksExtension(BaseExtension):
             valid, error = self.volume_ops.validate_volume_access(volume_path)
 
             if valid:
-                print("✅ Volume is accessible")
+                print("[OK] Volume is accessible")
 
                 # Get Volume metadata
                 volume_info = self.volume_ops.get_volume_metadata(volume_path)
@@ -511,7 +511,7 @@ class DatabricksExtension(BaseExtension):
                             f"   Type: {'Managed' if volume_info.is_managed else 'External'}"
                         )
             else:
-                print(f"❌ Volume validation failed: {error}")
+                print(f"[FAIL] Volume validation failed: {error}")
 
             return valid
 

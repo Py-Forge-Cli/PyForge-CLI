@@ -219,7 +219,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
                 f.write(readme_content)
 
             console.print(
-                f"[green]✓ Created minimal sample datasets in {self.target_dir}[/green]"
+                f"[green][OK] Created minimal sample datasets in {self.target_dir}[/green]"
             )
             console.print(
                 "[dim]Basic CSV and XML samples are now available for testing.[/dim]"
@@ -389,7 +389,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
 
                 progress.remove_task(file_task)
 
-        console.print(f"[green]✅ Downloaded {len(downloaded_files)} files[/green]")
+        console.print(f"[green][OK] Downloaded {len(downloaded_files)} files[/green]")
 
         # Extract ZIP files
         zip_files = [f for f in downloaded_files if f.suffix == ".zip"]
@@ -420,7 +420,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
             except Exception as e:
                 console.print(f"[yellow]Could not read manifest: {e}[/yellow]")
 
-        console.print("[bold green]🎉 Installation complete![/bold green]")
+        console.print("[bold green][SUCCESS] Installation complete![/bold green]")
         console.print(f"[dim]Datasets installed to: {self.target_dir}[/dim]")
 
         return True
@@ -428,7 +428,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
     def _display_installation_summary(self, manifest: Dict) -> None:
         """Display installation summary from manifest."""
 
-        console.print("\n[bold]📊 Installation Summary[/bold]")
+        console.print("\n[bold][CHART] Installation Summary[/bold]")
 
         # Overall stats
         summary = manifest.get("summary", {})
@@ -456,7 +456,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
             console.print(format_table)
 
         # Quick start examples
-        console.print("\n[bold]🚀 Quick Start Examples[/bold]")
+        console.print("\n[bold][START] Quick Start Examples[/bold]")
         console.print("[dim]Try converting some datasets:[/dim]")
 
         if formats.get("pdf", {}).get("file_count", 0) > 0:
@@ -529,7 +529,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
             import shutil
 
             shutil.rmtree(self.target_dir)
-            console.print(f"[green]✅ Datasets removed from {self.target_dir}[/green]")
+            console.print(f"[green][OK] Datasets removed from {self.target_dir}[/green]")
             return True
 
         except Exception as e:

@@ -164,7 +164,7 @@ class MDBConverter(StringDatabaseConverter):
 
         try:
             # Stage 1: Analyzing the file
-            console.print("🔍 [bold blue]Stage 1:[/bold blue] Analyzing the file...")
+            console.print("[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file...")
 
             # Extract password from options
             self.password = options.get("password")
@@ -172,17 +172,17 @@ class MDBConverter(StringDatabaseConverter):
             # Validate and detect file
             db_info = detect_database_file(input_path)
             if db_info.error_message:
-                console.print(f"❌ [red]Error:[/red] {db_info.error_message}")
+                console.print(f"[FAIL] [red]Error:[/red] {db_info.error_message}")
                 return False
 
-            console.print(f"✓ File format: {db_info.version}")
-            console.print(f"✓ File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
+            console.print(f"[OK] File format: {db_info.version}")
+            console.print(f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
             console.print(
-                f"✓ Password protected: {'Yes' if db_info.is_password_protected else 'No'}"
+                f"[OK] Password protected: {'Yes' if db_info.is_password_protected else 'No'}"
             )
 
             # Stage 2: Listing all tables
-            console.print("\n📋 [bold blue]Stage 2:[/bold blue] Listing all tables...")
+            console.print("\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing all tables...")
 
             connection = self._connect_to_database(input_path)
 
@@ -191,16 +191,16 @@ class MDBConverter(StringDatabaseConverter):
 
                 if not tables:
                     console.print(
-                        "⚠️ [yellow]Warning:[/yellow] No user tables found in database"
+                        "[WARN] [yellow]Warning:[/yellow] No user tables found in database"
                     )
                     return True
 
                 # Stage 3: Found number of tables
-                console.print(f"✓ Found {len(tables)} user tables")
+                console.print(f"[OK] Found {len(tables)} user tables")
 
                 # Stage 4: Extracting summary
                 console.print(
-                    "\n📊 [bold blue]Stage 3:[/bold blue] Extracting summary..."
+                    "\n[CHART] [bold blue]Stage 3:[/bold blue] Extracting summary..."
                 )
 
                 # Get table info for all tables
@@ -215,7 +215,7 @@ class MDBConverter(StringDatabaseConverter):
                     total_size += info["estimated_size"]
 
                 # Stage 5: Show table overview
-                console.print("\n📈 [bold blue]Stage 4:[/bold blue] Table Overview:")
+                console.print("\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:")
 
                 # Create summary table (without estimated size)
                 summary_table = Table(title="Database Tables Summary")
@@ -239,7 +239,7 @@ class MDBConverter(StringDatabaseConverter):
 
                 # Stage 6: Convert tables
                 console.print(
-                    "\n🔄 [bold blue]Stage 5:[/bold blue] Converting tables to Parquet..."
+                    "\n[CONVERT] [bold blue]Stage 5:[/bold blue] Converting tables to Parquet..."
                 )
 
                 # Create output directory
@@ -274,7 +274,7 @@ class MDBConverter(StringDatabaseConverter):
 
                             if df.empty:
                                 console.print(
-                                    f"⚠️ Table {table_name} is empty, skipping..."
+                                    f"[WARN] Table {table_name} is empty, skipping..."
                                 )
                                 continue
 
@@ -300,7 +300,7 @@ class MDBConverter(StringDatabaseConverter):
                             )
 
                             console.print(
-                                f"✓ {table_name}: {record_count:,} records → {output_file.name}"
+                                f"[OK] {table_name}: {record_count:,} records → {output_file.name}"
                             )
 
                             # Memory cleanup for large datasets
@@ -311,7 +311,7 @@ class MDBConverter(StringDatabaseConverter):
                             gc.collect()
 
                         except Exception as e:
-                            console.print(f"❌ Failed to convert {table_name}: {e}")
+                            console.print(f"[FAIL] Failed to convert {table_name}: {e}")
                             continue
 
                     # Complete progress
@@ -320,14 +320,14 @@ class MDBConverter(StringDatabaseConverter):
                 # Stage 6: Final summary and Excel report generation
                 if converted_files:
                     console.print(
-                        "\n📑 [bold blue]Stage 6:[/bold blue] Conversion Summary:"
+                        "\n[DOCUMENT] [bold blue]Stage 6:[/bold blue] Conversion Summary:"
                     )
 
                     total_converted_records = sum(f["records"] for f in converted_files)
                     total_output_size = sum(f["size_mb"] for f in converted_files)
 
                     console.print(
-                        "✅ [green]Conversion completed successfully![/green]"
+                        "[OK] [green]Conversion completed successfully![/green]"
                     )
                     console.print(f"• Files created: {len(converted_files)}")
                     console.print(f"• Records converted: {total_converted_records:,}")
@@ -343,7 +343,7 @@ class MDBConverter(StringDatabaseConverter):
 
                     # Generate Excel report
                     console.print(
-                        "\n📊 [bold blue]Generating Excel Report...[/bold blue]"
+                        "\n[CHART] [bold blue]Generating Excel Report...[/bold blue]"
                     )
                     try:
                         excel_path = self._generate_excel_report(
@@ -353,14 +353,14 @@ class MDBConverter(StringDatabaseConverter):
                             converted_files,
                             connection,
                         )
-                        console.print(f"✅ Excel report created: {excel_path.name}")
+                        console.print(f"[OK] Excel report created: {excel_path.name}")
                     except Exception as e:
                         console.print(
-                            f"⚠️ [yellow]Warning: Could not generate Excel report: {e}[/yellow]"
+                            f"[WARN] [yellow]Warning: Could not generate Excel report: {e}[/yellow]"
                         )
                 else:
                     console.print(
-                        "⚠️ [yellow]No tables were successfully converted[/yellow]"
+                        "[WARN] [yellow]No tables were successfully converted[/yellow]"
                     )
 
                 return len(converted_files) > 0
@@ -369,7 +369,7 @@ class MDBConverter(StringDatabaseConverter):
                 self._close_connection(connection)
 
         except Exception as e:
-            console.print(f"❌ [red]Conversion failed:[/red] {e}")
+            console.print(f"[FAIL] [red]Conversion failed:[/red] {e}")
             self.logger.error(f"MDB conversion failed: {e}")
             return False
 

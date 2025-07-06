@@ -73,15 +73,15 @@ class PySparkCSVConverter(CSVConverter):
             if self.is_databricks:
                 if self.databricks_env.is_serverless():
                     self.logger.info(
-                        "✓ Databricks serverless environment detected - will use PySpark"
+                        "[OK] Databricks serverless environment detected - will use PySpark"
                     )
                 else:
                     self.logger.info(
-                        "✓ Databricks cluster environment detected - will use PySpark"
+                        "[OK] Databricks cluster environment detected - will use PySpark"
                     )
             else:
                 self.logger.info(
-                    "⚠️  Not in Databricks environment - will use pandas unless --force-pyspark"
+                    "[WARN]  Not in Databricks environment - will use pandas unless --force-pyspark"
                 )
 
         except ImportError:
@@ -127,19 +127,19 @@ class PySparkCSVConverter(CSVConverter):
                 if self.is_databricks:
                     if self.databricks_env.is_serverless():
                         self.console.print(
-                            "[green]🚀 Databricks Serverless detected - using PySpark distributed processing[/green]"
+                            "[green][START] Databricks Serverless detected - using PySpark distributed processing[/green]"
                         )
                     else:
                         self.console.print(
-                            "[green]🚀 Databricks Cluster detected - using PySpark distributed processing[/green]"
+                            "[green][START] Databricks Cluster detected - using PySpark distributed processing[/green]"
                         )
                 elif file_size_mb > 500:
                     self.console.print(
-                        f"[green]📊 Large file detected ({file_size_mb:.1f}MB > 500MB) - using native Spark for optimal performance[/green]"
+                        f"[green][DATA] Large file detected ({file_size_mb:.1f}MB > 500MB) - using native Spark for optimal performance[/green]"
                     )
                 else:
                     self.console.print(
-                        "[yellow]🔧 Local PySpark mode (--force-pyspark enabled)[/yellow]"
+                        "[yellow][CONFIG] Local PySpark mode (--force-pyspark enabled)[/yellow]"
                     )
 
                 # For large files, use native Spark session if in Databricks
@@ -155,11 +155,11 @@ class PySparkCSVConverter(CSVConverter):
                 # Fall back to pandas-based conversion
                 if options.get("verbose"):
                     self.console.print(
-                        f"[yellow]📊 Using pandas for CSV conversion ({file_size_mb:.1f}MB file)[/yellow]"
+                        f"[yellow][DATA] Using pandas for CSV conversion ({file_size_mb:.1f}MB file)[/yellow]"
                     )
                     if self.pyspark_available:
                         self.console.print(
-                            "[dim]💡 Tip: Files >500MB automatically use Spark, or use --force-pyspark for any size[/dim]"
+                            "[dim][TIP] Tip: Files >500MB automatically use Spark, or use --force-pyspark for any size[/dim]"
                         )
                 return super().convert(input_path, output_path, **options)
 
@@ -263,7 +263,7 @@ class PySparkCSVConverter(CSVConverter):
             if options.get("verbose"):
                 self._print_native_spark_conversion_summary()
 
-            self.logger.info(f"✓ Native Spark CSV conversion completed: {output_path}")
+            self.logger.info(f"[OK] Native Spark CSV conversion completed: {output_path}")
             return True
 
         except Exception as e:
@@ -379,7 +379,7 @@ class PySparkCSVConverter(CSVConverter):
             if options.get("verbose"):
                 self._print_pyspark_conversion_summary()
 
-            self.logger.info(f"✓ PySpark CSV conversion completed: {output_path}")
+            self.logger.info(f"[OK] PySpark CSV conversion completed: {output_path}")
             return True
 
         except ImportError as e:

@@ -51,7 +51,7 @@ class DualBackendMDBReader:
                     self.backend_name = "UCanAccess"
                     self._connection_info = ucanaccess.get_connection_info()
 
-                    self.logger.info("✓ Connected using UCanAccess (cross-platform)")
+                    self.logger.info("[OK] Connected using UCanAccess (cross-platform)")
                     return True
                 else:
                     connection_attempts.append(("UCanAccess", "Connection failed"))
@@ -77,7 +77,7 @@ class DualBackendMDBReader:
                     self.backend_name = "pyodbc"
                     self._connection_info = pyodbc_backend.get_connection_info()
 
-                    self.logger.info("✓ Connected using pyodbc (Windows native)")
+                    self.logger.info("[OK] Connected using pyodbc (Windows native)")
                     return True
                 else:
                     connection_attempts.append(("pyodbc", "Connection failed"))

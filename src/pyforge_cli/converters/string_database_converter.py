@@ -367,7 +367,7 @@ class StringDatabaseConverter(BaseConverter):
                         self.conversion_stats.append(self.string_converter.stats)
 
                         self.logger.info(
-                            f"✓ Converted {table_name}: {len(df)} records -> {output_file}"
+                            f"[OK] Converted {table_name}: {len(df)} records -> {output_file}"
                         )
 
                     except Exception as e:

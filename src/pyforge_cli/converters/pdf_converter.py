@@ -87,7 +87,7 @@ class PDFConverter(BaseConverter):
 
             # Show success message
             self.console.print(
-                f"[green]✓ Successfully converted {input_path.name} to {output_path.name}[/green]"
+                f"[green][OK] Successfully converted {input_path.name} to {output_path.name}[/green]"
             )
             self.console.print(f"[dim]Pages processed: {len(pages_to_process)}[/dim]")
             self.console.print(

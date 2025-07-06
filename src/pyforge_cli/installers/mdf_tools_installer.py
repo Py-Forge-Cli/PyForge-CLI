@@ -109,26 +109,26 @@ class MdfToolsInstaller:
         version = platform.release()
 
         if system == "Darwin":  # macOS
-            self.console.print(f"✓ Operating System: macOS {version} (supported)")
+            self.console.print(f"[OK] Operating System: macOS {version} (supported)")
         elif system == "Windows":
-            self.console.print(f"✓ Operating System: Windows {version} (supported)")
+            self.console.print(f"[OK] Operating System: Windows {version} (supported)")
         elif system == "Linux":
-            self.console.print(f"✓ Operating System: Linux {version} (supported)")
+            self.console.print(f"[OK] Operating System: Linux {version} (supported)")
         else:
-            self.console.print(f"❌ Operating System: {system} (not supported)")
+            self.console.print(f"[FAIL] Operating System: {system} (not supported)")
             return False
 
         # Check Docker Desktop installation (system level)
         docker_installed = self._is_docker_installed()
         if docker_installed:
-            self.console.print("✓ Docker Desktop: Installed")
+            self.console.print("[OK] Docker Desktop: Installed")
         else:
-            self.console.print("❌ Docker Desktop: Not found")
+            self.console.print("[FAIL] Docker Desktop: Not found")
 
         # Check if Docker SDK is available (Python package)
         global DOCKER_AVAILABLE
         if not DOCKER_AVAILABLE:
-            self.console.print("❌ Docker SDK for Python: Not installed")
+            self.console.print("[FAIL] Docker SDK for Python: Not installed")
             if docker_installed:
                 # Only install SDK if Docker Desktop exists
                 self.console.print(
@@ -142,16 +142,16 @@ class MdfToolsInstaller:
                     import docker
 
                     DOCKER_AVAILABLE = True
-                    self.console.print("✓ Docker SDK for Python: Installed")
+                    self.console.print("[OK] Docker SDK for Python: Installed")
                 except Exception as e:
-                    self.console.print(f"❌ Failed to install Docker SDK: {e}")
+                    self.console.print(f"[FAIL] Failed to install Docker SDK: {e}")
                     return False
             else:
                 self.console.print(
-                    "⚠️ Docker SDK installation skipped (Docker Desktop required first)"
+                    "[WARN] Docker SDK installation skipped (Docker Desktop required first)"
                 )
         else:
-            self.console.print("✓ Docker SDK for Python: Available")
+            self.console.print("[OK] Docker SDK for Python: Available")
 
         return True
 
@@ -238,15 +238,15 @@ class MdfToolsInstaller:
             try:
                 self.docker_client = docker.from_env()
                 self.docker_client.ping()
-                self.console.print("✓ Docker Desktop is running")
+                self.console.print("[OK] Docker Desktop is running")
                 return True
             except Exception:
                 if attempt == 0:
-                    self.console.print("⏳ Waiting for Docker daemon to start...")
+                    self.console.print("[WAIT] Waiting for Docker daemon to start...")
 
                 time.sleep(10)
 
-        self.console.print("❌ Docker daemon is not responding")
+        self.console.print("[FAIL] Docker daemon is not responding")
         self.console.print("Please ensure Docker Desktop is installed and running.")
         return False
 
@@ -261,15 +261,15 @@ class MdfToolsInstaller:
             existing_container = self._get_existing_container()
             if existing_container:
                 if existing_container.status == "running":
-                    self.console.print("✓ SQL Server container already running")
+                    self.console.print("[OK] SQL Server container already running")
                     return self._test_sql_connection()
                 else:
-                    self.console.print("⚠️ Existing container found, restarting...")
+                    self.console.print("[WARN] Existing container found, restarting...")
                     existing_container.start()
                     return self._wait_for_sql_server()
 
             # Pull SQL Server image
-            self.console.print(f"📥 Pulling SQL Server image: {self.sql_image}")
+            self.console.print(f"[DOWN] Pulling SQL Server image: {self.sql_image}")
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
@@ -277,17 +277,17 @@ class MdfToolsInstaller:
             ) as progress:
                 task = progress.add_task("Downloading SQL Server image...", total=None)
                 self.docker_client.images.pull(self.sql_image)
-                progress.update(task, description="✓ SQL Server image downloaded")
+                progress.update(task, description="[OK] SQL Server image downloaded")
 
             # Create and start container
-            self.console.print("🚀 Creating SQL Server container...")
+            self.console.print("[START] Creating SQL Server container...")
             self._create_sql_container()
 
             # Wait for SQL Server to be ready
             return self._wait_for_sql_server()
 
         except Exception as e:
-            self.console.print(f"❌ Failed to setup SQL Server: {e}")
+            self.console.print(f"[FAIL] Failed to setup SQL Server: {e}")
             return False
 
     def _complete_installation(self) -> None:
@@ -393,7 +393,7 @@ class MdfToolsInstaller:
                 subprocess.run(["brew", "--version"], check=True, capture_output=True)
             except (subprocess.CalledProcessError, FileNotFoundError):
                 self.console.print(
-                    "❌ Homebrew not found. Please install Homebrew first:"
+                    "[FAIL] Homebrew not found. Please install Homebrew first:"
                 )
                 self.console.print(
                     '   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
@@ -403,7 +403,7 @@ class MdfToolsInstaller:
             try:
                 # Install Docker Desktop using Homebrew
                 self.console.print(
-                    "📦 Installing Docker Desktop (this may take several minutes)..."
+                    "[INSTALL] Installing Docker Desktop (this may take several minutes)..."
                 )
                 subprocess.run(
                     ["brew", "install", "--cask", "docker"],
@@ -413,8 +413,8 @@ class MdfToolsInstaller:
                     timeout=600,  # 10 minute timeout
                 )
 
-                self.console.print("✅ Docker Desktop installed successfully!")
-                self.console.print("🚀 Launching Docker Desktop...")
+                self.console.print("[OK] Docker Desktop installed successfully!")
+                self.console.print("[START] Launching Docker Desktop...")
 
                 # Launch Docker Desktop
                 subprocess.run(["open", "-a", "Docker"], check=False)
@@ -423,11 +423,11 @@ class MdfToolsInstaller:
 
             except subprocess.TimeoutExpired:
                 self.console.print(
-                    "❌ Installation timed out. Please try manual installation."
+                    "[FAIL] Installation timed out. Please try manual installation."
                 )
                 return False
             except subprocess.CalledProcessError as e:
-                self.console.print(f"❌ Installation failed: {e.stderr}")
+                self.console.print(f"[FAIL] Installation failed: {e.stderr}")
                 self.console.print(
                     "Falling back to manual installation instructions..."
                 )
@@ -444,7 +444,7 @@ class MdfToolsInstaller:
                 subprocess.run(["winget", "--version"], check=True, capture_output=True)
             except (subprocess.CalledProcessError, FileNotFoundError):
                 self.console.print(
-                    "❌ Winget not found. Please use manual installation."
+                    "[FAIL] Winget not found. Please use manual installation."
                 )
                 self._show_docker_installation_instructions()
                 return self._wait_for_docker_installation()
@@ -452,7 +452,7 @@ class MdfToolsInstaller:
             try:
                 # Install Docker Desktop using Winget
                 self.console.print(
-                    "📦 Installing Docker Desktop (this may take several minutes)..."
+                    "[INSTALL] Installing Docker Desktop (this may take several minutes)..."
                 )
                 subprocess.run(
                     ["winget", "install", "Docker.DockerDesktop"],
@@ -462,9 +462,9 @@ class MdfToolsInstaller:
                     timeout=600,  # 10 minute timeout
                 )
 
-                self.console.print("✅ Docker Desktop installed successfully!")
+                self.console.print("[OK] Docker Desktop installed successfully!")
                 self.console.print(
-                    "⚠️ Please restart your computer and then launch Docker Desktop manually."
+                    "[WARN] Please restart your computer and then launch Docker Desktop manually."
                 )
 
                 try:
@@ -480,11 +480,11 @@ class MdfToolsInstaller:
 
             except subprocess.TimeoutExpired:
                 self.console.print(
-                    "❌ Installation timed out. Please try manual installation."
+                    "[FAIL] Installation timed out. Please try manual installation."
                 )
                 return False
             except subprocess.CalledProcessError as e:
-                self.console.print(f"❌ Installation failed: {e.stderr}")
+                self.console.print(f"[FAIL] Installation failed: {e.stderr}")
                 self.console.print(
                     "Falling back to manual installation instructions..."
                 )
@@ -495,7 +495,7 @@ class MdfToolsInstaller:
 
     def _wait_for_docker_startup(self) -> bool:
         """Wait for Docker Desktop to start up after installation"""
-        self.console.print("\n⏳ Waiting for Docker Desktop to start...")
+        self.console.print("\n[WAIT] Waiting for Docker Desktop to start...")
 
         max_attempts = 18  # 3 minutes with 10-second intervals
         for attempt in range(max_attempts):
@@ -505,7 +505,7 @@ class MdfToolsInstaller:
                     subprocess.run(
                         ["docker", "info"], check=True, capture_output=True, timeout=5
                     )
-                    self.console.print("✅ Docker Desktop is running!")
+                    self.console.print("[OK] Docker Desktop is running!")
                     return True
                 except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
                     pass
@@ -514,7 +514,7 @@ class MdfToolsInstaller:
                 time.sleep(10)
 
         self.console.print(
-            "⚠️ Docker Desktop may still be starting. Please ensure it's running and try again."
+            "[WARN] Docker Desktop may still be starting. Please ensure it's running and try again."
         )
         return False
 
@@ -528,11 +528,11 @@ class MdfToolsInstaller:
             try:
                 if Confirm.ask("Have you completed the Docker installation?"):
                     if self._is_docker_installed():
-                        self.console.print("✓ Docker installation detected")
+                        self.console.print("[OK] Docker installation detected")
                         return True
                     else:
                         self.console.print(
-                            "❌ Docker not detected. Please ensure it's properly installed."
+                            "[FAIL] Docker not detected. Please ensure it's properly installed."
                         )
                         try:
                             if not Confirm.ask("Try again?"):
@@ -601,7 +601,7 @@ class MdfToolsInstaller:
     def _wait_for_sql_server(self) -> bool:
         """Wait for SQL Server to be ready"""
         self.console.print(
-            "⏳ Waiting for SQL Server to start (this may take a minute)..."
+            "[WAIT] Waiting for SQL Server to start (this may take a minute)..."
         )
 
         max_attempts = 30  # 5 minutes with 10-second intervals
@@ -615,14 +615,14 @@ class MdfToolsInstaller:
 
             for _attempt in range(max_attempts):
                 if self._test_sql_connection():
-                    progress.update(task, description="✓ SQL Server is ready")
-                    self.console.print("✓ SQL Server is ready")
+                    progress.update(task, description="[OK] SQL Server is ready")
+                    self.console.print("[OK] SQL Server is ready")
                     return True
 
                 progress.advance(task)
                 time.sleep(10)
 
-        self.console.print("❌ SQL Server failed to start within timeout")
+        self.console.print("[FAIL] SQL Server failed to start within timeout")
         return False
 
     def _test_sql_connection(self) -> bool:
@@ -710,7 +710,7 @@ class MdfToolsInstaller:
     def _show_next_steps(self) -> None:
         """Show next steps after installation"""
         self.console.print(
-            "\n[bold green]🎉 Setup completed successfully![/bold green]"
+            "\n[bold green][SUCCESS] Setup completed successfully![/bold green]"
         )
 
         next_steps = [
@@ -762,7 +762,7 @@ class MdfToolsInstaller:
         try:
             if not DOCKER_AVAILABLE:
                 self.console.print(
-                    "❌ Docker SDK not available. Run 'pyforge install mdf-tools' first."
+                    "[FAIL] Docker SDK not available. Run 'pyforge install mdf-tools' first."
                 )
                 return False
 
@@ -774,22 +774,22 @@ class MdfToolsInstaller:
             container = self._get_existing_container()
             if not container:
                 self.console.print(
-                    "❌ SQL Server container not found. Run installation first."
+                    "[FAIL] SQL Server container not found. Run installation first."
                 )
                 return False
 
             if container.status == "running":
-                self.console.print("✓ SQL Server container is already running")
+                self.console.print("[OK] SQL Server container is already running")
                 return True
 
-            self.console.print("🚀 Starting SQL Server container...")
+            self.console.print("[START] Starting SQL Server container...")
             container.start()
 
             # Wait for SQL Server to be ready
             return self._wait_for_sql_server()
 
         except Exception as e:
-            self.console.print(f"❌ Failed to start container: {e}")
+            self.console.print(f"[FAIL] Failed to start container: {e}")
             return False
 
     def stop_container(self) -> bool:
@@ -797,7 +797,7 @@ class MdfToolsInstaller:
         try:
             if not DOCKER_AVAILABLE:
                 self.console.print(
-                    "❌ Docker SDK not available. Run 'pyforge install mdf-tools' first."
+                    "[FAIL] Docker SDK not available. Run 'pyforge install mdf-tools' first."
                 )
                 return False
 
@@ -808,20 +808,20 @@ class MdfToolsInstaller:
 
             container = self._get_existing_container()
             if not container:
-                self.console.print("❌ SQL Server container not found")
+                self.console.print("[FAIL] SQL Server container not found")
                 return False
 
             if container.status != "running":
-                self.console.print("✓ SQL Server container is already stopped")
+                self.console.print("[OK] SQL Server container is already stopped")
                 return True
 
-            self.console.print("🛑 Stopping SQL Server container...")
+            self.console.print("[STOP] Stopping SQL Server container...")
             container.stop()
-            self.console.print("✓ SQL Server container stopped")
+            self.console.print("[OK] SQL Server container stopped")
             return True
 
         except Exception as e:
-            self.console.print(f"❌ Failed to stop container: {e}")
+            self.console.print(f"[FAIL] Failed to stop container: {e}")
             return False
 
     def restart_container(self) -> bool:
@@ -832,7 +832,7 @@ class MdfToolsInstaller:
                 return self.start_container()
             return False
         except Exception as e:
-            self.console.print(f"❌ Failed to restart container: {e}")
+            self.console.print(f"[FAIL] Failed to restart container: {e}")
             return False
 
     def show_logs(self, lines: int = 50) -> None:
@@ -840,7 +840,7 @@ class MdfToolsInstaller:
         try:
             if not DOCKER_AVAILABLE:
                 self.console.print(
-                    "❌ Docker SDK not available. Run 'pyforge install mdf-tools' first."
+                    "[FAIL] Docker SDK not available. Run 'pyforge install mdf-tools' first."
                 )
                 return
 
@@ -851,7 +851,7 @@ class MdfToolsInstaller:
 
             container = self._get_existing_container()
             if not container:
-                self.console.print("❌ SQL Server container not found")
+                self.console.print("[FAIL] SQL Server container not found")
                 return
 
             logs = container.logs(tail=lines, timestamps=True).decode("utf-8")
@@ -861,14 +861,14 @@ class MdfToolsInstaller:
             self.console.print(logs)
 
         except Exception as e:
-            self.console.print(f"❌ Failed to get logs: {e}")
+            self.console.print(f"[FAIL] Failed to get logs: {e}")
 
     def uninstall(self) -> bool:
         """Uninstall SQL Server container and clean up"""
         try:
             if not DOCKER_AVAILABLE:
                 self.console.print(
-                    "❌ Docker SDK not available. Run 'pyforge install mdf-tools' first."
+                    "[FAIL] Docker SDK not available. Run 'pyforge install mdf-tools' first."
                 )
                 return False
 
@@ -891,16 +891,16 @@ class MdfToolsInstaller:
             # Stop and remove container
             container = self._get_existing_container()
             if container:
-                self.console.print("🛑 Stopping and removing container...")
+                self.console.print("[STOP] Stopping and removing container...")
                 container.stop()
                 container.remove()
-                self.console.print("✓ Container removed")
+                self.console.print("[OK] Container removed")
 
             # Remove volumes
             try:
                 volume = self.docker_client.volumes.get("pyforge-sql-data")
                 volume.remove()
-                self.console.print("✓ Data volume removed")
+                self.console.print("[OK] Data volume removed")
             except (
                 Exception
             ):  # Catch all Docker exceptions when module might not be available
@@ -909,7 +909,7 @@ class MdfToolsInstaller:
             try:
                 mdf_volume = self.docker_client.volumes.get("pyforge-mdf-files")
                 mdf_volume.remove()
-                self.console.print("✓ MDF files volume removed")
+                self.console.print("[OK] MDF files volume removed")
             except (
                 Exception
             ):  # Catch all Docker exceptions when module might not be available
@@ -918,11 +918,11 @@ class MdfToolsInstaller:
             # Remove config file
             if self.config_path.exists():
                 self.config_path.unlink()
-                self.console.print("✓ Configuration file removed")
+                self.console.print("[OK] Configuration file removed")
 
-            self.console.print("✅ [green]Uninstall completed successfully[/green]")
+            self.console.print("[OK] [green]Uninstall completed successfully[/green]")
             return True
 
         except Exception as e:
-            self.console.print(f"❌ Failed to uninstall: {e}")
+            self.console.print(f"[FAIL] Failed to uninstall: {e}")
             return False

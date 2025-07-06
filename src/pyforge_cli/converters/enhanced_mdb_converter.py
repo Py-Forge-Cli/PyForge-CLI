@@ -77,7 +77,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
 
             # Log which backend was selected
             backend_name = dual_reader.get_active_backend()
-            self.logger.info(f"✓ Connected using {backend_name} backend")
+            self.logger.info(f"[OK] Connected using {backend_name} backend")
 
             # Store connection info for later use
             conn_info = dual_reader.get_connection_info()
@@ -109,7 +109,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             space_tables = [t for t in tables if " " in t]
             if space_tables:
                 self.logger.info(
-                    f"✓ {len(space_tables)} space-named tables accessible: {space_tables}"
+                    f"[OK] {len(space_tables)} space-named tables accessible: {space_tables}"
                 )
 
             return tables
@@ -408,15 +408,15 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             self.password = options.get("password")
 
             # Stage 1: File Analysis with Backend Detection
-            console.print("🔍 Stage 1: Analyzing the file...")
+            console.print("[ANALYZE] Stage 1: Analyzing the file...")
 
             # Detect file and available backends
             db_info = detect_database_file(input_path)
-            console.print(f"✓ File format: {db_info.file_type.name}")
+            console.print(f"[OK] File format: {db_info.file_type.name}")
             file_size_mb = input_path.stat().st_size / (1024 * 1024)
-            console.print(f"✓ File size: {file_size_mb:.1f} MB")
+            console.print(f"[OK] File size: {file_size_mb:.1f} MB")
             console.print(
-                f"✓ Password protected: {'Yes' if options.get('password') else 'No'}"
+                f"[OK] Password protected: {'Yes' if options.get('password') else 'No'}"
             )
 
             # Check available backends
@@ -433,33 +433,33 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                 available_backends.append("pyodbc (Windows native)")
 
             if available_backends:
-                console.print(f"✓ Available backends: {', '.join(available_backends)}")
+                console.print(f"[OK] Available backends: {', '.join(available_backends)}")
             else:
-                console.print("❌ No database backends available!")
+                console.print("[FAIL] No database backends available!")
                 return False
 
             # Stage 2: Database Connection
-            console.print("\n📋 Stage 2: Connecting to database...")
+            console.print("\n[CLIPBOARD] Stage 2: Connecting to database...")
 
             console.print("  Establishing connection...")
             connection = self._connect_to_database(input_path)
             backend_name = connection.get_active_backend()
-            console.print(f"✓ Connected using {backend_name}")
+            console.print(f"[OK] Connected using {backend_name}")
 
             # Stage 3: Table Discovery
-            console.print("\n📊 Stage 3: Discovering tables...")
+            console.print("\n[CHART] Stage 3: Discovering tables...")
 
             console.print("  Scanning database structure...")
             tables = self._list_tables(connection)
 
             if not tables:
-                console.print("❌ No readable tables found")
+                console.print("[FAIL] No readable tables found")
                 return False
 
-            console.print(f"✓ Found {len(tables)} user tables")
+            console.print(f"[OK] Found {len(tables)} user tables")
 
             # Stage 4: Metadata Extraction
-            console.print("\n📈 Stage 4: Extracting table metadata...")
+            console.print("\n[GRAPH] Stage 4: Extracting table metadata...")
 
             table_info_list = []
             with Progress(
@@ -494,7 +494,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                         progress.advance(task)
 
             # Stage 5: Table Overview Display
-            console.print("\n📈 Stage 5: Table Overview:")
+            console.print("\n[GRAPH] Stage 5: Table Overview:")
 
             # Create enhanced table display
             table_display = Table(
@@ -545,14 +545,14 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             # Highlight improvements over pandas-access
             if space_tables > 0:
                 console.print(
-                    f"\n✨ Enhancement: {space_tables} space-named tables accessible with {backend_name}"
+                    f"\n[ENHANCE] Enhancement: {space_tables} space-named tables accessible with {backend_name}"
                 )
                 console.print(
                     "   (These were previously inaccessible with pandas-access)"
                 )
 
             # Stage 6: Table Conversion
-            console.print("\n🔄 Stage 6: Converting tables to Parquet...")
+            console.print("\n[CONVERT] Stage 6: Converting tables to Parquet...")
 
             # Perform conversion using parent class method
             success = self._convert_tables_to_parquet(
@@ -561,7 +561,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
 
             if success:
                 console.print(
-                    f"\n✅ Conversion completed successfully using {backend_name}!"
+                    f"\n[OK] Conversion completed successfully using {backend_name}!"
                 )
                 console.print(f"• Tables processed: {accessible_tables}/{len(tables)}")
                 console.print(f"• Records converted: {total_records:,}")
@@ -572,7 +572,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             return success
 
         except Exception as e:
-            console.print(f"\n❌ Conversion failed: {e}")
+            console.print(f"\n[FAIL] Conversion failed: {e}")
             self.logger.error(f"Enhanced MDB conversion error: {e}", exc_info=True)
             return False
 

@@ -126,7 +126,7 @@ class DBFTableDiscovery:
             self.table_info = self._analyze_dbf_structure(file_path)
 
             self.logger.info(
-                f"✓ Connected to DBF: {self.table_info.record_count} records, {self.table_info.field_count} fields"
+                f"[OK] Connected to DBF: {self.table_info.record_count} records, {self.table_info.field_count} fields"
             )
             return True
 
@@ -185,7 +185,7 @@ class DBFTableDiscovery:
                     # Early exit if we find a perfect or very high score with no errors
                     if score >= 100 and errors == 0:
                         self.logger.info(
-                            f"✅ Perfect encoding found: {encoding}, stopping search"
+                            f"[OK] Perfect encoding found: {encoding}, stopping search"
                         )
                         break
 
@@ -200,7 +200,7 @@ class DBFTableDiscovery:
 
         # Log the detection results
         self.logger.info(
-            f"✓ Optimal encoding detected: {best_info['encoding']} ({best_info['description']})"
+            f"[OK] Optimal encoding detected: {best_info['encoding']} ({best_info['description']})"
         )
         self.logger.info(
             f"  Score: {best_info['score']}, Samples: {best_info['sample_size']}, Errors: {best_info['errors']}"

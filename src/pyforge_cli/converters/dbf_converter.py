@@ -175,22 +175,22 @@ class DBFConverter(StringDatabaseConverter):
 
         try:
             # Stage 1: Analyzing the file
-            console.print("🔍 [bold blue]Stage 1:[/bold blue] Analyzing the file...")
+            console.print("[ANALYZE] [bold blue]Stage 1:[/bold blue] Analyzing the file...")
 
             # Validate and detect file
             db_info = detect_database_file(input_path)
             if db_info.error_message:
-                console.print(f"❌ [red]Error:[/red] {db_info.error_message}")
+                console.print(f"[FAIL] [red]Error:[/red] {db_info.error_message}")
                 return False
 
-            console.print(f"✓ File format: {db_info.version}")
-            console.print(f"✓ File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
-            console.print(f"✓ Encoding: {db_info.encoding}")
+            console.print(f"[OK] File format: {db_info.version}")
+            console.print(f"[OK] File size: {db_info.estimated_size / 1024 / 1024:.1f} MB")
+            console.print(f"[OK] Encoding: {db_info.encoding}")
             if db_info.creation_date:
-                console.print(f"✓ Last update: {db_info.creation_date}")
+                console.print(f"[OK] Last update: {db_info.creation_date}")
 
             # Stage 2: Listing table
-            console.print("\n📋 [bold blue]Stage 2:[/bold blue] Listing table...")
+            console.print("\n[CLIPBOARD] [bold blue]Stage 2:[/bold blue] Listing table...")
 
             connection = self._connect_to_database(input_path)
 
@@ -198,24 +198,24 @@ class DBFConverter(StringDatabaseConverter):
                 tables = self._list_tables(connection)
 
                 if not tables:
-                    console.print("❌ [red]Error:[/red] No table found in DBF file")
+                    console.print("[FAIL] [red]Error:[/red] No table found in DBF file")
                     return False
 
                 table_name = tables[0]
 
                 # Stage 3: Found table
-                console.print(f"✓ Found 1 table: {table_name}")
+                console.print(f"[OK] Found 1 table: {table_name}")
 
                 # Stage 4: Extracting summary
                 console.print(
-                    "\n📊 [bold blue]Stage 3:[/bold blue] Extracting summary..."
+                    "\n[CHART] [bold blue]Stage 3:[/bold blue] Extracting summary..."
                 )
 
                 # Get table info
                 table_info = self._get_table_info(connection, table_name)
 
                 # Stage 5: Show table overview
-                console.print("\n📈 [bold blue]Stage 4:[/bold blue] Table Overview:")
+                console.print("\n[GRAPH] [bold blue]Stage 4:[/bold blue] Table Overview:")
 
                 # Create detailed info display
                 info_table = Table(title=f"DBF File Details: {table_name}")
@@ -258,7 +258,7 @@ class DBFConverter(StringDatabaseConverter):
 
                 # Stage 6: Convert table
                 console.print(
-                    "\n🔄 [bold blue]Stage 5:[/bold blue] Converting to Parquet..."
+                    "\n[CONVERT] [bold blue]Stage 5:[/bold blue] Converting to Parquet..."
                 )
 
                 # Create output directory
@@ -288,7 +288,7 @@ class DBFConverter(StringDatabaseConverter):
 
                         if df.empty:
                             console.print(
-                                "⚠️ [yellow]Warning:[/yellow] DBF file contains no data"
+                                "[WARN] [yellow]Warning:[/yellow] DBF file contains no data"
                             )
                             return True
 
@@ -320,7 +320,7 @@ class DBFConverter(StringDatabaseConverter):
 
                         # Final summary
                         console.print(
-                            "\n📑 [bold blue]Stage 6:[/bold blue] Conversion Summary:"
+                            "\n[DOCUMENT] [bold blue]Stage 6:[/bold blue] Conversion Summary:"
                         )
 
                         output_size_mb = output_file.stat().st_size / 1024 / 1024
@@ -331,7 +331,7 @@ class DBFConverter(StringDatabaseConverter):
                         )
 
                         console.print(
-                            "✅ [green]Conversion completed successfully![/green]"
+                            "[OK] [green]Conversion completed successfully![/green]"
                         )
                         console.print(f"• Records converted: {len(string_df):,}")
                         console.print(f"• Output file: {output_file.name}")
@@ -352,25 +352,25 @@ class DBFConverter(StringDatabaseConverter):
 
                         if conversion_summary["warnings"] > 0:
                             console.print(
-                                f"⚠️ [yellow]Warnings:[/yellow] {conversion_summary['warnings']} conversion warnings"
+                                f"[WARN] [yellow]Warnings:[/yellow] {conversion_summary['warnings']} conversion warnings"
                             )
 
                         if conversion_summary["errors"] > 0:
                             console.print(
-                                f"❌ [red]Errors:[/red] {conversion_summary['errors']} conversion errors"
+                                f"[FAIL] [red]Errors:[/red] {conversion_summary['errors']} conversion errors"
                             )
 
                         return True
 
                     except Exception as e:
-                        console.print(f"❌ Failed to convert DBF file: {e}")
+                        console.print(f"[FAIL] Failed to convert DBF file: {e}")
                         return False
 
             finally:
                 self._close_connection(connection)
 
         except Exception as e:
-            console.print(f"❌ [red]Conversion failed:[/red] {e}")
+            console.print(f"[FAIL] [red]Conversion failed:[/red] {e}")
             self.logger.error(f"DBF conversion failed: {e}")
             return False
 

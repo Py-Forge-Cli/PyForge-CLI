@@ -423,7 +423,7 @@ class CSVConverter(BaseConverter):
             if options.get("verbose"):
                 self._print_conversion_summary()
 
-            self.logger.info(f"✓ CSV conversion completed: {output_path}")
+            self.logger.info(f"[OK] CSV conversion completed: {output_path}")
             return True
 
         except Exception as e:

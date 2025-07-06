@@ -32,7 +32,7 @@ class PluginLoader:
 
             registry.register("mdb", EnhancedMDBConverter)
             self.loaded_plugins.append("mdb")
-            print("✓ Loaded enhanced MDB converter with UCanAccess + pyodbc support")
+            print("[OK] Loaded enhanced MDB converter with UCanAccess + pyodbc support")
         except ImportError as e:
             print(f"Warning: Enhanced MDB converter not available: {e}")
             # Fallback to basic MDB converter
@@ -41,7 +41,7 @@ class PluginLoader:
 
                 registry.register("mdb", MDBConverter)
                 self.loaded_plugins.append("mdb")
-                print("✓ Loaded basic MDB converter (fallback)")
+                print("[OK] Loaded basic MDB converter (fallback)")
             except ImportError as e2:
                 print(f"Warning: Could not load any MDB converter: {e2}")
 
