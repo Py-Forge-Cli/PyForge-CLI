@@ -602,8 +602,12 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                 "file_size": file_stats.st_size,
                 "file_format": "Microsoft Access Database (Enhanced)",
                 "file_extension": input_path.suffix,
-                "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
-                "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
+                "modified_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_ctime
+                ).isoformat(),
             }
 
             # Detect database type and version
@@ -614,14 +618,16 @@ class EnhancedMDBConverter(StringDatabaseConverter):
 
             metadata["database_type"] = db_info.file_type.value.upper()
             metadata["database_version"] = db_info.version or "Unknown"
-            metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
+            metadata["is_encrypted"] = getattr(db_info, "is_encrypted", False)
 
             # Try to get table information using dual-backend reader
             try:
                 dual_reader = DualBackendMDBReader()
 
                 # Attempt connection
-                connection_success = dual_reader.connect(input_path, password=self.password)
+                connection_success = dual_reader.connect(
+                    input_path, password=self.password
+                )
 
                 if connection_success:
                     # Get backend info
@@ -647,13 +653,23 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                                 if info:
                                     table_info[table_name] = {
                                         "row_count": info.row_count,
-                                        "column_count": len(info.columns) if info.columns else 0,
-                                        "columns": [col.name for col in info.columns] if info.columns else []
+                                        "column_count": (
+                                            len(info.columns) if info.columns else 0
+                                        ),
+                                        "columns": (
+                                            [col.name for col in info.columns]
+                                            if info.columns
+                                            else []
+                                        ),
                                     }
                                     total_rows += info.row_count
-                                    total_columns += len(info.columns) if info.columns else 0
+                                    total_columns += (
+                                        len(info.columns) if info.columns else 0
+                                    )
                                 else:
-                                    table_info[table_name] = {"error": "Could not read table info"}
+                                    table_info[table_name] = {
+                                        "error": "Could not read table info"
+                                    }
                             except Exception as e:
                                 table_info[table_name] = {"error": str(e)}
 
@@ -668,7 +684,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                     dual_reader.close()
                 else:
                     metadata["error"] = "Connection failed"
-                    if getattr(db_info, 'is_encrypted', False):
+                    if getattr(db_info, "is_encrypted", False):
                         metadata["error"] = "Database is password protected"
 
             except Exception as e:
@@ -680,6 +696,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
         except Exception as e:
             logging.error(f"Failed to extract Enhanced MDB metadata: {e}")
             return None
+
     def __del__(self):
         """Destructor with automatic connection cleanup."""
         try:

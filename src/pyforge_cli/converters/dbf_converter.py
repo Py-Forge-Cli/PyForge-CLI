@@ -405,8 +405,12 @@ class DBFConverter(StringDatabaseConverter):
                 "file_size": file_stats.st_size,
                 "file_format": "dBase Database File",
                 "file_extension": input_path.suffix,
-                "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
-                "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
+                "modified_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_ctime
+                ).isoformat(),
             }
 
             # Detect database type and version
@@ -429,26 +433,43 @@ class DBFConverter(StringDatabaseConverter):
 
                     if table_info:
                         metadata["record_count"] = table_info.record_count
-                        metadata["field_count"] = len(table_info.fields) if table_info.fields else 0
-                        metadata["record_length"] = getattr(table_info, 'record_length', 0)
-                        metadata["header_length"] = getattr(table_info, 'header_length', 0)
-                        metadata["last_update"] = getattr(table_info, 'last_update', None)
+                        metadata["field_count"] = (
+                            len(table_info.fields) if table_info.fields else 0
+                        )
+                        metadata["record_length"] = getattr(
+                            table_info, "record_length", 0
+                        )
+                        metadata["header_length"] = getattr(
+                            table_info, "header_length", 0
+                        )
+                        metadata["last_update"] = getattr(
+                            table_info, "last_update", None
+                        )
 
                         # Field information
                         if table_info.fields:
                             field_info = []
                             for field in table_info.fields:
-                                field_info.append({
-                                    "name": field.name,
-                                    "type": field.type,
-                                    "length": field.length,
-                                    "decimal_places": getattr(field, 'decimal_places', 0)
-                                })
+                                field_info.append(
+                                    {
+                                        "name": field.name,
+                                        "type": field.type,
+                                        "length": field.length,
+                                        "decimal_places": getattr(
+                                            field, "decimal_places", 0
+                                        ),
+                                    }
+                                )
                             metadata["fields"] = field_info
 
                         # Calculate approximate data size
-                        if hasattr(table_info, 'record_length') and table_info.record_count:
-                            metadata["estimated_data_size"] = table_info.record_length * table_info.record_count
+                        if (
+                            hasattr(table_info, "record_length")
+                            and table_info.record_count
+                        ):
+                            metadata["estimated_data_size"] = (
+                                table_info.record_length * table_info.record_count
+                            )
                     else:
                         metadata["error"] = "Could not read DBF table structure"
 

@@ -56,10 +56,10 @@ class XmlStructureAnalyzer:
         try:
             # Read file content for namespace extraction (ElementTree limitation)
             try:
-                with open(file_path, encoding='utf-8') as f:
+                with open(file_path, encoding="utf-8") as f:
                     self._file_content = f.read()
             except UnicodeDecodeError:
-                with open(file_path, encoding='latin-1') as f:
+                with open(file_path, encoding="latin-1") as f:
                     self._file_content = f.read()
 
             # First, try to parse as single document
@@ -343,8 +343,9 @@ class XmlStructureAnalyzer:
                 namespaces[""] = value
 
         # If that didn't work (ElementTree limitation), fall back to regex parsing
-        if not namespaces and hasattr(self, '_file_content'):
+        if not namespaces and hasattr(self, "_file_content"):
             import re
+
             xmlns_pattern = r'xmlns:([a-zA-Z0-9_-]+)="([^"]+)"'
             matches = re.findall(xmlns_pattern, self._file_content)
             for prefix, uri in matches:

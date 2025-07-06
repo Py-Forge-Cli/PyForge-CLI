@@ -143,7 +143,10 @@
       "Bash(gh pr checks:*)",
       "Bash(gh run view:*)",
       "Bash(ruff check:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(.venv/bin/pytest tests/test_pdf_converter.py tests/test_csv_converter.py tests/test_excel_converter_improved.py tests/test_mdb_converter_improved.py tests/test_xml_converter.py -v --tb=short)",
+      "Bash(mypy:*)",
+      "Bash(black:*)"
     ],
     "deny": []
   },

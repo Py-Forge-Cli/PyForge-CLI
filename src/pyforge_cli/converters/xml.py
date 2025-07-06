@@ -103,30 +103,33 @@ class XmlConverter(BaseConverter):
         """
         try:
             # Read first few bytes to detect encoding
-            with open(input_path, 'rb') as f:
+            with open(input_path, "rb") as f:
                 header = f.read(200)
 
             # Decode header to check for XML declaration
             try:
-                header_str = header.decode('utf-8')
+                header_str = header.decode("utf-8")
             except UnicodeDecodeError:
                 try:
-                    header_str = header.decode('utf-16')
+                    header_str = header.decode("utf-16")
                 except UnicodeDecodeError:
                     try:
-                        header_str = header.decode('latin-1')
+                        header_str = header.decode("latin-1")
                     except UnicodeDecodeError:
-                        return 'UTF-8'
+                        return "UTF-8"
 
             # Look for encoding declaration
             import re
-            encoding_match = re.search(r'encoding\s*=\s*["\']([^"\']+)["\']', header_str, re.IGNORECASE)
+
+            encoding_match = re.search(
+                r'encoding\s*=\s*["\']([^"\']+)["\']', header_str, re.IGNORECASE
+            )
             if encoding_match:
                 return encoding_match.group(1).upper()
 
-            return 'UTF-8'
+            return "UTF-8"
         except Exception:
-            return 'UTF-8'
+            return "UTF-8"
 
     def get_metadata(self, input_path: Path) -> Dict[str, Any]:
         """
@@ -178,10 +181,16 @@ class XmlConverter(BaseConverter):
             logger.warning(f"Could not extract XML metadata: {e}")
 
             # Return None for corrupted/invalid XML files
-            if any(phrase in error_msg.lower() for phrase in [
-                'not well-formed', 'invalid token', 'invalid xml',
-                'xml declaration not at start', 'parsing error'
-            ]):
+            if any(
+                phrase in error_msg.lower()
+                for phrase in [
+                    "not well-formed",
+                    "invalid token",
+                    "invalid xml",
+                    "xml declaration not at start",
+                    "parsing error",
+                ]
+            ):
                 return None
 
             # For other errors, return metadata with error info

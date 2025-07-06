@@ -640,7 +640,9 @@ class ExcelConverter(BaseConverter):
                 "file_size": file_stats.st_size,
                 "file_format": "Excel Spreadsheet",
                 "file_extension": input_path.suffix,
-                "modified_date": datetime.fromtimestamp(file_stats.st_mtime).isoformat(),
+                "modified_date": datetime.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
                 "created_date": datetime.fromtimestamp(file_stats.st_ctime).isoformat(),
             }
 
@@ -649,19 +651,29 @@ class ExcelConverter(BaseConverter):
                 wb_props = openpyxl.load_workbook(input_path, read_only=False)
 
                 # Get document properties if available
-                if hasattr(wb_props, 'properties') and wb_props.properties:
+                if hasattr(wb_props, "properties") and wb_props.properties:
                     props = wb_props.properties
-                    metadata["title"] = getattr(props, 'title', None)
-                    metadata["author"] = getattr(props, 'creator', None)
-                    metadata["subject"] = getattr(props, 'subject', None)
-                    metadata["description"] = getattr(props, 'description', None)
-                    metadata["keywords"] = getattr(props, 'keywords', None)
-                    metadata["category"] = getattr(props, 'category', None)
+                    metadata["title"] = getattr(props, "title", None)
+                    metadata["author"] = getattr(props, "creator", None)
+                    metadata["subject"] = getattr(props, "subject", None)
+                    metadata["description"] = getattr(props, "description", None)
+                    metadata["keywords"] = getattr(props, "keywords", None)
+                    metadata["category"] = getattr(props, "category", None)
                     # Note: company property doesn't exist in openpyxl DocumentProperties
                     metadata["company"] = None
-                    metadata["created"] = props.created.isoformat() if hasattr(props, 'created') and props.created else None
-                    metadata["modified"] = props.modified.isoformat() if hasattr(props, 'modified') and props.modified else None
-                    metadata["last_modified_by"] = getattr(props, 'lastModifiedBy', None)
+                    metadata["created"] = (
+                        props.created.isoformat()
+                        if hasattr(props, "created") and props.created
+                        else None
+                    )
+                    metadata["modified"] = (
+                        props.modified.isoformat()
+                        if hasattr(props, "modified") and props.modified
+                        else None
+                    )
+                    metadata["last_modified_by"] = getattr(
+                        props, "lastModifiedBy", None
+                    )
                 else:
                     # Initialize properties as None if not available
                     metadata["title"] = None
@@ -713,12 +725,14 @@ class ExcelConverter(BaseConverter):
                 for row_idx, row in enumerate(ws.iter_rows(max_row=1000), 1):
                     if any(cell.value is not None for cell in row):
                         max_row = row_idx
-                        max_col = max(max_col, len([c for c in row if c.value is not None]))
+                        max_col = max(
+                            max_col, len([c for c in row if c.value is not None])
+                        )
 
                 sheet_info[sheet_name] = {
                     "estimated_rows": max_row,
                     "estimated_columns": max_col,
-                    "has_data": max_row > 0
+                    "has_data": max_row > 0,
                 }
 
                 total_rows += max_row
@@ -736,4 +750,3 @@ class ExcelConverter(BaseConverter):
         except Exception as e:
             logger.error(f"Failed to extract Excel metadata: {e}")
             return None
-

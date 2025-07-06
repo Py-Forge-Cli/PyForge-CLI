@@ -499,8 +499,12 @@ class MDBConverter(StringDatabaseConverter):
                 "file_size": file_stats.st_size,
                 "file_format": "Microsoft Access Database",
                 "file_extension": input_path.suffix,
-                "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
-                "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
+                "modified_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_ctime
+                ).isoformat(),
             }
 
             # Detect database type and version
@@ -511,7 +515,7 @@ class MDBConverter(StringDatabaseConverter):
 
             metadata["database_type"] = db_info.file_type.value.upper()
             metadata["database_version"] = db_info.version or "Unknown"
-            metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
+            metadata["is_encrypted"] = getattr(db_info, "is_encrypted", False)
 
             # Try to get table information without full connection
             try:
@@ -541,13 +545,17 @@ class MDBConverter(StringDatabaseConverter):
                                 table_info[table_name] = {
                                     "row_count": row_count,
                                     "column_count": len(columns),
-                                    "columns": [col.name for col in columns]
+                                    "columns": [col.name for col in columns],
                                 }
                                 total_rows += row_count
                                 total_columns += len(columns)
                             except Exception as e:
                                 # Still count failed tables but with 0 rows
-                                table_info[table_name] = {"error": str(e), "row_count": 0, "column_count": 0}
+                                table_info[table_name] = {
+                                    "error": str(e),
+                                    "row_count": 0,
+                                    "column_count": 0,
+                                }
 
                         metadata["table_details"] = table_info
                         metadata["total_rows"] = total_rows
@@ -560,7 +568,7 @@ class MDBConverter(StringDatabaseConverter):
                     discovery.close()
                 else:
                     metadata["error"] = "Connection failed"
-                    if getattr(db_info, 'is_encrypted', False):
+                    if getattr(db_info, "is_encrypted", False):
                         metadata["error"] = "Database is password protected"
 
             except Exception as e:

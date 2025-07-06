@@ -476,8 +476,12 @@ class StringDatabaseConverter(BaseConverter):
                 "file_size": file_stats.st_size,
                 "file_format": "Database File",
                 "file_extension": input_path.suffix,
-                "modified_date": pd.Timestamp.fromtimestamp(file_stats.st_mtime).isoformat(),
-                "created_date": pd.Timestamp.fromtimestamp(file_stats.st_ctime).isoformat(),
+                "modified_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_ctime
+                ).isoformat(),
             }
 
             # Try to get additional database information
@@ -491,7 +495,7 @@ class StringDatabaseConverter(BaseConverter):
                 if db_info and db_info.file_type != DatabaseType.UNKNOWN:
                     metadata["database_type"] = db_info.file_type.value
                     metadata["database_version"] = db_info.version or "Unknown"
-                    metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
+                    metadata["is_encrypted"] = getattr(db_info, "is_encrypted", False)
 
                     if db_info.error_message:
                         metadata["error"] = db_info.error_message
