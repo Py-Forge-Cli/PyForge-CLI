@@ -412,7 +412,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
         manifest_path = self.target_dir / "manifest.json"
         if manifest_path.exists():
             try:
-                with open(manifest_path) as f:
+                with open(manifest_path, encoding="utf-8") as f:
                     manifest = json.load(f)
 
                 self._display_installation_summary(manifest)
@@ -487,7 +487,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
         manifest_path = self.target_dir / "manifest.json"
         if manifest_path.exists():
             try:
-                with open(manifest_path) as f:
+                with open(manifest_path, encoding="utf-8") as f:
                     manifest = json.load(f)
 
                 console.print(

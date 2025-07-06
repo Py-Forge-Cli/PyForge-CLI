@@ -677,7 +677,7 @@ class MdfToolsInstaller:
         self.config_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Save configuration
-        with open(self.config_path, "w") as f:
+        with open(self.config_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
 
     def _get_docker_version(self) -> str:

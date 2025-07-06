@@ -202,7 +202,7 @@ class TestMDBConverterImproved:
         structure_file = test_data_dir / "structures" / "complex_structure.json"
 
         if structure_file.exists():
-            with open(structure_file) as f:
+            with open(structure_file, encoding="utf-8") as f:
                 structure = json.load(f)
 
             mdb_file = test_data_dir / "jet4_database.mdb"
@@ -423,7 +423,7 @@ class TestMDBConverterImproved:
         structure_file = test_data_dir / "structures" / "empty_tables.json"
 
         if structure_file.exists():
-            with open(structure_file) as f:
+            with open(structure_file, encoding="utf-8") as f:
                 structure = json.load(f)
 
             mdb_file = test_data_dir / "empty_valid.mdb"
@@ -466,7 +466,7 @@ class TestMDBConverterImproved:
         structure_file = test_data_dir / "structures" / "special_names.json"
 
         if structure_file.exists():
-            with open(structure_file) as f:
+            with open(structure_file, encoding="utf-8") as f:
                 structure = json.load(f)
 
             mdb_file = test_data_dir / "jet4_database.mdb"

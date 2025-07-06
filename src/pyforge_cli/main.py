@@ -1400,7 +1400,7 @@ def config():
         return
 
     try:
-        with open(installer.config_path) as f:
+        with open(installer.config_path, encoding="utf-8") as f:
             config = json.load(f)
 
         console.print(f"[bold]Configuration file:[/bold] {installer.config_path}")

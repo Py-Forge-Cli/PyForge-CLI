@@ -321,7 +321,7 @@ class CacheManager:
             return None
 
         try:
-            with open(cache_file) as f:
+            with open(cache_file, encoding="utf-8") as f:
                 cache_data = json.load(f)
 
             # Check expiry
@@ -356,7 +356,7 @@ class CacheManager:
                 "created": datetime.now().isoformat(),
             }
 
-            with open(cache_file, "w") as f:
+            with open(cache_file, "w", encoding="utf-8") as f:
                 json.dump(cache_data, f, default=str, indent=2)
 
             return True
