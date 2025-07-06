@@ -608,10 +608,29 @@ class CSVConverter(BaseConverter):
             Dictionary with file metadata
         """
         try:
-            if not self.validate_input(input_path):
+            if not input_path.exists():
+                return None
+
+            # Check file extension
+            if input_path.suffix.lower() not in self.supported_inputs:
                 return None
 
             file_stat = input_path.stat()
+            
+            # Handle empty files
+            if file_stat.st_size == 0:
+                return {
+                    "file_name": input_path.name,
+                    "file_size": 0,
+                    "file_type": "CSV",
+                    "encoding": "utf-8",
+                    "encoding_confidence": 1.0,
+                    "delimiter": ",",
+                    "has_header": False,
+                    "estimated_rows": 0,
+                    "last_modified": file_stat.st_mtime,
+                }
+
             encoding, confidence = self.encoding_detector.detect_encoding(input_path)
             dialect_params = self.dialect_detector.detect_dialect(input_path, encoding)
 

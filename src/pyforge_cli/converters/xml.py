@@ -108,6 +108,8 @@ class XmlConverter(BaseConverter):
         metadata = {
             "file_path": str(input_path),
             "file_name": input_path.name,
+            "file_extension": input_path.suffix,
+            "file_format": "XML",
             "file_size": input_path.stat().st_size if input_path.exists() else 0,
         }
 
@@ -117,7 +119,6 @@ class XmlConverter(BaseConverter):
 
             metadata.update(
                 {
-                    "format": "XML",
                     "schema_detected": True,
                     "namespaces": analysis.get("namespaces", {}),
                     "root_element": analysis.get("root_tag"),
@@ -125,13 +126,13 @@ class XmlConverter(BaseConverter):
                     "total_elements": analysis.get("total_elements", 0),
                     "array_elements": len(analysis.get("array_elements", [])),
                     "suggested_columns": len(analysis.get("suggested_columns", [])),
-                    "encoding": "utf-8",  # TODO: Detect actual encoding
+                    "encoding": "UTF-8",  # TODO: Detect actual encoding
                 }
             )
         except Exception as e:
             logger.warning(f"Could not extract XML metadata: {e}")
             metadata.update(
-                {"format": "XML", "schema_detected": False, "error": str(e)}
+                {"schema_detected": False, "error": str(e), "encoding": "UTF-8"}
             )
 
         return metadata
