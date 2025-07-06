@@ -67,19 +67,22 @@ jobs:
       - name: Run comprehensive test suite
         run: |
           # Full test suite including PySpark, integration and slow tests
-          pytest tests/ --run-pyspark --cov=pyforge_cli --cov-report=term-missing --cov-report=xml --cov-report=html --html=pytest_html_report.html --self-contained-html -v
+          pytest tests/ --run-pyspark --cov=pyforge_cli --cov-report=term-missing --cov-report=xml --cov-report=html --html=pytest_html_report.html --self-contained-html --junitxml=junit/test-results-${{ matrix.os }}.xml -v
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v4
         
       - name: Upload test results
-        if: always() && matrix.os == 'ubuntu-latest'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-${{ matrix.os }}
           path: |
+            junit/
             pytest_html_report.html
             htmlcov/
+            coverage.xml
+            .coverage
 
   security:
     runs-on: ubuntu-latest
@@ -131,9 +134,24 @@ jobs:
       - name: Show version
         run: |
           python -c "import setuptools_scm; print(f'Version: {setuptools_scm.get_version()}')"
+          echo "VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV
+          
+      - name: Check if version exists on TestPyPI
+        run: |
+          pip install --upgrade pip
+          # Check if version already exists
+          if pip index versions -i https://test.pypi.org/simple/ pyforge-cli 2>/dev/null | grep -q "${{ env.VERSION }}"; then
+            echo "Version ${{ env.VERSION }} already exists on TestPyPI"
+            echo "skip_publish=true" >> $GITHUB_ENV
+          else
+            echo "Version ${{ env.VERSION }} does not exist on TestPyPI, will publish"
+            echo "skip_publish=false" >> $GITHUB_ENV
+          fi
           
       - name: Publish to TestPyPI
+        if: env.skip_publish == 'false'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
+          verbose: true

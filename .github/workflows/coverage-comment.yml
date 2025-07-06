@@ -1,0 +1,50 @@
+name: Coverage Comment
+
+on:
+  workflow_run:
+    workflows: ["CI Develop Branch (Features)", "CI Main Branch", "CI"]
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  coverage-comment:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Display structure of downloaded files
+        run: ls -la
+        
+      - name: Post Coverage Comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MINIMUM_GREEN: 80
+          MINIMUM_ORANGE: 60
+          ANNOTATE_MISSING_LINES: true
+          ANNOTATION_TYPE: warning
+          VERBOSE: true
+          
+      - name: Create Test Summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: 'junit/*.xml'
+          show: all
