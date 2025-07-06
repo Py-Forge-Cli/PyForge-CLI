@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]  # Remove develop - use ci-develop.yml for develop branch
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
   quality-checks:
