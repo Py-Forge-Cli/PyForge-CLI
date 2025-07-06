@@ -116,7 +116,11 @@
       "Bash(.venv/bin/pytest --tb=no -q)",
       "Bash(.venv/bin/pytest tests/test_xml_converter.py::TestXMLConverter::test_get_metadata_simple_xml -v --tb=short)",
       "Bash(.venv/bin/pytest tests/test_csv_converter.py::TestCSVConverterIntegration::test_get_metadata_empty_file -v --tb=short)",
-      "Bash(.venv/bin/pytest tests/test_csv_converter.py::TestCSVConverterIntegration::test_get_metadata_empty_file tests/test_xml_converter.py::TestXMLConverter::test_get_metadata_simple_xml -v --tb=no)"
+      "Bash(.venv/bin/pytest tests/test_csv_converter.py::TestCSVConverterIntegration::test_get_metadata_empty_file tests/test_xml_converter.py::TestXMLConverter::test_get_metadata_simple_xml -v --tb=no)",
+      "Bash(.venv/bin/pytest tests/test_xml_converter.py::TestXMLConverter::test_get_metadata_nonexistent_file -v --tb=short)",
+      "Bash(.venv/bin/pytest tests/test_excel_converter_improved.py::TestExcelConverterImproved::test_get_metadata_with_properties -v --tb=short)",
+      "Bash(.venv/bin/pytest tests/test_mdb_converter_improved.py::TestMDBConverterImproved::test_get_metadata_basic_mdb -v --tb=short)",
+      "Bash(.venv/bin/pytest tests/test_xml_converter.py::TestXMLConverter::test_get_metadata_nonexistent_file tests/test_mdb_converter_improved.py::TestMDBConverterImproved::test_get_metadata_basic_mdb -v --tb=no)"
     ],
     "deny": []
   },

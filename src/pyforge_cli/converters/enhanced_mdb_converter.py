@@ -612,7 +612,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             if db_info.file_type not in [DatabaseType.MDB, DatabaseType.ACCDB]:
                 return metadata  # Return basic metadata only
             
-            metadata["database_type"] = db_info.file_type.value
+            metadata["database_type"] = db_info.file_type.value.upper()
             metadata["database_version"] = db_info.version or "Unknown"
             metadata["is_encrypted"] = getattr(db_info, 'is_encrypted', False)
             

@@ -105,12 +105,16 @@ class XmlConverter(BaseConverter):
         if isinstance(input_path, str):
             input_path = Path(input_path)
 
+        # Return None for nonexistent files
+        if not input_path.exists():
+            return None
+
         metadata = {
             "file_path": str(input_path),
             "file_name": input_path.name,
             "file_extension": input_path.suffix,
             "file_format": "XML",
-            "file_size": input_path.stat().st_size if input_path.exists() else 0,
+            "file_size": input_path.stat().st_size,
         }
 
         try:
