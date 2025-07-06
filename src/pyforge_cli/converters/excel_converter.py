@@ -3,13 +3,13 @@ Excel to Parquet converter implementation for PyForge.
 Supports multi-sheet Excel files with intelligent column signature detection.
 """
 
-import os
 import logging
-from typing import List, Dict, Any, Optional, Tuple
-from pathlib import Path
-from datetime import datetime, date
-from decimal import Decimal, getcontext
+import os
 from collections import defaultdict
+from datetime import date, datetime
+from decimal import Decimal, getcontext
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import openpyxl
@@ -134,7 +134,7 @@ class ExcelConverter(BaseConverter):
             # Check if openpyxl is available
             if not HAS_OPENPYXL:
                 console.print(
-                    "[red]❌ Excel conversion requires 'openpyxl' package[/red]"
+                    "[red][FAIL] Excel conversion requires 'openpyxl' package[/red]"
                 )
                 console.print("[dim]Install with: pip install openpyxl[/dim]")
                 return False
@@ -144,11 +144,11 @@ class ExcelConverter(BaseConverter):
                 return False
 
             # Analyze file
-            console.print("🔍 Analyzing Excel file...")
+            console.print("[ANALYZE] Analyzing Excel file...")
             self.analysis_result = self._analyze_file(str(input_path))
 
             if not self.analysis_result:
-                console.print("[red]❌ Failed to analyze Excel file[/red]")
+                console.print("[red][FAIL] Failed to analyze Excel file[/red]")
                 return False
 
             # Display analysis
@@ -171,7 +171,7 @@ class ExcelConverter(BaseConverter):
 
         except Exception as e:
             logger.error(f"Excel conversion failed: {e}")
-            console.print(f"[red]❌ Conversion failed: {e}[/red]")
+            console.print(f"[red][FAIL] Conversion failed: {e}[/red]")
             return False
         finally:
             if self.workbook:
@@ -180,11 +180,11 @@ class ExcelConverter(BaseConverter):
     def validate_input(self, input_path: Path) -> bool:
         """Validate input Excel file."""
         if not input_path.exists():
-            console.print(f"[red]❌ File not found: {input_path}[/red]")
+            console.print(f"[red][FAIL] File not found: {input_path}[/red]")
             return False
 
         if not input_path.suffix.lower() == ".xlsx":
-            console.print(f"[red]❌ Only .xlsx files are supported[/red]")
+            console.print("[red][FAIL] Only .xlsx files are supported[/red]")
             return False
 
         try:
@@ -192,7 +192,7 @@ class ExcelConverter(BaseConverter):
             test_wb = openpyxl.load_workbook(str(input_path), read_only=True)
             test_wb.close()
         except Exception as e:
-            console.print(f"[red]❌ Cannot open Excel file: {e}[/red]")
+            console.print(f"[red][FAIL] Cannot open Excel file: {e}[/red]")
             return False
 
         return True
@@ -207,9 +207,9 @@ class ExcelConverter(BaseConverter):
             result.file_size_mb > 10
         )  # Use read-only for large files
 
-        console.print(f"📊 File size: {result.file_size_mb:.1f} MB")
+        console.print(f"[CHART] File size: {result.file_size_mb:.1f} MB")
         console.print(
-            f"📖 Using {'read-only' if result.read_only_mode else 'standard'} mode"
+            f"[BOOK] Using {'read-only' if result.read_only_mode else 'standard'} mode"
         )
 
         # Load workbook
@@ -220,7 +220,7 @@ class ExcelConverter(BaseConverter):
                 data_only=True,  # Get formula values, not formulas
             )
         except Exception as e:
-            console.print(f"[red]❌ Failed to load workbook: {e}[/red]")
+            console.print(f"[red][FAIL] Failed to load workbook: {e}[/red]")
             return None
 
         # Analyze each sheet
@@ -307,16 +307,16 @@ class ExcelConverter(BaseConverter):
 
     def _display_analysis(self, result: ExcelAnalysisResult):
         """Display analysis results to user."""
-        console.print("✓ File validation passed")
-        console.print(f"✓ {result.total_sheets} sheets detected")
+        console.print("[OK] File validation passed")
+        console.print(f"[OK] {result.total_sheets} sheets detected")
 
         if result.warnings:
             for warning in result.warnings:
-                console.print(f"[yellow]⚠️  Warning: {warning}[/yellow]")
+                console.print(f"[yellow][WARN]  Warning: {warning}[/yellow]")
 
         # Create summary table for valid sheets
         if result.valid_sheets:
-            table = Table(title="📊 Valid Sheets with Table Structure")
+            table = Table(title="[CHART] Valid Sheets with Table Structure")
             table.add_column("Sheet", style="cyan")
             table.add_column("Rows", justify="right", style="green")
             table.add_column("Columns", justify="right", style="blue")
@@ -336,7 +336,7 @@ class ExcelConverter(BaseConverter):
 
         # Show skipped sheets if any
         if result.skipped_sheets:
-            skipped_table = Table(title="⚠️  Skipped Sheets (No Table Structure)")
+            skipped_table = Table(title="[WARN]  Skipped Sheets (No Table Structure)")
             skipped_table.add_column("Sheet", style="red")
             skipped_table.add_column("Reason", style="yellow")
 
@@ -351,17 +351,17 @@ class ExcelConverter(BaseConverter):
             console.print(skipped_table)
 
         # Show signature analysis
-        console.print("✓ Table structure analysis complete")
+        console.print("[OK] Table structure analysis complete")
 
         if result.unique_table_structures == 0:
-            console.print("[red]❌ No valid table structures found[/red]")
+            console.print("[red][FAIL] No valid table structures found[/red]")
         elif result.unique_table_structures == 1:
-            console.print("ℹ️  All valid sheets have matching column signatures")
+            console.print("[INFO]  All valid sheets have matching column signatures")
         elif result.unique_table_structures > 1:
             console.print(
-                f"⚠️  {result.unique_table_structures} different table structures detected"
+                f"[WARN]  {result.unique_table_structures} different table structures detected"
             )
-            for i, (signature, sheet_names) in enumerate(
+            for i, (_signature, sheet_names) in enumerate(
                 result.signature_groups.items(), 1
             ):
                 console.print(f"   Structure {i}: {sheet_names}")
@@ -419,7 +419,7 @@ class ExcelConverter(BaseConverter):
             ):
                 # Combine sheets with matching signatures
                 for (
-                    signature,
+                    _signature,
                     sheet_names,
                 ) in self.analysis_result.signature_groups.items():
                     if len(sheet_names) > 1:
@@ -578,8 +578,8 @@ class ExcelConverter(BaseConverter):
 
     def _display_conversion_results(self, output_files: List[str]):
         """Display conversion results."""
-        console.print("\n✅ Conversion Complete!")
-        console.print("📁 Output files:")
+        console.print("\n[OK] Conversion Complete!")
+        console.print("[FOLDER] Output files:")
 
         total_records = 0
         for file_path in output_files:
@@ -594,10 +594,10 @@ class ExcelConverter(BaseConverter):
 
         if self.analysis_result.total_formulas > 0:
             console.print(
-                f"⚠️  {self.analysis_result.total_formulas} formula cells converted to string values"
+                f"[WARN]  {self.analysis_result.total_formulas} formula cells converted to string values"
             )
 
-        console.print(f"📊 Total records: {total_records:,}")
+        console.print(f"[CHART] Total records: {total_records:,}")
 
     def _sanitize_filename(self, filename: str) -> str:
         """Create safe filename from sheet name."""

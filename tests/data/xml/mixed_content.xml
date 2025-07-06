@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<article>
+  <title>Understanding XML Processing</title>
+  <content>
+    XML processing involves 
+    <bold>parsing</bold>
+     and 
+    <italic>transforming</italic>
+     structured data. 
+    <link href="https://example.com">Learn more</link>
+     about XML.
+  </content>
+</article>

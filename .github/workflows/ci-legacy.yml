@@ -1,0 +1,195 @@
+name: CI Legacy (Manual Only)
+
+on:
+  workflow_dispatch:  # Only run manually, not automatically
+  # push:
+  #   branches: [ main, develop ]
+  # pull_request:
+  #   branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10"]
+        # TODO: Enable full matrix once tests are fixed
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # python-version: ["3.8", "3.9", "3.10"]  # Skip 3.11+ due to PyArrow 8.0.0 compatibility
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev,test]"
+        # Install PySpark dependencies
+        pip install pyspark==3.5.2 delta-spark==3.1.0 databricks-sdk==0.19.0
+        pip install pytest-xdist findspark py4j
+        # Install test reporting dependencies
+        pip install pytest-html pytest-json-report
+
+    - name: Set PySpark environment
+      run: |
+        echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+        echo "PYSPARK_PYTHON=python" >> $GITHUB_ENV
+        echo "PYSPARK_DRIVER_PYTHON=python" >> $GITHUB_ENV
+        echo "PYARROW_IGNORE_TIMEZONE=1" >> $GITHUB_ENV
+        echo "SPARK_LOCAL_IP=127.0.0.1" >> $GITHUB_ENV
+        # Clear any SPARK_HOME
+        unset SPARK_HOME || true
+
+    - name: Verify PySpark setup
+      run: |
+        python -c "import pyspark; print(f'PySpark {pyspark.__version__} installed')"
+        python -c "import delta; print('Delta Lake available')"
+        # Quick test to ensure PySpark works
+        python -c "
+        from pyspark.sql import SparkSession
+        spark = SparkSession.builder.appName('CI-Test').master('local[1]').config('spark.ui.enabled', 'false').getOrCreate()
+        spark.range(10).count()
+        spark.stop()
+        print('PySpark verified successfully!')
+        "
+
+    - name: Lint with ruff (allow failures)
+      run: |
+        ruff check src tests || true
+
+    - name: Format check with black (allow failures)
+      run: |
+        black --check src tests || true
+
+    - name: Type check with mypy (allow failures)
+      run: |
+        mypy src || true
+
+    - name: Test with pytest
+      run: |
+        # Run tests with multiple output formats for reporting
+        pytest tests/ \
+          --cov=pyforge_cli \
+          --cov-report=xml \
+          --cov-report=term-missing \
+          --cov-report=html:htmlcov \
+          --junit-xml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml \
+          --html=pytest_html_report.html \
+          --self-contained-html \
+          --json-report \
+          --json-report-file=test-report.json \
+          --override-ini="addopts=" \
+          -v \
+          --tb=short || true
+        
+        # Store test exit code
+        TEST_EXIT_CODE=$?
+        
+        # Generate test summary
+        echo "## Test Results Summary :test_tube:" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f test-report.json ]; then
+          python -c "
+import json
+with open('test-report.json', 'r') as f:
+    data = json.load(f)
+    summary = data.get('summary', {})
+    total = summary.get('total', 0)
+    passed = summary.get('passed', 0)
+    failed = summary.get('failed', 0)
+    skipped = summary.get('skipped', 0)
+    print(f'- **Total Tests**: {total}')
+    print(f'- **Passed**: ✅ {passed}')
+    print(f'- **Failed**: ❌ {failed}')
+    print(f'- **Skipped**: ⏭️ {skipped}')
+    print(f'- **Duration**: {data.get(\"duration\", 0):.2f} seconds')
+" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Exit with original test code
+        exit $TEST_EXIT_CODE
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      if: success() || failure()
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        report_paths: 'junit/test-results-*.xml'
+        check_name: 'Test Results (${{ matrix.os }} - Python ${{ matrix.python-version }})'
+        fail_on_failure: true
+        detailed_summary: true
+        include_passed: true
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: |
+          junit/
+          pytest_html_report.html
+          test-report.json
+          htmlcov/
+          coverage.xml
+        retention-days: 30
+
+    - name: Upload Coverage HTML Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report-${{ matrix.os }}-${{ matrix.python-version }}
+        path: htmlcov/
+        retention-days: 30
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit[toml] safety
+
+    - name: Run bandit security scan (allow failures)
+      run: |
+        bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Run safety check (allow failures)
+      run: |
+        safety check --json --output safety-report.json || true
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json

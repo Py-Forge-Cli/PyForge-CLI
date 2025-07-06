@@ -75,10 +75,20 @@ pip install -e .
 
 ### Development Installation
 
+For development, we recommend using our automated setup:
+
 ```bash
 git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
 cd PyForge-CLI
-pip install -e ".[dev,test]"
+
+# Automated setup (recommended)
+python scripts/setup_dev_environment.py
+
+# This will:
+# - Create a virtual environment (.venv)
+# - Install all dependencies
+# - Set up pre-commit hooks
+# - Create a .env file template
 ```
 
 ### System Dependencies
@@ -375,42 +385,89 @@ pyforge info document.pdf --format json > metadata.json
 
 ## Development
 
-### Setting Up Development Environment
+### Quick Setup
+
+The fastest way to set up a development environment:
 
 ```bash
 # Clone the repository
 git clone https://github.com/Py-Forge-Cli/PyForge-CLI.git
 cd PyForge-CLI
 
-# Set up development environment
-pip install -e ".[dev,test]"
+# Automated setup (recommended)
+python scripts/setup_dev_environment.py
 
-# Run tests
-pytest
-
-# Format code
-black src tests
-
-# Run all checks
-ruff check src tests
+# Or use make
+make setup-dev
 ```
+
+### Manual Setup
+
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Linux/macOS
+# or
+.venv\Scripts\activate  # On Windows
+
+# Install dependencies
+pip install -e ".[dev,test,all]"
+pip install -r requirements-dev.txt
+
+# Verify installation
+pyforge --version
+```
+
+### Testing
+
+```bash
+# Run quick tests
+make test-quick
+
+# Run all tests with reporting
+make test-all
+
+# Run specific test
+pytest tests/test_csv_converter.py
+```
+
+For detailed development setup instructions, see the [Development Setup Guide](https://py-forge-cli.github.io/PyForge-CLI/getting-started/development-setup)
 
 ### Development Commands
 
+We provide comprehensive Makefile commands for development:
+
 ```bash
+# Environment Management
+make venv              # Create virtual environment
+make setup-dev         # Complete development setup
+make test-env          # Create dedicated test environment
+
 # Testing
-pytest                                    # Run tests
-pytest --cov=pyforge_cli                 # Run tests with coverage
+make test              # Run tests
+make test-quick        # Run quick tests (skip slow/integration)
+make test-all          # Run all tests with full reporting
+make test-cov          # Run tests with coverage
+make test-report       # Generate test report summary
 
 # Code Quality
-black src tests                          # Format code
-ruff check src tests                     # Run linting
-mypy src                                 # Type checking
+make lint              # Run linting with ruff
+make format            # Format code with black
+make type-check        # Run type checking with mypy
+make pre-commit        # Run all checks before committing
 
-# Building
-python -m build                          # Build distribution packages
-twine upload dist/*                      # Publish to PyPI
+# Building & Publishing
+make build             # Build distribution packages
+make publish-test      # Publish to Test PyPI
+make publish           # Publish to PyPI (production)
+
+# Documentation
+make docs-serve        # Serve documentation locally
+make docs-build        # Build documentation
+make docs-deploy       # Deploy to GitHub Pages
 ```
+
+For a complete list of commands, run: `make help`
 
 ### Project Structure
 
@@ -439,7 +496,7 @@ PyForge-CLI/
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.10+ (Python 3.10 recommended for Databricks compatibility and CI/CD pipeline)
 - PyMuPDF (for PDF processing)
 - Click (for CLI interface)
 - Rich (for beautiful terminal output)
@@ -448,6 +505,7 @@ PyForge-CLI/
 - dbfread (for DBF file support)
 - openpyxl (for Excel file support)
 - chardet (for encoding detection)
+- PySpark 3.5.0 (optional, for Databricks extension)
 
 ## Contributing
 

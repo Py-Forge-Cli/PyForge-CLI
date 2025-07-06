@@ -1,0 +1,17 @@
+{
+  "tables": {
+    "EmptyTable": {
+      "columns": [
+        "ID",
+        "Name"
+      ],
+      "rows": 0
+    },
+    "AnotherEmpty": {
+      "columns": [
+        "Col1"
+      ],
+      "rows": 0
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<data>
+  <empty1/>
+  <empty2/>
+  <empty3/>
+  <empty4 attr="value"/>
+  <container>
+    <self_closing/>
+    <explicit_closing/>
+  </container>
+</data>

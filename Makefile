@@ -1,13 +1,18 @@
 # PyForge CLI - Makefile for development and deployment
 
 # Variables
-PYTHON := python
+# Use Python 3.10 for Databricks compatibility
+PYTHON := python3.10
 UV := uv
 PACKAGE_NAME := pyforge-cli
 SRC_DIR := src
 TEST_DIR := tests
 DIST_DIR := dist
 DOCS_DIR := docs
+VENV_NAME := .venv
+VENV_BIN := $(VENV_NAME)/bin
+VENV_PYTHON := $(VENV_BIN)/python
+VENV_PIP := $(VENV_BIN)/pip
 
 # Colors for output
 BLUE := \033[36m
@@ -16,19 +21,72 @@ YELLOW := \033[33m
 RED := \033[31m
 RESET := \033[0m
 
-.PHONY: help install install-dev clean test lint format type-check build publish publish-test dev setup-dev pre-commit docs docs-install docs-serve docs-build docs-deploy docs-clean all
+.PHONY: help install install-dev clean test lint format type-check build publish publish-test dev setup-dev pre-commit docs docs-install docs-serve docs-build docs-deploy docs-clean all venv venv-clean venv-activate test-env test-quick test-all test-report
 
 help: ## Show this help message
 	@echo "$(BLUE)PyForge CLI - Available commands:$(RESET)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-20s$(RESET) %s\n", $$1, $$2}'
 
+# Virtual Environment Management
+venv: ## Create virtual environment using Python 3.10 for Databricks compatibility
+	@echo "$(BLUE)Creating virtual environment...$(RESET)"
+	@if [ -d "$(VENV_NAME)" ]; then \
+		echo "$(YELLOW)Virtual environment already exists. Use 'make venv-clean' to recreate.$(RESET)"; \
+	else \
+		if command -v python3.10 >/dev/null 2>&1; then \
+			echo "$(GREEN)Using Python 3.10 for Databricks Serverless V1 compatibility$(RESET)"; \
+			python3.10 -m venv $(VENV_NAME); \
+		else \
+			echo "$(RED)ERROR: Python 3.10 is required for Databricks compatibility$(RESET)"; \
+			echo "$(YELLOW)Please install Python 3.10 and try again$(RESET)"; \
+			exit 1; \
+		fi; \
+		$(VENV_PIP) install --upgrade pip setuptools wheel; \
+		echo "$(GREEN)Virtual environment created with Python 3.10!$(RESET)"; \
+		echo "$(YELLOW)Activate with: source $(VENV_NAME)/bin/activate$(RESET)"; \
+	fi
+
+venv-clean: ## Remove virtual environment
+	@echo "$(BLUE)Removing virtual environment...$(RESET)"
+	@rm -rf $(VENV_NAME)
+	@echo "$(GREEN)Virtual environment removed!$(RESET)"
+
+venv-activate: ## Show activation command
+	@echo "$(YELLOW)To activate the virtual environment, run:$(RESET)"
+	@echo "$(GREEN)source $(VENV_NAME)/bin/activate$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)To deactivate, run:$(RESET)"
+	@echo "$(GREEN)deactivate$(RESET)"
+
 # Development Setup
-setup-dev: ## Set up development environment with uv
+setup-dev: venv ## Set up complete development environment
 	@echo "$(BLUE)Setting up development environment...$(RESET)"
-	$(UV) venv
-	$(UV) pip install -e ".[dev]"
+	@$(VENV_PIP) install -e ".[dev,test,all]"
+	@if [ -f requirements-dev.txt ]; then \
+		$(VENV_PIP) install -r requirements-dev.txt; \
+	fi
 	@echo "$(GREEN)Development environment ready!$(RESET)"
+	@echo "$(YELLOW)Activate with: source $(VENV_NAME)/bin/activate$(RESET)"
+
+test-env: ## Create dedicated test environment
+	@echo "$(BLUE)Creating test environment...$(RESET)"
+	@if [ -d ".testenv" ]; then \
+		echo "$(YELLOW)Test environment already exists. Removing...$(RESET)"; \
+		rm -rf .testenv; \
+	fi
+	@if command -v python3.10 >/dev/null 2>&1; then \
+		echo "$(GREEN)Using Python 3.10 for compatibility with PyArrow 8.0.0$(RESET)"; \
+		python3.10 -m venv .testenv; \
+	else \
+		echo "$(YELLOW)Python 3.10 not found, using default Python$(RESET)"; \
+		$(PYTHON) -m venv .testenv; \
+	fi
+	@.testenv/bin/pip install --upgrade pip
+	@.testenv/bin/pip install -e ".[dev,test,databricks]"
+	@.testenv/bin/pip install pytest-html pytest-json-report
+	@echo "$(GREEN)Test environment created!$(RESET)"
+	@echo "$(YELLOW)Run tests with: make test-all$(RESET)"
 
 install: ## Install package dependencies
 	@echo "$(BLUE)Installing package dependencies...$(RESET)"
@@ -58,18 +116,109 @@ type-check: ## Run type checking with mypy
 	@echo "$(GREEN)Type checking completed!$(RESET)"
 
 # Testing
-test: ## Run tests with pytest
+test: ## Run tests with pytest in virtual environment (includes PySpark tests)
 	@echo "$(BLUE)Running tests...$(RESET)"
-	$(UV) run pytest -v
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v --run-pyspark; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
 	@echo "$(GREEN)Tests completed!$(RESET)"
 
-test-cov: ## Run tests with coverage report
+test-quick: ## Run quick tests (exclude slow and integration tests)
+	@echo "$(BLUE)Running quick tests...$(RESET)"
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v -k "not slow and not integration and not pyspark"; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
+	@echo "$(GREEN)Quick tests completed!$(RESET)"
+
+test-all: ## Run all tests using test environment with full reporting (includes PySpark tests)
+	@echo "$(BLUE)Running all tests with reporting...$(RESET)"
+	@if [ -d ".testenv" ]; then \
+		.testenv/bin/pytest tests/ \
+			--run-pyspark \
+			--junit-xml=junit/test-results.xml \
+			--html=pytest_html_report.html \
+			--self-contained-html \
+			--json-report \
+			--json-report-file=test-report.json \
+			--cov=pyforge_cli \
+			--cov-report=xml \
+			--cov-report=html:htmlcov \
+			--cov-report=term-missing \
+			-v --tb=short; \
+		echo "$(GREEN)Test reports generated:$(RESET)"; \
+		echo "  - HTML: pytest_html_report.html"; \
+		echo "  - XML: junit/test-results.xml"; \
+		echo "  - JSON: test-report.json"; \
+		echo "  - Coverage: htmlcov/index.html"; \
+	else \
+		echo "$(RED)Test environment not found. Run 'make test-env' first.$(RESET)"; \
+		exit 1; \
+	fi
+
+test-cov: ## Run tests with coverage report (includes PySpark tests)
 	@echo "$(BLUE)Running tests with coverage...$(RESET)"
-	$(UV) run pytest -v --cov=$(PACKAGE_NAME) --cov-report=html --cov-report=term-missing
-	@echo "$(GREEN)Coverage report generated in htmlcov/$(RESET)"
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v --cov=pyforge_cli --cov-report=html --cov-report=term-missing --run-pyspark; \
+		echo "$(GREEN)Coverage report generated in htmlcov/$(RESET)"; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
+
+test-no-slow: ## Run all tests except slow ones (includes PySpark tests)
+	@echo "$(BLUE)Running all tests except slow (including PySpark)...$(RESET)"
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v -m "not slow" --run-pyspark; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
+	@echo "$(GREEN)Tests completed!$(RESET)"
+
+test-no-databricks: ## Run all tests except databricks ones 
+	@echo "$(BLUE)Running tests without Databricks tests...$(RESET)"
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v -m "not databricks"; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
+	@echo "$(GREEN)Tests completed!$(RESET)"
+
+test-no-databricks-cov: ## Run tests with coverage excluding databricks tests
+	@echo "$(BLUE)Running tests with coverage (excluding Databricks)...$(RESET)"
+	@if [ -d "$(VENV_NAME)" ] && [ -f "$(VENV_BIN)/pytest" ]; then \
+		$(VENV_BIN)/pytest -v -m "not databricks" --cov=pyforge_cli --cov-report=html --cov-report=term-missing; \
+		echo "$(GREEN)Coverage report generated in htmlcov/$(RESET)"; \
+	else \
+		echo "$(RED)Virtual environment not found. Run 'make setup-dev' first.$(RESET)"; \
+		exit 1; \
+	fi
+
+test-report: test-all ## Generate test report summary
+	@echo "$(BLUE)Test Report Summary:$(RESET)"
+	@if [ -f "test-report.json" ]; then \
+		python -c "import json; \
+		with open('test-report.json', 'r') as f: \
+			data = json.load(f); \
+			summary = data.get('summary', {}); \
+			print(f'Total Tests: {summary.get(\"total\", 0)}'); \
+			print(f'Passed: {summary.get(\"passed\", 0)}'); \
+			print(f'Failed: {summary.get(\"failed\", 0)}'); \
+			print(f'Skipped: {summary.get(\"skipped\", 0)}'); \
+			print(f'Duration: {data.get(\"duration\", 0):.2f} seconds')"; \
+	else \
+		echo "$(RED)No test report found. Run 'make test-all' first.$(RESET)"; \
+	fi
 
 # Pre-commit
-pre-commit: ## Run all pre-commit checks
+pre-commit: ## Run all pre-commit checks (includes PySpark tests)
 	@echo "$(BLUE)Running pre-commit checks...$(RESET)"
 	$(MAKE) format
 	$(MAKE) lint
@@ -197,8 +346,8 @@ docs: docs-serve ## Alias for docs-serve (default docs command)
 ci-install: ## Install dependencies for CI
 	$(UV) pip install -e ".[dev]"
 
-ci-test: ## Run tests for CI
-	$(UV) run pytest -v --cov=$(PACKAGE_NAME) --cov-report=xml
+ci-test: ## Run tests for CI (includes PySpark tests)
+	$(UV) run pytest -v --run-pyspark --cov=$(PACKAGE_NAME) --cov-report=xml
 
 ci-lint: ## Run linting for CI
 	$(UV) run ruff check $(SRC_DIR) $(TEST_DIR)

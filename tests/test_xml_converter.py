@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock, mock_open
 import tempfile
 import xml.etree.ElementTree as ET
 
-from pyforge_cli.converters.xml import XMLConverter
+from pyforge_cli.converters.xml import XmlConverter
 
 
 class TestXMLConverter:
@@ -15,7 +15,7 @@ class TestXMLConverter:
     @pytest.fixture
     def converter(self):
         """Create an XML converter instance."""
-        return XMLConverter()
+        return XmlConverter()
     
     @pytest.fixture
     def temp_dir(self):

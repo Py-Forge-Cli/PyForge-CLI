@@ -1,0 +1,175 @@
+# Databricks Serverless Environment V2 Python Package Constraints
+# Generated from: https://learn.microsoft.com/en-us/azure/databricks/release-notes/serverless/environment-version/two
+# Python Version: 3.11.10
+
+# Core Python Libraries
+pip==24.2
+setuptools==75.1.0
+wheel==0.44.0
+
+# Data Science & Scientific Computing
+numpy==1.23.5
+pandas==1.5.3
+scipy==1.11.1
+matplotlib==3.7.2
+seaborn==0.12.2
+plotly==5.9.0
+statsmodels==0.14.0
+
+# Machine Learning & AI
+scikit-learn==1.3.0
+mlflow-skinny==2.11.4
+xgboost==1.7.6
+lightgbm==4.1.0
+tensorflow==2.15.0
+torch==2.1.2
+transformers==4.36.2
+tokenizers==0.15.0
+accelerate==0.25.0
+
+# Deep Learning Support
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# LLM & AI Libraries
+openai==1.6.1
+anthropic==0.8.1
+langchain==0.1.0
+langchain-core==0.1.12
+sentence-transformers==2.2.2
+
+# Arrow & Parquet (Major Update)
+pyarrow==14.0.1
+
+# Date/Time Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Basic Utilities
+six==1.16.0
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6
+urllib3==2.1.0
+
+# Development & Jupyter
+ipykernel==6.28.0
+jupyter-client==7.4.9
+ipython==8.25.0
+black==23.12.1
+mypy==1.8.0
+pylsp-mypy==0.6.8
+
+# Cloud Libraries - AWS
+boto3==1.34.39
+botocore==1.34.39
+s3transfer==0.10.0
+
+# Cloud Libraries - Azure (New in V2)
+azure-core==1.31.0
+azure-storage-blob==12.19.1
+azure-storage-file-datalake==12.14.0
+azure-identity==1.15.0
+azure-keyvault-secrets==4.7.0
+
+# Cloud Libraries - Google Cloud (New in V2)
+google-cloud-storage==2.18.2
+google-cloud-core==2.4.1
+google-auth==2.28.1
+
+# Databricks Specific
+databricks-connect==15.4.5
+databricks-sdk==0.36.0
+
+# JSON & Serialization
+orjson==3.9.10
+ujson==5.9.0
+msgpack==1.0.7
+
+# HTTP & Networking
+requests==2.31.0
+aiohttp==3.9.1
+httpx==0.26.0
+
+# Cryptography & Security
+cryptography==41.0.8
+pyopenssl==23.3.0
+pycryptodome==3.19.0
+
+# File & Path Utilities
+click==8.1.7
+pathlib2==2.3.7
+
+# Image Processing
+pillow==10.1.0
+opencv-python==4.8.1.78
+
+# Text Processing
+regex==2023.10.3
+lxml==4.9.3
+beautifulsoup4==4.12.2
+
+# Configuration
+pyyaml==6.0.1
+toml==0.10.2
+tomli==2.0.1
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Additional Scientific Libraries
+sympy==1.12
+numba==0.58.1
+dask==2023.12.1
+xarray==2023.12.0
+
+# Database Connectivity
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+pymongo==4.6.1
+
+# Data Validation & Serialization
+pydantic==2.5.2
+marshmallow==3.20.2
+
+# Logging & Monitoring
+structlog==23.2.0
+loguru==0.7.2
+
+# Memory & Performance
+psutil==5.9.6
+memory-profiler==0.61.0
+
+# Async & Concurrency
+asyncio==3.4.3
+concurrent-futures==3.1.1
+
+# Web Frameworks (if needed)
+fastapi==0.104.1
+uvicorn==0.24.0
+
+# Data Processing
+polars==0.20.2
+pyjanitor==0.26.0
+
+# Geospatial (if needed)
+geopandas==0.14.1
+shapely==2.0.2
+
+# Time Series
+prophet==1.1.5
+pmdarima==2.0.4
+
+# Optimization
+optuna==3.5.0
+hyperopt==0.2.7
+
+# Visualization Extensions
+bokeh==3.3.2
+altair==5.2.0
+
+# API & Documentation
+swagger-ui-bundle==0.0.9
+redoc==2.1.2
