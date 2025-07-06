@@ -91,6 +91,46 @@ class XmlConverter(BaseConverter):
 
         return False
 
+    def _detect_encoding(self, input_path: Path) -> str:
+        """
+        Detect encoding from XML declaration.
+
+        Args:
+            input_path: Path to XML file
+
+        Returns:
+            Detected encoding or 'UTF-8' as default
+        """
+        try:
+            # Read first few bytes to detect encoding
+            with open(input_path, "rb") as f:
+                header = f.read(200)
+
+            # Decode header to check for XML declaration
+            try:
+                header_str = header.decode("utf-8")
+            except UnicodeDecodeError:
+                try:
+                    header_str = header.decode("utf-16")
+                except UnicodeDecodeError:
+                    try:
+                        header_str = header.decode("latin-1")
+                    except UnicodeDecodeError:
+                        return "UTF-8"
+
+            # Look for encoding declaration
+            import re
+
+            encoding_match = re.search(
+                r'encoding\s*=\s*["\']([^"\']+)["\']', header_str, re.IGNORECASE
+            )
+            if encoding_match:
+                return encoding_match.group(1).upper()
+
+            return "UTF-8"
+        except Exception:
+            return "UTF-8"
+
     def get_metadata(self, input_path: Path) -> Dict[str, Any]:
         """
         Extract metadata from the XML file.
@@ -105,11 +145,20 @@ class XmlConverter(BaseConverter):
         if isinstance(input_path, str):
             input_path = Path(input_path)
 
+        # Return None for nonexistent files
+        if not input_path.exists():
+            return None
+
         metadata = {
             "file_path": str(input_path),
             "file_name": input_path.name,
-            "file_size": input_path.stat().st_size if input_path.exists() else 0,
+            "file_extension": input_path.suffix,
+            "file_format": "XML",
+            "file_size": input_path.stat().st_size,
         }
+
+        # Detect encoding
+        encoding = self._detect_encoding(input_path)
 
         try:
             # Analyze XML structure
@@ -117,7 +166,6 @@ class XmlConverter(BaseConverter):
 
             metadata.update(
                 {
-                    "format": "XML",
                     "schema_detected": True,
                     "namespaces": analysis.get("namespaces", {}),
                     "root_element": analysis.get("root_tag"),
@@ -125,13 +173,29 @@ class XmlConverter(BaseConverter):
                     "total_elements": analysis.get("total_elements", 0),
                     "array_elements": len(analysis.get("array_elements", [])),
                     "suggested_columns": len(analysis.get("suggested_columns", [])),
-                    "encoding": "utf-8",  # TODO: Detect actual encoding
+                    "encoding": encoding,
                 }
             )
         except Exception as e:
+            error_msg = str(e)
             logger.warning(f"Could not extract XML metadata: {e}")
+
+            # Return None for corrupted/invalid XML files
+            if any(
+                phrase in error_msg.lower()
+                for phrase in [
+                    "not well-formed",
+                    "invalid token",
+                    "invalid xml",
+                    "xml declaration not at start",
+                    "parsing error",
+                ]
+            ):
+                return None
+
+            # For other errors, return metadata with error info
             metadata.update(
-                {"format": "XML", "schema_detected": False, "error": str(e)}
+                {"schema_detected": False, "error": error_msg, "encoding": encoding}
             )
 
         return metadata

@@ -3,6 +3,7 @@ Enhanced MDB (Microsoft Access) to Parquet converter with dual-backend support.
 Uses UCanAccess + pyodbc fallback for maximum compatibility and table coverage.
 """
 
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -582,6 +583,119 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             # Cleanup connection
             if hasattr(self, "dual_reader") and self.dual_reader:
                 self._close_connection(self.dual_reader)
+
+    def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
+        """
+        Extract metadata from MDB/ACCDB file using dual-backend approach.
+
+        Args:
+            input_path: Path to MDB/ACCDB file
+
+        Returns:
+            Dictionary containing file metadata or None if extraction fails
+        """
+        try:
+            # Get basic file info
+            file_stats = input_path.stat()
+            metadata = {
+                "file_name": input_path.name,
+                "file_size": file_stats.st_size,
+                "file_format": "Microsoft Access Database (Enhanced)",
+                "file_extension": input_path.suffix,
+                "modified_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_mtime
+                ).isoformat(),
+                "created_date": pd.Timestamp.fromtimestamp(
+                    file_stats.st_ctime
+                ).isoformat(),
+            }
+
+            # Detect database type and version
+            db_info = detect_database_file(input_path)
+
+            if db_info.file_type not in [DatabaseType.MDB, DatabaseType.ACCDB]:
+                return metadata  # Return basic metadata only
+
+            metadata["database_type"] = db_info.file_type.value.upper()
+            metadata["database_version"] = db_info.version or "Unknown"
+            metadata["is_encrypted"] = getattr(db_info, "is_encrypted", False)
+
+            # Try to get table information using dual-backend reader
+            try:
+                dual_reader = DualBackendMDBReader()
+
+                # Attempt connection
+                connection_success = dual_reader.connect(
+                    input_path, password=self.password
+                )
+
+                if connection_success:
+                    # Get backend info
+                    metadata["backend_used"] = dual_reader.get_active_backend()
+
+                    # List tables
+                    table_names = dual_reader.list_tables()
+
+                    if table_names:
+                        metadata["table_count"] = len(table_names)
+                        metadata["table_names"] = table_names
+
+                        # Get table details
+                        table_info = {}
+                        total_rows = 0
+                        total_columns = 0
+
+                        for table_name in table_names:
+                            try:
+                                # Get basic table info
+                                info = dual_reader.get_table_info(table_name)
+
+                                if info:
+                                    table_info[table_name] = {
+                                        "row_count": info.row_count,
+                                        "column_count": (
+                                            len(info.columns) if info.columns else 0
+                                        ),
+                                        "columns": (
+                                            [col.name for col in info.columns]
+                                            if info.columns
+                                            else []
+                                        ),
+                                    }
+                                    total_rows += info.row_count
+                                    total_columns += (
+                                        len(info.columns) if info.columns else 0
+                                    )
+                                else:
+                                    table_info[table_name] = {
+                                        "error": "Could not read table info"
+                                    }
+                            except Exception as e:
+                                table_info[table_name] = {"error": str(e)}
+
+                        metadata["table_details"] = table_info
+                        metadata["total_rows"] = total_rows
+                        metadata["total_columns"] = total_columns
+                    else:
+                        metadata["table_count"] = 0
+                        metadata["error"] = "No tables found"
+
+                    # Disconnect
+                    dual_reader.close()
+                else:
+                    metadata["error"] = "Connection failed"
+                    if getattr(db_info, "is_encrypted", False):
+                        metadata["error"] = "Database is password protected"
+
+            except Exception as e:
+                # If we can't connect, just include basic metadata
+                metadata["error"] = f"Could not read database structure: {str(e)}"
+
+            return metadata
+
+        except Exception as e:
+            logging.error(f"Failed to extract Enhanced MDB metadata: {e}")
+            return None
 
     def __del__(self):
         """Destructor with automatic connection cleanup."""

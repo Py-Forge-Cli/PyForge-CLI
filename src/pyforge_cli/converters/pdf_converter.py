@@ -137,13 +137,14 @@ class PDFConverter(BaseConverter):
             metadata = doc.metadata
 
             result = {
-                "title": metadata.get("title", ""),
-                "author": metadata.get("author", ""),
-                "subject": metadata.get("subject", ""),
-                "creator": metadata.get("creator", ""),
-                "producer": metadata.get("producer", ""),
-                "creation_date": metadata.get("creationDate", ""),
-                "modification_date": metadata.get("modDate", ""),
+                "title": metadata.get("title") or None,
+                "author": metadata.get("author") or None,
+                "subject": metadata.get("subject") or None,
+                "creator": metadata.get("creator") or None,
+                "producer": metadata.get("producer") or None,
+                "keywords": metadata.get("keywords") or None,
+                "creation_date": metadata.get("creationDate") or None,
+                "modification_date": metadata.get("modDate") or None,
                 "page_count": len(doc),
                 "file_size": input_path.stat().st_size,
             }

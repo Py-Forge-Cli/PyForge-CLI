@@ -123,16 +123,11 @@ class TestMDBConverterImproved:
         """Test validation of non-existent file."""
         assert converter.validate_input(Path("/nonexistent/file.mdb")) is False
 
-    @patch("pyforge_cli.converters.mdb_converter.MDBTableDiscovery")
-    def test_get_info_basic(
-        self, mock_discovery_class, converter, test_data_dir, mock_table_discovery
-    ):
-        """Test getting info from MDB file."""
+    def test_get_metadata_from_real_file(self, converter, test_data_dir):
+        """Test metadata extraction from real MDB file if available."""
         mdb_file = test_data_dir / "jet4_database.mdb"
 
         if mdb_file.exists():
-            mock_discovery_class.return_value = mock_table_discovery
-
             with patch(
                 "pyforge_cli.converters.mdb_converter.detect_database_file"
             ) as mock_detect:
@@ -140,57 +135,124 @@ class TestMDBConverterImproved:
                     file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
                 )
 
-                # MDBConverter doesn't have get_info, skip test
-                pytest.skip("MDBConverter doesn't have get_info method")
+                with patch(
+                    "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+                ) as mock_discovery_class:
+                    mock_discovery = MagicMock()
+                    mock_discovery.connect.return_value = True
+                    mock_discovery.list_tables.return_value = [
+                        "Customers",
+                        "Orders",
+                        "Products",
+                    ]
+                    mock_discovery.get_table_info.side_effect = [
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 100,
+                                "columns": [
+                                    type("Column", (), {"name": "ID"}),
+                                    type("Column", (), {"name": "Name"}),
+                                ],
+                            },
+                        )(),
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 500,
+                                "columns": [
+                                    type("Column", (), {"name": "OrderID"}),
+                                    type("Column", (), {"name": "CustomerID"}),
+                                ],
+                            },
+                        )(),
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 50,
+                                "columns": [
+                                    type("Column", (), {"name": "ProductID"}),
+                                    type("Column", (), {"name": "ProductName"}),
+                                ],
+                            },
+                        )(),
+                    ]
+                    mock_discovery_class.return_value = mock_discovery
 
-                # Code below is unreachable but kept for reference
-                # assert "tables" in info
-                # assert info["tables"] == 3
-                # assert "table_details" in info
-                # assert "Customers" in info["table_details"]
-                # assert info["table_details"]["Customers"]["row_count"] == 100
+                    metadata = converter.get_metadata(mdb_file)
 
-    @patch("pyforge_cli.converters.mdb_converter.MDBTableDiscovery")
-    def test_get_info_with_structure(
-        self, mock_discovery_class, converter, test_data_dir
-    ):
-        """Test getting info using structure JSON files."""
+                    assert metadata is not None
+                    assert metadata["table_count"] == 3
+                    assert metadata["table_names"] == [
+                        "Customers",
+                        "Orders",
+                        "Products",
+                    ]
+                    assert "table_details" in metadata
+                    assert "Customers" in metadata["table_details"]
+                    assert metadata["table_details"]["Customers"]["row_count"] == 100
+        else:
+            pytest.skip("Test data file not found")
+
+    def test_get_metadata_with_structure_file(self, converter, test_data_dir):
+        """Test metadata extraction using structure information."""
         structure_file = test_data_dir / "structures" / "complex_structure.json"
 
         if structure_file.exists():
             with open(structure_file, encoding="utf-8") as f:
                 structure = json.load(f)
 
-            # Mock discovery to return structure data
-            mock_discovery = MagicMock()
-            mock_discovery.discover_tables.return_value = True
-            mock_discovery.get_tables.return_value = list(structure["tables"].keys())
+            mdb_file = test_data_dir / "jet4_database.mdb"
+            if mdb_file.exists():
+                with patch(
+                    "pyforge_cli.converters.mdb_converter.detect_database_file"
+                ) as mock_detect:
+                    mock_detect.return_value = DatabaseInfo(
+                        file_type=DatabaseType.MDB,
+                        version="Jet 4.x",
+                        error_message=None,
+                    )
 
-            def get_table_info(table_name):
-                table = structure["tables"].get(table_name, {})
-                return {
-                    "row_count": table.get("rows", 0),
-                    "columns": table.get("columns", []),
-                }
+                    with patch(
+                        "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+                    ) as mock_discovery_class:
+                        mock_discovery = MagicMock()
+                        mock_discovery.connect.return_value = True
+                        mock_discovery.list_tables.return_value = list(
+                            structure["tables"].keys()
+                        )
 
-            mock_discovery.get_table_info.side_effect = get_table_info
-            mock_discovery_class.return_value = mock_discovery
+                        def mock_get_table_info(table_name):
+                            table = structure["tables"].get(table_name, {})
+                            columns = table.get("columns", [])
+                            return type(
+                                "TableInfo",
+                                (),
+                                {
+                                    "row_count": table.get("rows", 0),
+                                    "columns": [
+                                        type("Column", (), {"name": col})
+                                        for col in columns
+                                    ],
+                                },
+                            )()
 
-            test_data_dir / "jet4_database.mdb"
-            with patch(
-                "pyforge_cli.converters.mdb_converter.detect_database_file"
-            ) as mock_detect:
-                mock_detect.return_value = DatabaseInfo(
-                    file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
-                )
+                        mock_discovery.get_table_info.side_effect = mock_get_table_info
+                        mock_discovery_class.return_value = mock_discovery
 
-                # MDBConverter doesn't have get_info, skip test
-                pytest.skip("MDBConverter doesn't have get_info method")
+                        metadata = converter.get_metadata(mdb_file)
 
-                # Code below is unreachable but kept for reference
-                # assert info["tables"] == len(structure["tables"])
-                # assert "Customers" in info["table_details"]
-                # assert "Orders" in info["table_details"]
+                        assert metadata is not None
+                        assert metadata["table_count"] == len(structure["tables"])
+                        for table_name in structure["tables"]:
+                            assert table_name in metadata["table_details"]
+            else:
+                pytest.skip("Test data file not found")
+        else:
+            pytest.skip("Structure file not found")
 
     def test_convert_basic(
         self, converter, test_data_dir, temp_dir, mock_table_discovery
@@ -545,3 +607,331 @@ class TestMDBConverterImproved:
                                     result = converter.convert(mdb_file, output_dir)
                                     assert result is True
                                     assert output_dir.exists()
+
+    def test_get_metadata_basic_mdb(self, converter, test_data_dir):
+        """Test metadata extraction from basic MDB file."""
+        mdb_file = test_data_dir / "jet4_database.mdb"
+        if mdb_file.exists():
+            with patch(
+                "pyforge_cli.converters.mdb_converter.detect_database_file"
+            ) as mock_detect:
+                mock_detect.return_value = DatabaseInfo(
+                    file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+                )
+
+                with patch(
+                    "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+                ) as mock_discovery_class:
+                    mock_discovery = MagicMock()
+                    mock_discovery.connect.return_value = True
+                    mock_discovery.list_tables.return_value = ["Customers", "Orders"]
+                    mock_discovery.get_table_info.side_effect = [
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 100,
+                                "columns": [
+                                    type("Column", (), {"name": "ID"}),
+                                    type("Column", (), {"name": "Name"}),
+                                ],
+                            },
+                        )(),
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 500,
+                                "columns": [
+                                    type("Column", (), {"name": "OrderID"}),
+                                    type("Column", (), {"name": "CustomerID"}),
+                                ],
+                            },
+                        )(),
+                    ]
+                    mock_discovery_class.return_value = mock_discovery
+
+                    metadata = converter.get_metadata(mdb_file)
+
+                    assert metadata is not None
+                    assert metadata["file_name"] == "jet4_database.mdb"
+                    assert metadata["file_format"] == "Microsoft Access Database"
+                    assert metadata["file_extension"] == ".mdb"
+                    assert metadata["database_type"] == "MDB"
+                    assert metadata["database_version"] == "Jet 4.x"
+                    assert metadata["table_count"] == 2
+                    assert metadata["table_names"] == ["Customers", "Orders"]
+                    assert metadata["total_rows"] == 600
+                    assert metadata["total_columns"] == 4
+
+                    # Check table details
+                    assert "table_details" in metadata
+                    assert "Customers" in metadata["table_details"]
+                    assert "Orders" in metadata["table_details"]
+                    assert metadata["table_details"]["Customers"]["row_count"] == 100
+                    assert metadata["table_details"]["Orders"]["row_count"] == 500
+        else:
+            pytest.skip("Test data file not found")
+
+    def test_get_metadata_accdb_file(self, converter, test_data_dir):
+        """Test metadata extraction from ACCDB file."""
+        accdb_file = test_data_dir / "access2016_database.accdb"
+        if accdb_file.exists():
+            with patch(
+                "pyforge_cli.converters.mdb_converter.detect_database_file"
+            ) as mock_detect:
+                mock_detect.return_value = DatabaseInfo(
+                    file_type=DatabaseType.ACCDB,
+                    version="Access 2016",
+                    error_message=None,
+                )
+
+                with patch(
+                    "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+                ) as mock_discovery_class:
+                    mock_discovery = MagicMock()
+                    mock_discovery.connect.return_value = True
+                    mock_discovery.list_tables.return_value = ["Products", "Categories"]
+                    mock_discovery.get_table_info.side_effect = [
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 50,
+                                "columns": [
+                                    type("Column", (), {"name": "ProductID"}),
+                                    type("Column", (), {"name": "ProductName"}),
+                                    type("Column", (), {"name": "Price"}),
+                                ],
+                            },
+                        )(),
+                        type(
+                            "TableInfo",
+                            (),
+                            {
+                                "row_count": 10,
+                                "columns": [
+                                    type("Column", (), {"name": "CategoryID"}),
+                                    type("Column", (), {"name": "CategoryName"}),
+                                ],
+                            },
+                        )(),
+                    ]
+                    mock_discovery_class.return_value = mock_discovery
+
+                    metadata = converter.get_metadata(accdb_file)
+
+                    assert metadata is not None
+                    assert metadata["database_type"] == "ACCDB"
+                    assert metadata["database_version"] == "Access 2016"
+                    assert metadata["table_count"] == 2
+                    assert metadata["total_rows"] == 60
+                    assert metadata["total_columns"] == 5
+        else:
+            pytest.skip("Test data file not found")
+
+    def test_get_metadata_encrypted_database(self, converter, temp_dir):
+        """Test metadata extraction from encrypted database."""
+        # Create a fake encrypted database file
+        encrypted_file = temp_dir / "encrypted.mdb"
+        encrypted_file.write_bytes(b"Encrypted MDB file content")
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+            )
+            # Add is_encrypted attribute to the returned object
+            mock_detect.return_value.is_encrypted = True
+
+            with patch(
+                "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+            ) as mock_discovery_class:
+                mock_discovery = MagicMock()
+                mock_discovery.connect.return_value = (
+                    False  # Connection fails for encrypted DB
+                )
+                mock_discovery_class.return_value = mock_discovery
+
+                metadata = converter.get_metadata(encrypted_file)
+
+                assert metadata is not None
+                assert metadata["is_encrypted"] is True
+                assert metadata["error"] == "Database is password protected"
+
+    def test_get_metadata_connection_failure(self, converter, temp_dir):
+        """Test metadata extraction when connection fails."""
+        # Create a fake MDB file
+        mdb_file = temp_dir / "connection_fail.mdb"
+        mdb_file.write_bytes(b"Fake MDB file content")
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+            )
+
+            with patch(
+                "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+            ) as mock_discovery_class:
+                mock_discovery = MagicMock()
+                mock_discovery.connect.return_value = False  # Connection fails
+                mock_discovery_class.return_value = mock_discovery
+
+                metadata = converter.get_metadata(mdb_file)
+
+                assert metadata is not None
+                assert metadata["error"] == "Connection failed"
+
+    def test_get_metadata_no_tables(self, converter, temp_dir):
+        """Test metadata extraction from database with no tables."""
+        # Create a fake MDB file
+        mdb_file = temp_dir / "no_tables.mdb"
+        mdb_file.write_bytes(b"Fake MDB file content")
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+            )
+
+            with patch(
+                "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+            ) as mock_discovery_class:
+                mock_discovery = MagicMock()
+                mock_discovery.connect.return_value = True
+                mock_discovery.list_tables.return_value = []  # No tables
+                mock_discovery_class.return_value = mock_discovery
+
+                metadata = converter.get_metadata(mdb_file)
+
+                assert metadata is not None
+                assert metadata["table_count"] == 0
+                assert metadata["error"] == "No tables found"
+
+    def test_get_metadata_table_info_error(self, converter, temp_dir):
+        """Test metadata extraction when table info extraction fails."""
+        # Create a fake MDB file
+        mdb_file = temp_dir / "table_error.mdb"
+        mdb_file.write_bytes(b"Fake MDB file content")
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+            )
+
+            with patch(
+                "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+            ) as mock_discovery_class:
+                mock_discovery = MagicMock()
+                mock_discovery.connect.return_value = True
+                mock_discovery.list_tables.return_value = ["ErrorTable"]
+                mock_discovery.get_table_info.side_effect = Exception(
+                    "Table info error"
+                )
+                mock_discovery_class.return_value = mock_discovery
+
+                metadata = converter.get_metadata(mdb_file)
+
+                assert metadata is not None
+                assert metadata["table_count"] == 1
+                assert "table_details" in metadata
+                assert "ErrorTable" in metadata["table_details"]
+                assert "error" in metadata["table_details"]["ErrorTable"]
+                assert (
+                    metadata["table_details"]["ErrorTable"]["error"]
+                    == "Table info error"
+                )
+
+    def test_get_metadata_corrupted_file(self, converter, temp_dir):
+        """Test metadata extraction from corrupted MDB file."""
+        # Create a corrupted MDB file
+        corrupted_file = temp_dir / "corrupted.mdb"
+        corrupted_file.write_bytes(b"Not a valid MDB file")
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.UNKNOWN,
+                version=None,
+                error_message="Invalid file format",
+            )
+
+            metadata = converter.get_metadata(corrupted_file)
+
+            # Should return basic metadata only
+            assert metadata is not None
+            assert metadata["file_name"] == "corrupted.mdb"
+            assert metadata["file_format"] == "Microsoft Access Database"
+            assert (
+                "database_type" not in metadata
+                or metadata["database_type"] == "UNKNOWN"
+            )
+
+    def test_get_metadata_nonexistent_file(self, converter):
+        """Test metadata extraction from non-existent file."""
+        from pathlib import Path
+
+        nonexistent_file = Path("/nonexistent/file.mdb")
+        metadata = converter.get_metadata(nonexistent_file)
+
+        # Should return None for non-existent files
+        assert metadata is None
+
+    def test_get_metadata_large_database(self, converter, temp_dir):
+        """Test metadata extraction from large database with many tables."""
+        # Create a fake MDB file
+        mdb_file = temp_dir / "large.mdb"
+        mdb_file.write_bytes(b"Fake large MDB file content")
+
+        # Create mock table info for 20 tables
+        table_names = [f"Table_{i:02d}" for i in range(1, 21)]
+
+        with patch(
+            "pyforge_cli.converters.mdb_converter.detect_database_file"
+        ) as mock_detect:
+            mock_detect.return_value = DatabaseInfo(
+                file_type=DatabaseType.MDB, version="Jet 4.x", error_message=None
+            )
+
+            with patch(
+                "pyforge_cli.converters.mdb_converter.MDBTableDiscovery"
+            ) as mock_discovery_class:
+                mock_discovery = MagicMock()
+                mock_discovery.connect.return_value = True
+                mock_discovery.list_tables.return_value = table_names
+
+                def mock_get_table_info(table_name):
+                    # Return varying table sizes
+                    table_num = int(table_name.split("_")[1])
+                    return type(
+                        "TableInfo",
+                        (),
+                        {
+                            "row_count": table_num * 100,
+                            "columns": [
+                                type("Column", (), {"name": "Col_1"}),
+                                type("Column", (), {"name": "Col_2"}),
+                            ],
+                        },
+                    )()
+
+                mock_discovery.get_table_info.side_effect = mock_get_table_info
+                mock_discovery_class.return_value = mock_discovery
+
+                metadata = converter.get_metadata(mdb_file)
+
+                assert metadata is not None
+                assert metadata["table_count"] == 20
+                assert metadata["total_rows"] == sum(
+                    i * 100 for i in range(1, 21)
+                )  # 21000
+                assert metadata["total_columns"] == 20 * 2  # 40 columns total
+                assert len(metadata["table_names"]) == 20
+                assert len(metadata["table_details"]) == 20
