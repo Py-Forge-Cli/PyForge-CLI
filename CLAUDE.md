@@ -6,6 +6,11 @@
 - **No AI Attribution**: Do not include "Generated with Claude Code" or similar AI attribution in commit messages
 - **Clean Professional Format**: Use standard commit message format without AI generation notices
 
+### Documentation Organization
+- **All documentation artifacts**: Always create all documentation files requested by the user under the `claude-notes/` folder
+- **Structured organization**: Keep documentation organized by topic/feature within the claude-notes directory
+- **No documentation in root**: Never create documentation files in the project root unless explicitly requested
+
 ## Jupyter Notebook Organization Best Practices
 
 ### Directory Structure for Testing Notebooks

@@ -148,7 +148,10 @@
       "Bash(mypy:*)",
       "Bash(black:*)",
       "Bash(.venv/bin/pytest tests/test_pdf_converter.py tests/test_csv_converter.py tests/test_excel_converter_improved.py tests/test_mdb_converter_improved.py tests/test_xml_converter.py -v --tb=no -x)",
-      "Bash(.venv/bin/pytest tests/test_mdb_converter_improved.py::TestMDBConverterImproved::test_convert_special_table_names -v)"
+      "Bash(.venv/bin/pytest tests/test_mdb_converter_improved.py::TestMDBConverterImproved::test_convert_special_table_names -v)",
+      "mcp__ide__getDiagnostics",
+      "Bash(ulimit:*)",
+      "WebFetch(domain:databricks-sdk-py.readthedocs.io)"
     ],
     "deny": []
   },

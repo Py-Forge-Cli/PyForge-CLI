@@ -332,13 +332,21 @@ class PySparkCSVConverter(CSVConverter):
                 # In Databricks, get the active session
                 spark = SparkSession.builder.getOrCreate()
             else:
-                # Locally, create a new session
-                spark = (
-                    SparkSession.builder.appName("PyForge-CSV-Converter")
-                    .config("spark.sql.execution.arrow.pyspark.enabled", "true")
-                    .config("spark.driver.memory", "2g")
-                    .getOrCreate()
-                )
+                # Locally, create a new session with configs (not serverless)
+                import os
+                is_serverless = os.environ.get("IS_SERVERLESS", "").lower() == "true"
+                
+                if is_serverless:
+                    # In serverless, use existing session without configs
+                    spark = SparkSession.builder.getOrCreate()
+                else:
+                    # Local environment, can set configs
+                    spark = (
+                        SparkSession.builder.appName("PyForge-CSV-Converter")
+                        .config("spark.sql.execution.arrow.pyspark.enabled", "true")
+                        .config("spark.driver.memory", "2g")
+                        .getOrCreate()
+                    )
 
             # Read CSV with robust options - let Spark handle edge cases
             df = (

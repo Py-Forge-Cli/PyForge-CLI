@@ -47,19 +47,32 @@ class DeltaLakeSupport:
 
     def _configure_delta_optimizations(self):
         """Configure Delta Lake optimizations."""
-        # Enable adaptive query execution
-        self.spark.conf.set("spark.sql.adaptive.enabled", "true")
-        self.spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
+        # Check if running in serverless environment
+        import os
+        is_serverless = os.environ.get("IS_SERVERLESS", "").lower() == "true"
+        
+        if is_serverless:
+            self.logger.debug("Skipping Delta optimizations config - running in serverless")
+            return
+            
+        try:
+            # Enable adaptive query execution
+            self.spark.conf.set("spark.sql.adaptive.enabled", "true")
+            self.spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
 
-        # Delta-specific optimizations
-        self.spark.conf.set(
-            "spark.databricks.delta.retentionDurationCheck.enabled", "false"
-        )
-        self.spark.conf.set(
-            "spark.databricks.delta.merge.optimizeWrite.enabled", "true"
-        )
-        self.spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
-        self.spark.conf.set("spark.databricks.delta.autoCompact.enabled", "true")
+            # Delta-specific optimizations
+            self.spark.conf.set(
+                "spark.databricks.delta.retentionDurationCheck.enabled", "false"
+            )
+            self.spark.conf.set(
+                "spark.databricks.delta.merge.optimizeWrite.enabled", "true"
+            )
+            self.spark.conf.set("spark.databricks.delta.optimizeWrite.enabled", "true")
+            self.spark.conf.set("spark.databricks.delta.autoCompact.enabled", "true")
+            
+            self.logger.debug("Configured Delta optimizations")
+        except Exception as e:
+            self.logger.warning(f"Could not set Delta configurations: {e}")
 
     def write_delta(self, df: DataFrame, path: str, options: Dict[str, Any]) -> bool:
         """

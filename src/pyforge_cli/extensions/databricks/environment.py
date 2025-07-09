@@ -91,24 +91,29 @@ class DatabricksEnvironment:
 
         compute_type = "unknown"
 
-        # Method 1: Check runtime version for serverless marker
-        runtime_version = self.get_runtime_version()
-        if runtime_version and self.SERVERLESS_MARKER in runtime_version.lower():
+        # Method 1: Check environment variables (most reliable)
+        if self._is_serverless_by_env():
             compute_type = "serverless"
-            self.logger.info("Detected serverless compute from runtime version")
+            self.logger.info("Detected serverless compute from environment variables")
 
-        # Method 2: Check environment variables
-        elif self._is_serverless_by_env():
-            compute_type = "serverless"
-            self.logger.info("Detected serverless compute from environment")
+        # Method 2: Check runtime version for client marker or serverless marker
+        elif runtime_version := self.get_runtime_version():
+            if (runtime_version.startswith("client.") or 
+                self.SERVERLESS_MARKER in runtime_version.lower()):
+                compute_type = "serverless"
+                self.logger.info("Detected serverless compute from runtime version")
 
-        # Method 3: Check Spark configuration
-        elif self._is_serverless_by_spark_conf():
-            compute_type = "serverless"
-            self.logger.info("Detected serverless compute from Spark config")
+        # Method 3: Check Spark configuration (avoid in serverless as it can error)
+        elif compute_type == "unknown":
+            try:
+                if self._is_serverless_by_spark_conf():
+                    compute_type = "serverless"
+                    self.logger.info("Detected serverless compute from Spark config")
+            except Exception as e:
+                self.logger.debug(f"Could not check Spark config for serverless detection: {e}")
 
         # Default to classic if Databricks but not serverless
-        elif self.is_databricks_environment():
+        if compute_type == "unknown" and self.is_databricks_environment():
             compute_type = "classic"
             self.logger.info("Detected classic compute (non-serverless Databricks)")
 
@@ -158,15 +163,36 @@ class DatabricksEnvironment:
         # "13.3.x-serverless-scala2.12" (serverless)
 
         try:
-            # Extract numeric version
-            version_parts = runtime_version.split("-")[0].split(".")
-            major = int(version_parts[0])
-            minor = int(version_parts[1]) if len(version_parts) > 1 else 0
+            # Handle client version format (e.g., "client.1.13")
+            if runtime_version.startswith("client."):
+                # Extract version after "client."
+                client_version = runtime_version[7:]  # Remove "client." prefix
+                version_parts = client_version.split(".")
+                if len(version_parts) >= 2:
+                    major = int(version_parts[0])
+                    minor = int(version_parts[1])
+                    # Client versions are typically serverless and not LTS
+                    return major, minor, False
+                else:
+                    # Malformed client version, return defaults
+                    self.logger.warning(f"Malformed client version: {runtime_version}")
+                    return 1, 0, False
+            else:
+                # Extract numeric version for standard format
+                version_parts = runtime_version.split("-")[0].split(".")
+                # Ensure we have numeric parts
+                if version_parts and version_parts[0].isdigit():
+                    major = int(version_parts[0])
+                    minor = int(version_parts[1]) if len(version_parts) > 1 and version_parts[1].isdigit() else 0
 
-            # Check if LTS (Long Term Support)
-            is_lts = major in [11, 12, 13]  # Known LTS versions
+                    # Check if LTS (Long Term Support)
+                    is_lts = major in [11, 12, 13]  # Known LTS versions
 
-            return major, minor, is_lts
+                    return major, minor, is_lts
+                else:
+                    # Non-numeric version, possibly a development or special version
+                    self.logger.warning(f"Non-numeric runtime version: {runtime_version}")
+                    return None, None, False
 
         except (ValueError, IndexError) as e:
             self.logger.warning(
@@ -203,6 +229,26 @@ class DatabricksEnvironment:
 
         return spark_version
 
+    def get_serverless_version(self) -> Optional[str]:
+        """Get serverless version based on SPARK_ENV_LOADED.
+        
+        Returns:
+            Optional[str]: "v1", "v2", "v3", or None
+        """
+        if not self._is_serverless_by_env():
+            return None
+            
+        spark_env_loaded = os.environ.get("SPARK_ENV_LOADED", "")
+        
+        # Map SPARK_ENV_LOADED to serverless versions
+        version_map = {
+            "1": "v1",
+            "2": "v2", 
+            "3": "v3"
+        }
+        
+        return version_map.get(spark_env_loaded)
+
     def get_environment_info(self) -> Dict[str, Any]:
         """
         Get comprehensive environment information.
@@ -218,6 +264,7 @@ class DatabricksEnvironment:
         # Gather all information
         runtime_version = self.get_runtime_version()
         major, minor, is_lts = self.parse_runtime_version()
+        is_serverless = self._is_serverless_by_env()
 
         info = {
             "is_databricks": self.is_databricks_environment(),
@@ -231,6 +278,10 @@ class DatabricksEnvironment:
             "has_unity_catalog": self._check_unity_catalog(),
             "has_pyspark": self._check_pyspark_availability(),
             "detected_at": datetime.now().isoformat(),
+            # Add serverless detection info
+            "is_serverless": is_serverless,
+            "serverless_version": self.get_serverless_version() if is_serverless else None,
+            "spark_connect_enabled": os.environ.get("SPARK_CONNECT_MODE_ENABLED") == "1",
         }
 
         # Add serverless-specific info
@@ -242,6 +293,9 @@ class DatabricksEnvironment:
                         "photon_enabled": True,
                         "unity_catalog_only": True,
                         "spark_connect": True,
+                        "version": info["serverless_version"],
+                        "no_spark_configs": True,  # Cannot set Spark configurations
+                        "volume_only_storage": True,  # Only Unity Catalog volumes
                     }
                 }
             )
@@ -296,9 +350,14 @@ class DatabricksEnvironment:
 
     def _is_serverless_by_env(self) -> bool:
         """Check environment variables for serverless indicators."""
+        # Primary serverless indicator (most reliable)
+        if os.environ.get("IS_SERVERLESS", "").lower() == "true":
+            return True
+            
+        # Backup indicators
         serverless_env_vars = [
             "DATABRICKS_SERVERLESS_COMPUTE",
-            "IS_SERVERLESS_COMPUTE",
+            "IS_SERVERLESS_COMPUTE", 
             "SERVERLESS_COMPUTE_ENABLED",
         ]
 
@@ -372,6 +431,12 @@ class DatabricksEnvironment:
         tags = {}
 
         try:
+            # Check if running in serverless environment
+            if self._is_serverless_by_env():
+                # In serverless, sparkContext is not available
+                self.logger.debug("Skipping cluster tags retrieval - running in serverless")
+                return tags
+                
             # Try to read cluster tags from Spark config
             from pyspark.sql import SparkSession
 

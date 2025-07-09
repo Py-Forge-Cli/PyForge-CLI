@@ -425,6 +425,11 @@ class ClassicDetector:
     def _check_custom_tags(self) -> bool:
         """Check if custom cluster tags are available."""
         try:
+            # Check if running in serverless environment
+            if os.environ.get("IS_SERVERLESS", "").lower() == "true":
+                # In serverless, sparkContext is not available
+                return False
+                
             from pyspark.sql import SparkSession
 
             spark = SparkSession.builder.getOrCreate()

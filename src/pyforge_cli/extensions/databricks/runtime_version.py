@@ -33,6 +33,11 @@ class RuntimeVersionDetector:
             r"(?:-scala(\d+\.\d+))?"  # Scala version
             r"(?:-(.+))?$"  # Additional tags
         )
+        
+        # Alternative pattern for client versions (e.g., "client.1.13")
+        self.CLIENT_VERSION_PATTERN = re.compile(
+            r"^client\.(\d+)\.(\d+)(?:\.(\d+))?$"
+        )
 
         # Known LTS versions
         self.LTS_VERSIONS = {
@@ -94,6 +99,34 @@ class RuntimeVersionDetector:
         match = self.VERSION_PATTERN.match(version_string)
 
         if not match:
+            # Try client version pattern
+            client_match = self.CLIENT_VERSION_PATTERN.match(version_string)
+            if client_match:
+                # Handle client versions (e.g., "client.1.13")
+                groups = client_match.groups()
+                major = int(groups[0])
+                minor = int(groups[1])
+                patch = int(groups[2]) if groups[2] else 0
+                
+                return {
+                    "raw": version_string,
+                    "major": major,
+                    "minor": minor,
+                    "patch": patch,
+                    "stage": "client",
+                    "variant": "client",
+                    "variant_name": "Client Version",
+                    "scala_version": None,
+                    "tags": ["client"],
+                    "numeric_version": f"{major}.{minor}.{patch}",
+                    "is_lts": False,
+                    "lts_release_date": None,
+                    "is_serverless": True,  # Client versions are typically serverless
+                    "is_ml": False,
+                    "is_gpu": False,
+                    "is_photon": True,  # Serverless includes Photon
+                }
+            
             self.logger.warning(f"Could not parse version: {version_string}")
             return self._empty_version_info()
 

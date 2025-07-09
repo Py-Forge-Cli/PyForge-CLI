@@ -231,6 +231,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
             console.print(f"[red]Error creating minimal datasets: {e}[/red]")
             return False
 
+
     def install_datasets(
         self,
         version: Optional[str] = None,
@@ -238,7 +239,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
         sizes: Optional[List[str]] = None,
         force: bool = False,
     ) -> bool:
-        """Install sample datasets.
+        """Install sample datasets from GitHub releases.
 
         Args:
             version: Specific version to install (defaults to latest)
@@ -249,7 +250,7 @@ These are minimal sample datasets created locally for testing PyForge CLI.
         Returns:
             True if installation succeeded, False otherwise
         """
-
+        
         # Get release info
         if version:
             release = self.get_release_by_version(version)

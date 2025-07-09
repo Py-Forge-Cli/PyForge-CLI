@@ -40,6 +40,7 @@ class PyForgeDatabricks:
 
         Args:
             spark_session: Optional Spark session (auto-detected if not provided)
+                           In Databricks notebooks, this is usually the global 'spark' variable
             auto_init: Automatically initialize on creation (default: True)
         """
         self.logger = logging.getLogger("pyforge.databricks")
@@ -89,11 +90,38 @@ class PyForgeDatabricks:
 
             # Initialize Spark if needed
             if self.spark is None:
-                from pyspark.sql import SparkSession
+                try:
+                    # In Databricks, try to use the existing 'spark' variable first
+                    if env_info["is_databricks"]:
+                        try:
+                            # Try to access the global spark variable
+                            import builtins
+                            if hasattr(builtins, '__dict__') and 'spark' in builtins.__dict__:
+                                self.spark = builtins.__dict__['spark']
+                                self.logger.info("Using existing Databricks spark session")
+                            else:
+                                # Fallback to getting active session
+                                from pyspark.sql import SparkSession
+                                self.spark = SparkSession.getActiveSession()
+                                if self.spark:
+                                    self.logger.info("Using active Spark session")
+                                else:
+                                    self.logger.warning("No active Spark session found")
+                        except Exception as e:
+                            self.logger.debug(f"Could not access global spark variable: {e}")
+                            # Try getActiveSession as fallback
+                            from pyspark.sql import SparkSession
+                            self.spark = SparkSession.getActiveSession()
+                    else:
+                        # Non-Databricks environment, create new session
+                        from pyspark.sql import SparkSession
+                        self.spark = SparkSession.builder.getOrCreate()
+                        
+                except Exception as spark_error:
+                    self.logger.warning(f"Could not initialize Spark session: {spark_error}")
+                    # Continue without Spark - native converters can still work
 
-                self.spark = SparkSession.builder.getOrCreate()
-
-            # Initialize converters
+            # Initialize converters (always initialize, even if Spark fails)
             self._initialize_converters()
 
             self.logger.info("PyForge Databricks initialized successfully")
@@ -484,26 +512,90 @@ class PyForgeDatabricks:
         if self._converters_initialized:
             return
 
-        # Initialize converters
-        csv_converter = SparkCSVConverter(self.spark)
-        excel_converter = SparkExcelConverter(self.spark)
-        xml_converter = SparkXMLConverter(self.spark)
-        delta_support = DeltaLakeSupport(self.spark)
-        streaming_support = StreamingSupport(self.spark)
+        # Initialize converters only if we have a Spark session
+        if self.spark:
+            try:
+                csv_converter = SparkCSVConverter(self.spark)
+                excel_converter = SparkExcelConverter(self.spark)
+                xml_converter = SparkXMLConverter(self.spark)
+                
+                # Only initialize Delta support in non-serverless environments
+                import os
+                is_serverless = os.environ.get("IS_SERVERLESS", "").lower() == "true"
+                if not is_serverless:
+                    delta_support = DeltaLakeSupport(self.spark)
+                else:
+                    delta_support = None
+                    self.logger.debug("Skipping Delta support initialization in serverless environment")
+                    
+                streaming_support = StreamingSupport(self.spark)
+                
+                # Store converter instances
+                self._csv_converter = csv_converter
+                self._excel_converter = excel_converter
+                self._xml_converter = xml_converter
+                self._delta_support = delta_support
+                self._streaming_support = streaming_support
+            except Exception as e:
+                self.logger.warning(f"Could not initialize Spark converters: {e}")
+                # Set to None so we know they're not available
+                self._csv_converter = None
+                self._excel_converter = None
+                self._xml_converter = None
+                self._delta_support = None
+                self._streaming_support = None
+        else:
+            # No Spark session, can't create Spark converters
+            self.logger.warning("No Spark session available, Spark converters will not be initialized")
+            self._csv_converter = None
+            self._excel_converter = None
+            self._xml_converter = None
+            self._delta_support = None
+            self._streaming_support = None
 
-        # Register converters with fallback manager
-        # These would be wrapper functions that match the expected signature
+        # Import native converters for fallback
+        from ...converters import CSVConverter, XmlConverter
+        try:
+            from ...converters.excel_converter import ExcelConverter
+            excel_available = True
+        except ImportError:
+            excel_available = False
+            self.logger.warning("ExcelConverter not available for native fallback")
+
+        # Note: Spark converter instances are already stored above
+        
+        # Store native converter instances for fallback
+        self._native_csv_converter = CSVConverter()
+        self._native_xml_converter = XmlConverter()
+        if excel_available:
+            self._native_excel_converter = ExcelConverter()
+        else:
+            self._native_excel_converter = None
+
+        # Register all converter types with fallback manager
+        # SPARK converter (distributed processing)
         self.fallback_manager.register_converter(
             ConverterType.SPARK,
             lambda i, o, opts: self._spark_converter_wrapper(i, o, opts),
         )
-
-        # Store converter instances
-        self._csv_converter = csv_converter
-        self._excel_converter = excel_converter
-        self._xml_converter = xml_converter
-        self._delta_support = delta_support
-        self._streaming_support = streaming_support
+        
+        # PANDAS converter (uses pandas for processing)
+        self.fallback_manager.register_converter(
+            ConverterType.PANDAS,
+            lambda i, o, opts: self._pandas_converter_wrapper(i, o, opts),
+        )
+        
+        # PYARROW converter (uses PyArrow for processing)
+        self.fallback_manager.register_converter(
+            ConverterType.PYARROW,
+            lambda i, o, opts: self._pyarrow_converter_wrapper(i, o, opts),
+        )
+        
+        # NATIVE converter (PyForge's native converters)
+        self.fallback_manager.register_converter(
+            ConverterType.NATIVE,
+            lambda i, o, opts: self._native_converter_wrapper(i, o, opts),
+        )
 
         self._converters_initialized = True
 
@@ -511,19 +603,24 @@ class PyForgeDatabricks:
         self, input_path: Path, output_path: Path, options: Dict[str, Any]
     ) -> bool:
         """Wrapper for Spark converters to match fallback manager interface."""
+        # Check if Spark converters are available
+        if not self.spark:
+            self.logger.error("Spark session not available")
+            return False
+            
         input_format = input_path.suffix.lower().lstrip(".")
         output_format = options.get("output_format", "parquet")
 
         # Route to appropriate converter
-        if input_format == "csv":
+        if input_format == "csv" and self._csv_converter:
             return self._csv_converter.convert(
                 input_path, output_path, output_format, options
             )
-        elif input_format in ["xlsx", "xls"]:
+        elif input_format in ["xlsx", "xls"] and self._excel_converter:
             return self._excel_converter.convert(
                 input_path, output_path, output_format, options
             )
-        elif input_format == "xml":
+        elif input_format == "xml" and self._xml_converter:
             return self._xml_converter.convert(
                 input_path, output_path, output_format, options
             )
@@ -532,6 +629,109 @@ class PyForgeDatabricks:
             return self._generic_spark_convert(
                 input_path, output_path, input_format, output_format, options
             )
+
+    def _pandas_converter_wrapper(
+        self, input_path: Path, output_path: Path, options: Dict[str, Any]
+    ) -> bool:
+        """Wrapper for pandas-based converters."""
+        input_format = input_path.suffix.lower().lstrip(".")
+        output_format = options.get("output_format", "parquet")
+
+        try:
+            import pandas as pd
+
+            # Read file with pandas
+            if input_format == "csv":
+                df = pd.read_csv(input_path)
+            elif input_format in ["xlsx", "xls"]:
+                df = pd.read_excel(input_path)
+            elif input_format == "json":
+                df = pd.read_json(input_path)
+            elif input_format == "parquet":
+                df = pd.read_parquet(input_path)
+            else:
+                self.logger.warning(f"Pandas doesn't support {input_format} format")
+                return False
+
+            # Write output
+            if output_format == "parquet":
+                df.to_parquet(output_path, index=False)
+            elif output_format == "csv":
+                df.to_csv(output_path, index=False)
+            elif output_format == "json":
+                df.to_json(output_path, orient="records")
+            else:
+                self.logger.warning(f"Pandas doesn't support writing to {output_format} format")
+                return False
+
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Pandas conversion failed: {e}")
+            return False
+
+    def _pyarrow_converter_wrapper(
+        self, input_path: Path, output_path: Path, options: Dict[str, Any]
+    ) -> bool:
+        """Wrapper for PyArrow-based converters."""
+        input_format = input_path.suffix.lower().lstrip(".")
+        output_format = options.get("output_format", "parquet")
+
+        try:
+            import pyarrow as pa
+            import pyarrow.parquet as pq
+            import pyarrow.csv as pc
+
+            # Read file with PyArrow
+            if input_format == "csv":
+                table = pc.read_csv(input_path)
+            elif input_format == "parquet":
+                table = pq.read_table(input_path)
+            else:
+                self.logger.warning(f"PyArrow doesn't support {input_format} format")
+                return False
+
+            # Write output
+            if output_format == "parquet":
+                pq.write_table(table, output_path)
+            elif output_format == "csv":
+                pc.write_csv(table, output_path)
+            else:
+                self.logger.warning(f"PyArrow doesn't support writing to {output_format} format")
+                return False
+
+            return True
+
+        except Exception as e:
+            self.logger.error(f"PyArrow conversion failed: {e}")
+            return False
+
+    def _native_converter_wrapper(
+        self, input_path: Path, output_path: Path, options: Dict[str, Any]
+    ) -> bool:
+        """Wrapper for PyForge's native converters."""
+        input_format = input_path.suffix.lower().lstrip(".")
+        output_format = options.get("output_format", "parquet")
+
+        try:
+            # Route to appropriate native converter
+            if input_format == "csv":
+                return self._native_csv_converter.convert(input_path, output_path, **options)
+            elif input_format in ["xlsx", "xls"]:
+                if self._native_excel_converter:
+                    return self._native_excel_converter.convert(input_path, output_path, **options)
+                else:
+                    self.logger.warning(f"No native Excel converter available")
+                    return False
+            elif input_format == "xml":
+                return self._native_xml_converter.convert(input_path, output_path, **options)
+            else:
+                self.logger.warning(f"No native converter for {input_format} format")
+                return False
+
+        except Exception as e:
+            self.logger.error(f"Native converter failed: {e}")
+            return False
 
     def _prepare_input_path(self, path: Union[str, Path]) -> Path:
         """Prepare and validate input path."""
@@ -667,7 +867,11 @@ class PyForgeDatabricks:
             writer = df.write.mode(options.get("mode", "overwrite"))
 
             if output_format == "delta":
-                self._delta_support.write_delta(df, str(output_path), options)
+                if self._delta_support:
+                    self._delta_support.write_delta(df, str(output_path), options)
+                else:
+                    # Fallback to basic delta write without optimizations
+                    writer.format("delta").save(str(output_path))
             else:
                 writer.format(output_format).save(str(output_path))
 

@@ -129,11 +129,23 @@ class SparkXMLConverter:
 
     def _ensure_xml_support(self):
         """Ensure spark-xml package is available."""
+        # Check if running in serverless environment first
+        import os
+        is_serverless = os.environ.get("IS_SERVERLESS", "").lower() == "true"
+        
+        if is_serverless:
+            # In serverless, skip all sparkContext operations
+            self.logger.warning(
+                "Running in Databricks Serverless - spark-xml package must be pre-installed. "
+                "XML conversion may fail if package is not available."
+            )
+            return
+            
         try:
-            # Try to load XML package
+            # Try to load XML package (non-serverless only)
             _ = self.spark._jvm.com.databricks.spark.xml.XmlReader
         except Exception:
-            # Try to add package dynamically
+            # Try to add package dynamically (non-serverless only)
             try:
                 self.spark.sparkContext.addPyFile(
                     "https://repo1.maven.org/maven2/com/databricks/spark-xml_2.12/0.15.0/spark-xml_2.12-0.15.0.jar"

@@ -44,11 +44,22 @@ class SparkExcelConverter:
         )
         self.spark = spark_session or SparkSession.builder.getOrCreate()
 
-        # Configure Spark pandas API
-        self.spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
-        self.spark.conf.set(
-            "spark.sql.execution.arrow.pyspark.fallback.enabled", "true"
-        )
+        # Configure Spark pandas API (only if not in serverless)
+        # Check for serverless environment first
+        import os
+        is_serverless = os.environ.get("IS_SERVERLESS", "").lower() == "true"
+        
+        if not is_serverless:
+            try:
+                self.spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
+                self.spark.conf.set(
+                    "spark.sql.execution.arrow.pyspark.fallback.enabled", "true"
+                )
+                self.logger.debug("Configured Spark pandas API settings")
+            except Exception as e:
+                self.logger.debug(f"Could not set Spark config: {e}")
+        else:
+            self.logger.debug("Skipping Spark config - running in serverless environment")
 
         # Sheet combination strategies
         self.combination_strategies = {
