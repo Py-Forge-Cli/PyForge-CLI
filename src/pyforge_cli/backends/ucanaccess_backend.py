@@ -25,14 +25,20 @@ class UCanAccessBackend(DatabaseBackend):
         """Check if UCanAccess backend is available.
         
         Checks:
-        1. Java runtime availability
-        2. JayDeBeApi Python package
-        3. UCanAccess JAR (downloads if needed)
+        1. Databricks Serverless detection (not supported due to JPype)
+        2. Java runtime availability
+        3. JayDeBeApi Python package
+        4. UCanAccess JAR (downloads if needed)
         
         Returns:
             True if all dependencies are available, False otherwise
         """
         try:
+            # Check if we're in Databricks Serverless where JPype doesn't work
+            if self._is_databricks_serverless():
+                self.logger.info("UCanAccess backend not available in Databricks Serverless (JPype native library limitation)")
+                return False
+            
             # Check Java runtime
             if not self._check_java():
                 self.logger.debug("Java runtime not available")
@@ -328,3 +334,26 @@ class UCanAccessBackend(DatabaseBackend):
             'db_path': self.db_path,
             'jar_info': self.jar_manager.get_jar_info()
         }
+    
+    def _is_databricks_serverless(self) -> bool:
+        """Check if running in Databricks Serverless environment.
+        
+        Returns:
+            True if in Databricks Serverless, False otherwise
+        """
+        import os
+        
+        # Check various environment variables that indicate Databricks Serverless
+        if os.environ.get('IS_SERVERLESS', '').upper() == 'TRUE':
+            return True
+        
+        if os.environ.get('SPARK_CONNECT_MODE_ENABLED') == '1':
+            return True
+        
+        if 'serverless' in os.environ.get('DB_INSTANCE_TYPE', '').lower():
+            return True
+        
+        if 'serverless' in os.environ.get('POD_NAME', '').lower():
+            return True
+        
+        return False

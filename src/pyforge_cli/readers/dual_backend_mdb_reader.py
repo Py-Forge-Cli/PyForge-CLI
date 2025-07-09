@@ -1,10 +1,11 @@
-"""Dual-backend MDB reader with UCanAccess primary and pyodbc fallback."""
+"""Multi-backend MDB reader with UCanAccess, subprocess, and pyodbc support."""
 
 import logging
 from typing import List, Optional
 import pandas as pd
 
 from ..backends.ucanaccess_backend import UCanAccessBackend
+from ..backends.ucanaccess_subprocess_backend import UCanAccessSubprocessBackend
 from ..backends.pyodbc_backend import PyODBCBackend
 
 
@@ -22,7 +23,8 @@ class DualBackendMDBReader:
         
         Connection strategy:
         1. Try UCanAccess first (cross-platform, handles space-named tables)
-        2. Fallback to pyodbc if UCanAccess fails (Windows only, high performance)
+        2. Try UCanAccess subprocess if JPype fails (Databricks Serverless compatible)
+        3. Fallback to pyodbc if all else fails (Windows only, high performance)
         
         Args:
             db_path: Path to Access database file
@@ -59,9 +61,37 @@ class DualBackendMDBReader:
             except Exception as e:
                 connection_attempts.append(("UCanAccess", f"Exception: {e}"))
                 self.logger.warning(f"UCanAccess connection exception: {e}")
+                
+                # Check if it's a JPype error
+                if "org.jpype.jar" in str(e) or "JPype" in str(e):
+                    self.logger.info("JPype error detected, will try subprocess backend")
         else:
             connection_attempts.append(("UCanAccess", "Backend not available"))
             self.logger.info("UCanAccess not available, trying fallback...")
+        
+        # Try UCanAccess subprocess backend (for Databricks Serverless)
+        ucanaccess_subprocess = UCanAccessSubprocessBackend()
+        if ucanaccess_subprocess.is_available():
+            self.logger.info("Attempting UCanAccess subprocess connection (Databricks Serverless compatible)...")
+            
+            try:
+                if ucanaccess_subprocess.connect(db_path, password):
+                    self.backend = ucanaccess_subprocess
+                    self.backend_name = "UCanAccess-Subprocess"
+                    self._connection_info = ucanaccess_subprocess.get_connection_info()
+                    
+                    self.logger.info("✓ Connected using UCanAccess subprocess (Databricks Serverless compatible)")
+                    return True
+                else:
+                    connection_attempts.append(("UCanAccess-Subprocess", "Connection failed"))
+                    self.logger.warning("UCanAccess subprocess connection failed, trying next fallback...")
+                    
+            except Exception as e:
+                connection_attempts.append(("UCanAccess-Subprocess", f"Exception: {e}"))
+                self.logger.warning(f"UCanAccess subprocess connection exception: {e}")
+        else:
+            connection_attempts.append(("UCanAccess-Subprocess", "Backend not available"))
+            self.logger.info("UCanAccess subprocess not available, trying next fallback...")
         
         # Fallback to pyodbc (Windows-native solution)
         pyodbc_backend = PyODBCBackend()
@@ -120,6 +150,14 @@ class DualBackendMDBReader:
             
             if any("UCanAccess" in name for name, _ in attempts):
                 error_msg += "  • For UCanAccess issues: Ensure Java 8+ is installed\n"
+                
+                # Check for JPype errors
+                jpype_errors = [error for name, error in attempts if "jpype" in error.lower()]
+                if jpype_errors:
+                    error_msg += "  • For JPype errors in Databricks Serverless: The subprocess backend should work\n"
+            
+            if any("UCanAccess-Subprocess" in name for name, _ in attempts):
+                error_msg += "  • For subprocess issues: Check Java installation and file permissions\n"
             
             if any("pyodbc" in name for name, _ in attempts):
                 error_msg += "  • For pyodbc issues: Install Microsoft Access Database Engine\n"
