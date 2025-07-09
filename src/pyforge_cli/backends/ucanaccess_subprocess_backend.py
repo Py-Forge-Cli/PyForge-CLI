@@ -397,17 +397,17 @@ public class ExportTable {{
         temp_dir = tempfile.mkdtemp()
         
         try:
-            # Write Java source file
-            java_file = os.path.join(temp_dir, "TempClass.java")
-            with open(java_file, 'w') as f:
-                f.write(java_code)
-            
             # Determine class name from code
             import re
             class_match = re.search(r'public\s+class\s+(\w+)', java_code)
             if not class_match:
                 raise RuntimeError("Could not determine Java class name")
             class_name = class_match.group(1)
+            
+            # Write Java source file with correct filename
+            java_file = os.path.join(temp_dir, f"{class_name}.java")
+            with open(java_file, 'w') as f:
+                f.write(java_code)
             
             # Get all JAR paths
             jar_paths = self._get_all_jar_paths()
