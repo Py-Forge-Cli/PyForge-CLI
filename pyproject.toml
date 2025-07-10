@@ -216,6 +216,17 @@ dev = [
     "twine>=6.1.0",
 ]
 
+[tool.setuptools]
+packages = ["pyforge_cli"]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.package-data]
+pyforge_cli = [
+    "data/jars/*.jar",
+    "backends/jars/*.jar"
+]
+
 [tool.setuptools_scm]
 version_file = "src/pyforge_cli/_version.py"
 # Remove local identifiers for PyPI compatibility while keeping dev versions
