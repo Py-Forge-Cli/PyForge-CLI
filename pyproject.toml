@@ -217,7 +217,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["pyforge_cli"]
+packages = {find = {where = ["src"]}}
 package-dir = {"" = "src"}
 include-package-data = true
 
