@@ -385,14 +385,18 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             
             # Check available backends
             from ..backends.ucanaccess_backend import UCanAccessBackend
+            from ..backends.ucanaccess_subprocess_backend import UCanAccessSubprocessBackend
             from ..backends.pyodbc_backend import PyODBCBackend
             
             ucanaccess = UCanAccessBackend()
+            ucanaccess_subprocess = UCanAccessSubprocessBackend()
             pyodbc_backend = PyODBCBackend()
             
             available_backends = []
             if ucanaccess.is_available():
                 available_backends.append("UCanAccess (cross-platform)")
+            if ucanaccess_subprocess.is_available():
+                available_backends.append("UCanAccess-Subprocess (Databricks Serverless)")
             if pyodbc_backend.is_available():
                 available_backends.append("pyodbc (Windows native)")
             
@@ -533,6 +537,10 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             # Cleanup connection
             if hasattr(self, 'dual_reader') and self.dual_reader:
                 self._close_connection(self.dual_reader)
+    
+    def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
+        """Standard convert method - delegates to progress version"""
+        return self.convert_with_progress(input_path, output_path, **options)
     
     def __del__(self):
         """Destructor with automatic connection cleanup."""

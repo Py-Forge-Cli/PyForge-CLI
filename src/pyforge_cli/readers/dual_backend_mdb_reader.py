@@ -140,9 +140,18 @@ class DualBackendMDBReader:
         # Check if any backends were available
         available_backends = [name for name, error in attempts if "not available" not in error]
         if not available_backends:
-            error_msg += "  • No database backends are available.\n"
-            error_msg += "  • For cross-platform support: Install Java and run 'pip install jaydebeapi jpype1'\n"
-            error_msg += "  • For Windows: Install pyodbc with 'pip install pyodbc'\n"
+            error_msg += "  • No database backends are available!\n"
+            
+            # Check if we're in Databricks Serverless
+            import os
+            if (os.environ.get('IS_SERVERLESS', '').upper() == 'TRUE' or 
+                os.environ.get('SPARK_CONNECT_MODE_ENABLED') == '1'):
+                error_msg += "  • Environment: Databricks Serverless detected\n"
+                error_msg += "  • The subprocess backend should be available but may have issues with Java detection\n"
+                error_msg += "  • Check notebook logs for detailed error messages\n"
+            else:
+                error_msg += "  • For cross-platform support: Install Java and run 'pip install jaydebeapi jpype1'\n"
+                error_msg += "  • For Windows: Install pyodbc with 'pip install pyodbc'\n"
         else:
             error_msg += "  • Check if the database file exists and is not corrupted\n"
             error_msg += "  • Verify the database is not password-protected (or provide correct password)\n"

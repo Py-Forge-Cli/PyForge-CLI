@@ -36,7 +36,15 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
             True if Java is available via subprocess, False otherwise
         """
         try:
-            # Check Java runtime via subprocess
+            # In Databricks Serverless, we rely on the environment having Java
+            # Check if we're in Databricks Serverless environment
+            if self._is_databricks_serverless():
+                self.logger.info("Databricks Serverless detected - subprocess backend available")
+                # In Databricks Serverless, Java is embedded in the runtime
+                # We don't need to check via subprocess, just trust it's there
+                return True
+            
+            # For other environments, check Java runtime via subprocess
             if not self._check_java_subprocess():
                 self.logger.debug("Java runtime not available via subprocess")
                 return False
@@ -204,6 +212,27 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
         
         self.db_path = None
         self._tables_cache = None
+    
+    def _is_databricks_serverless(self) -> bool:
+        """Check if running in Databricks Serverless environment.
+        
+        Returns:
+            True if in Databricks Serverless, False otherwise
+        """
+        # Check multiple environment variables that indicate Databricks Serverless
+        is_serverless = os.environ.get('IS_SERVERLESS', '').upper() == 'TRUE'
+        spark_connect = os.environ.get('SPARK_CONNECT_MODE_ENABLED') == '1'
+        db_instance = 'serverless' in os.environ.get('DB_INSTANCE_TYPE', '').lower()
+        
+        # Log what we found for debugging
+        if is_serverless or spark_connect or db_instance:
+            self.logger.debug(f"Databricks Serverless environment detected: "
+                            f"IS_SERVERLESS={os.environ.get('IS_SERVERLESS')}, "
+                            f"SPARK_CONNECT_MODE_ENABLED={os.environ.get('SPARK_CONNECT_MODE_ENABLED')}, "
+                            f"DB_INSTANCE_TYPE={os.environ.get('DB_INSTANCE_TYPE')}")
+            return True
+        
+        return False
     
     def _check_java_subprocess(self) -> bool:
         """Check if Java is available via subprocess.
@@ -415,8 +444,28 @@ public class ExportTable {{
             if os.name == 'nt':
                 classpath = ';'.join(jar_paths)
             
+            # In Databricks Serverless, try alternative Java paths if needed
+            java_cmd = 'java'
+            javac_cmd = 'javac'
+            
+            if self._is_databricks_serverless():
+                # Try to find Java in common Databricks locations
+                possible_java_paths = [
+                    '/usr/bin/java',
+                    '/usr/lib/jvm/java-8-openjdk-amd64/bin/java',
+                    '/usr/lib/jvm/java-11-openjdk-amd64/bin/java',
+                    '/databricks/jdk/bin/java'
+                ]
+                
+                for java_path in possible_java_paths:
+                    if os.path.exists(java_path):
+                        java_cmd = java_path
+                        javac_cmd = java_path.replace('/java', '/javac')
+                        self.logger.debug(f"Found Java at: {java_cmd}")
+                        break
+            
             # Compile Java code
-            compile_cmd = ['javac', '-cp', classpath, java_file]
+            compile_cmd = [javac_cmd, '-cp', classpath, java_file]
             compile_result = subprocess.run(compile_cmd, capture_output=True, text=True, cwd=temp_dir)
             
             if compile_result.returncode != 0:
@@ -430,7 +479,7 @@ public class ExportTable {{
             csv_file = os.path.join(temp_dir, 'table_data.csv')
             
             # Run Java code
-            run_cmd = ['java', '-cp', f'.{os.pathsep}{classpath}', class_name, self.db_path, output_file, csv_file]
+            run_cmd = [java_cmd, '-cp', f'.{os.pathsep}{classpath}', class_name, self.db_path, output_file, csv_file]
             run_result = subprocess.run(run_cmd, capture_output=True, text=True, cwd=temp_dir, timeout=60)
             
             if run_result.returncode != 0:
@@ -464,7 +513,21 @@ public class ExportTable {{
         Returns:
             List of absolute paths to JAR files
         """
-        jar_dir = self.jar_manager.bundled_jar_dir
+        # In Databricks Serverless, check multiple possible locations
+        if self._is_databricks_serverless():
+            # Try to find JARs in the installed package location
+            import pyforge_cli
+            package_dir = Path(pyforge_cli.__file__).parent
+            possible_dirs = [
+                package_dir / 'data' / 'jars',
+                package_dir / 'backends' / 'jars',
+                Path('/local_disk0/tmp/') / 'pyforge_jars',  # Potential temp location
+                Path('/databricks/jars'),  # Databricks system JARs
+                Path.home() / '.pyforge' / 'jars',  # User cache
+            ]
+        else:
+            possible_dirs = [self.jar_manager.bundled_jar_dir]
+        
         jar_paths = []
         
         # Required JAR files for UCanAccess 4.0.4
@@ -476,12 +539,27 @@ public class ExportTable {{
             'jackcess-3.0.1.jar'
         ]
         
-        for jar_name in required_jars:
-            jar_path = jar_dir / jar_name
-            if jar_path.exists():
-                jar_paths.append(str(jar_path))
-            else:
-                self.logger.warning(f"Required JAR not found: {jar_path}")
+        # Look for JARs in all possible directories
+        for jar_dir in possible_dirs:
+            if jar_dir.exists():
+                self.logger.debug(f"Checking for JARs in: {jar_dir}")
+                for jar_name in required_jars:
+                    jar_path = jar_dir / jar_name
+                    if jar_path.exists():
+                        jar_paths.append(str(jar_path))
+                        self.logger.debug(f"Found JAR: {jar_path}")
+                
+                # If we found JARs, stop searching
+                if jar_paths:
+                    break
+        
+        if not jar_paths:
+            self.logger.warning(f"No JAR files found in any of: {possible_dirs}")
+            # In Databricks, we might need to work without local JARs
+            if self._is_databricks_serverless():
+                self.logger.info("Will attempt to run without local JAR files - may use system classpath")
+                # Return empty list to allow the code to continue
+                return []
         
         return jar_paths
     
