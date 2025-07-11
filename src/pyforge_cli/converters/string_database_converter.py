@@ -11,6 +11,10 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import logging
 from dataclasses import dataclass
+import tempfile
+import shutil
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from .base import BaseConverter
 from ..detectors.database_detector import DatabaseType, DatabaseInfo
@@ -373,19 +377,59 @@ class StringDatabaseConverter(BaseConverter):
             self.logger.error(f"Conversion failed: {e}")
             return False
     
+    def _is_volume_path(self, path: Path) -> bool:
+        """Check if a path is a Databricks Unity Catalog volume path."""
+        return str(path).startswith('/Volumes/')
+    
     def _save_parquet(self, df: pd.DataFrame, output_file: Path, **options: Any) -> None:
-        """Save DataFrame as Parquet with string schema"""
+        """Save DataFrame as Parquet with string schema, handling volume paths safely."""
         try:
             # Parquet options
             compression = options.get('compression', 'snappy')
             
-            # Save with PyArrow for better string handling
-            df.to_parquet(
-                output_file,
-                engine='pyarrow',
-                compression=compression,
-                index=False
-            )
+            # Ensure all columns are strings
+            string_df = df.copy()
+            for col in string_df.columns:
+                string_df[col] = string_df[col].astype(str)
+            
+            if self._is_volume_path(output_file):
+                # Write to temporary file first, then copy to volume
+                with tempfile.NamedTemporaryFile(suffix='.parquet', delete=False) as tmp_file:
+                    tmp_path = Path(tmp_file.name)
+                    
+                    # Create PyArrow schema with all string columns
+                    schema_fields = [(col, pa.string()) for col in string_df.columns]
+                    schema = pa.schema(schema_fields)
+                    
+                    # Convert to PyArrow table and write
+                    table = pa.Table.from_pandas(string_df, schema=schema)
+                    pq.write_table(
+                        table,
+                        tmp_path,
+                        compression=compression,
+                        write_statistics=True,
+                        use_dictionary=True
+                    )
+                    
+                    # Copy to final destination
+                    shutil.copy2(str(tmp_path), str(output_file))
+                    tmp_path.unlink()  # Clean up temp file
+                    
+            else:
+                # Direct write for non-volume paths using PyArrow
+                # Create PyArrow schema with all string columns
+                schema_fields = [(col, pa.string()) for col in string_df.columns]
+                schema = pa.schema(schema_fields)
+                
+                # Convert to PyArrow table and write
+                table = pa.Table.from_pandas(string_df, schema=schema)
+                pq.write_table(
+                    table,
+                    output_file,
+                    compression=compression,
+                    write_statistics=True,
+                    use_dictionary=True
+                )
             
         except Exception as e:
             self.logger.error(f"Error saving Parquet file {output_file}: {e}")

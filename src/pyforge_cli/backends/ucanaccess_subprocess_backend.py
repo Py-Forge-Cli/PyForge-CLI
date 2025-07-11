@@ -22,7 +22,11 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.jar_manager = UCanAccessJARManager()
+        try:
+            self.jar_manager = UCanAccessJARManager()
+        except Exception as e:
+            self.logger.error(f"Failed to initialize JAR manager: {e}")
+            self.jar_manager = None
         self.db_path = None
         self._temp_file_path = None
         self._tables_cache = None
@@ -36,6 +40,10 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
             True if Java is available via subprocess, False otherwise
         """
         try:
+            # Log environment for debugging
+            self.logger.debug(f"IS_SERVERLESS env: {os.environ.get('IS_SERVERLESS', 'Not set')}")
+            self.logger.debug(f"SPARK_CONNECT_MODE_ENABLED env: {os.environ.get('SPARK_CONNECT_MODE_ENABLED', 'Not set')}")
+            
             # In Databricks Serverless, we rely on the environment having Java
             # Check if we're in Databricks Serverless environment
             if self._is_databricks_serverless():
@@ -50,7 +58,7 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
                 return False
             
             # Check/download UCanAccess JAR
-            if not self.jar_manager.ensure_jar_available():
+            if self.jar_manager and not self.jar_manager.ensure_jar_available():
                 self.logger.debug("UCanAccess JAR not available")
                 return False
             
@@ -58,7 +66,10 @@ class UCanAccessSubprocessBackend(DatabaseBackend):
             return True
             
         except Exception as e:
-            self.logger.debug(f"UCanAccess subprocess availability check failed: {e}")
+            self.logger.error(f"UCanAccess subprocess availability check failed with exception: {e}")
+            self.logger.error(f"Exception type: {type(e).__name__}")
+            import traceback
+            self.logger.error(f"Traceback: {traceback.format_exc()}")
             return False
     
     def connect(self, db_path: str, password: str = None) -> bool:

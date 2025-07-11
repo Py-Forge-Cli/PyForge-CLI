@@ -7,6 +7,10 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 import pandas as pd
+import tempfile
+import shutil
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from .string_database_converter import StringDatabaseConverter
 from ..readers.dual_backend_mdb_reader import DualBackendMDBReader
@@ -201,6 +205,61 @@ class EnhancedMDBConverter(StringDatabaseConverter):
         except Exception as e:
             self.logger.warning(f"Error closing enhanced MDB connection: {e}")
     
+    def _is_volume_path(self, path: Path) -> bool:
+        """Check if a path is a Databricks Unity Catalog volume path."""
+        return str(path).startswith('/Volumes/')
+    
+    def _write_parquet_safe(self, df: pd.DataFrame, output_file: Path, **options: Any) -> None:
+        """Write DataFrame to Parquet, handling volume paths safely."""
+        try:
+            # Ensure all columns are strings (consistent with StringDatabaseConverter)
+            string_df = df.copy()
+            for col in string_df.columns:
+                string_df[col] = string_df[col].astype(str)
+            
+            if self._is_volume_path(output_file):
+                # Write to temporary file first, then copy to volume
+                with tempfile.NamedTemporaryFile(suffix='.parquet', delete=False) as tmp_file:
+                    tmp_path = Path(tmp_file.name)
+                    
+                    # Create PyArrow schema with all string columns
+                    schema_fields = [(col, pa.string()) for col in string_df.columns]
+                    schema = pa.schema(schema_fields)
+                    
+                    # Convert to PyArrow table and write
+                    table = pa.Table.from_pandas(string_df, schema=schema)
+                    pq.write_table(
+                        table,
+                        tmp_path,
+                        compression=options.get('compression', 'snappy'),
+                        write_statistics=True,
+                        use_dictionary=True
+                    )
+                    
+                    # Copy to final destination
+                    shutil.copy2(str(tmp_path), str(output_file))
+                    tmp_path.unlink()  # Clean up temp file
+                    
+            else:
+                # Direct write for non-volume paths
+                # Create PyArrow schema with all string columns
+                schema_fields = [(col, pa.string()) for col in string_df.columns]
+                schema = pa.schema(schema_fields)
+                
+                # Convert to PyArrow table and write
+                table = pa.Table.from_pandas(string_df, schema=schema)
+                pq.write_table(
+                    table,
+                    output_file,
+                    compression=options.get('compression', 'snappy'),
+                    write_statistics=True,
+                    use_dictionary=True
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Failed to write Parquet file: {e}")
+            raise
+    
     def _convert_tables_to_parquet(self, connection, table_info_list: List[dict], 
                                    output_path: Path, **options: Any) -> bool:
         """Convert database tables to Parquet files.
@@ -247,8 +306,8 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                         safe_filename = self._sanitize_filename(f"{table_name}.parquet")
                         output_file = output_path / safe_filename
                         
-                        # Write to Parquet
-                        df.to_parquet(output_file, index=False)
+                        # Write to Parquet using safe method
+                        self._write_parquet_safe(df, output_file, **options)
                         
                         progress.advance(task)
                         
@@ -276,50 +335,17 @@ class EnhancedMDBConverter(StringDatabaseConverter):
         return safe_name.strip('_')
     
     def _generate_conversion_report(self, table_info_list: List[dict], output_path: Path):
-        """Generate Excel conversion report."""
+        """Generate conversion report (skip for now to avoid Excel issues)."""
         try:
-            import pandas as pd
-            from datetime import datetime
+            # Skip report generation for now
+            self.logger.info(f"Skipping report generation to avoid Excel/CSV issues on volumes")
+            self.logger.info(f"Conversion completed successfully:")
             
-            # Create report DataFrame
-            report_data = []
-            for table_info in table_info_list:
-                report_data.append({
-                    'Table Name': table_info['name'],
-                    'Record Count': table_info['record_count'],
-                    'Column Count': table_info['column_count'],
-                    'Status': 'Converted Successfully',
-                    'Output File': f"{self._sanitize_filename(table_info['name'])}.parquet"
-                })
-            
-            df_report = pd.DataFrame(report_data)
-            
-            # Create report filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            db_name = output_path.name
-            report_file = output_path / f"{db_name}_conversion_report_{timestamp}.xlsx"
-            
-            # Write Excel report
-            with pd.ExcelWriter(report_file) as writer:
-                df_report.to_excel(writer, sheet_name='Conversion Summary', index=False)
-                
-                # Add column details sheet if available
-                if table_info_list and 'columns' in table_info_list[0]:
-                    column_data = []
-                    for table_info in table_info_list:
-                        for col in table_info.get('columns', []):
-                            column_data.append({
-                                'Table': table_info['name'],
-                                'Column': col.get('name', ''),
-                                'Data Type': col.get('type', ''),
-                                'Nullable': col.get('nullable', True)
-                            })
-                    
-                    if column_data:
-                        df_columns = pd.DataFrame(column_data)
-                        df_columns.to_excel(writer, sheet_name='Column Details', index=False)
-            
-            self.logger.info(f"Conversion report saved to: {report_file}")
+            # Log summary instead
+            total_records = sum(info['record_count'] for info in table_info_list)
+            self.logger.info(f"  • Tables converted: {len(table_info_list)}")
+            self.logger.info(f"  • Total records: {total_records:,}")
+            self.logger.info(f"  • Output path: {output_path}")
             
         except Exception as e:
             self.logger.warning(f"Failed to generate conversion report: {e}")

@@ -310,15 +310,16 @@ class MDBConverter(StringDatabaseConverter):
                     for file_info in converted_files:
                         console.print(f"  • {file_info['file'].name} ({file_info['records']:,} records)")
                     
-                    # Generate Excel report
-                    console.print(f"\n📊 [bold blue]Generating Excel Report...[/bold blue]")
-                    try:
-                        excel_path = self._generate_excel_report(
-                            input_path, output_path, table_infos, converted_files, connection
-                        )
-                        console.print(f"✅ Excel report created: {excel_path.name}")
-                    except Exception as e:
-                        console.print(f"⚠️ [yellow]Warning: Could not generate Excel report: {e}[/yellow]")
+                    # Generate Excel report - DISABLED for volume compatibility
+                    console.print(f"\n📊 [bold blue]Excel Report Generation Disabled[/bold blue]")
+                    console.print(f"⚠️ [yellow]Excel report generation skipped to avoid volume path issues[/yellow]")
+                    # try:
+                    #     excel_path = self._generate_excel_report(
+                    #         input_path, output_path, table_infos, converted_files, connection
+                    #     )
+                    #     console.print(f"✅ Excel report created: {excel_path.name}")
+                    # except Exception as e:
+                    #     console.print(f"⚠️ [yellow]Warning: Could not generate Excel report: {e}[/yellow]")
                 else:
                     console.print("⚠️ [yellow]No tables were successfully converted[/yellow]")
                 
@@ -341,87 +342,13 @@ class MDBConverter(StringDatabaseConverter):
         connection: Any
     ) -> Path:
         """
-        Generate Excel report with summary and sample data from each table.
-        
-        Returns:
-            Path to the generated Excel file
+        Excel report generation permanently disabled to avoid ZipFile.__del__ errors.
+        This method is kept for compatibility but will raise NotImplementedError.
         """
-        import pandas as pd
-        from datetime import datetime
-        
-        # Create Excel file path
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        excel_filename = f"{input_path.stem}_conversion_report_{timestamp}.xlsx"
-        excel_path = output_path / excel_filename
-        
-        with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
-            # 1. Summary Sheet
-            summary_data = {
-                'Property': [
-                    'Source File',
-                    'Conversion Date',
-                    'Total Tables',
-                    'Total Records',
-                    'Output Directory',
-                    'Conversion Status'
-                ],
-                'Value': [
-                    str(input_path),
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    len(converted_files),
-                    sum(f['records'] for f in converted_files),
-                    str(output_path),
-                    'Completed Successfully'
-                ]
-            }
-            
-            summary_df = pd.DataFrame(summary_data)
-            summary_df.to_excel(writer, sheet_name='Summary', index=False)
-            
-            # Table details in summary
-            table_summary_data = {
-                'Table Name': [f['table'] for f in converted_files],
-                'Records': [f['records'] for f in converted_files],
-                'Output File': [f['file'].name for f in converted_files],
-                'Size (MB)': [f['size_mb'] for f in converted_files]
-            }
-            
-            table_summary_df = pd.DataFrame(table_summary_data)
-            # Add table summary starting from row 10
-            table_summary_df.to_excel(
-                writer, 
-                sheet_name='Summary', 
-                startrow=9, 
-                index=False
-            )
-            
-            # 2. Sample data from each table (first 10 records)
-            for table_name in [f['table'] for f in converted_files]:
-                try:
-                    # Read the full table data
-                    df = self._read_table(connection, table_name)
-                    
-                    # Take first 10 records for sample
-                    sample_df = df.head(10)
-                    
-                    # Convert to strings (same as our conversion process)
-                    string_sample = self.string_converter.convert_dataframe(sample_df)
-                    
-                    # Write to Excel sheet (sheet name max 31 chars)
-                    sheet_name = table_name[:31] if len(table_name) > 31 else table_name
-                    string_sample.to_excel(writer, sheet_name=sheet_name, index=False)
-                    
-                except Exception as e:
-                    self.logger.warning(f"Could not create sample sheet for {table_name}: {e}")
-                    
-                    # Create error sheet
-                    error_df = pd.DataFrame({
-                        'Error': [f'Could not read sample data: {e}']
-                    })
-                    sheet_name = f"{table_name[:25]}_ERROR" if len(table_name) > 25 else f"{table_name}_ERROR"
-                    error_df.to_excel(writer, sheet_name=sheet_name, index=False)
-        
-        return excel_path
+        raise NotImplementedError(
+            "Excel report generation is permanently disabled to avoid ZipFile.__del__ errors "
+            "during MDB conversion. Use the console output summary instead."
+        )
     
     def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
         """Standard convert method - delegates to progress version"""

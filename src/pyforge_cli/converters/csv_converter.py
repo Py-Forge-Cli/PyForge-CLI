@@ -405,8 +405,12 @@ class CSVConverter(BaseConverter):
             self.logger.error(f"Failed to read CSV file: {e}")
             return None
     
+    def _is_volume_path(self, path: Path) -> bool:
+        """Check if a path is a Databricks Unity Catalog volume path."""
+        return str(path).startswith('/Volumes/')
+    
     def _save_parquet(self, df: pd.DataFrame, output_path: Path, **options: Any) -> None:
-        """Save DataFrame as Parquet with all string columns."""
+        """Save DataFrame as Parquet with all string columns, handling volume paths safely."""
         try:
             compression = options.get('compression', 'snappy')
             
@@ -421,14 +425,35 @@ class CSVConverter(BaseConverter):
             # Convert to PyArrow table
             table = pa.Table.from_pandas(df, schema=schema)
             
-            # Write Parquet file
-            pq.write_table(
-                table,
-                output_path,
-                compression=compression,
-                write_statistics=True,
-                use_dictionary=True
-            )
+            if self._is_volume_path(output_path):
+                # Write to temporary file first, then copy to volume
+                import tempfile
+                import shutil
+                
+                with tempfile.NamedTemporaryFile(suffix='.parquet', delete=False) as tmp_file:
+                    tmp_path = Path(tmp_file.name)
+                    
+                    # Write Parquet file to temp location
+                    pq.write_table(
+                        table,
+                        tmp_path,
+                        compression=compression,
+                        write_statistics=True,
+                        use_dictionary=True
+                    )
+                    
+                    # Copy to final destination
+                    shutil.copy2(str(tmp_path), str(output_path))
+                    tmp_path.unlink()  # Clean up temp file
+            else:
+                # Direct write for non-volume paths
+                pq.write_table(
+                    table,
+                    output_path,
+                    compression=compression,
+                    write_statistics=True,
+                    use_dictionary=True
+                )
             
         except Exception as e:
             self.logger.error(f"Failed to save Parquet file: {e}")
