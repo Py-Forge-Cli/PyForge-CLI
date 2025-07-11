@@ -1,0 +1,512 @@
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 26,
+      "row": 196
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/pyodbc_backend.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 196
+    },
+    "message": "`pyodbc` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+    "noqa_row": 196,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 86,
+      "row": 111
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/ucanaccess_backend.py",
+    "fix": null,
+    "location": {
+      "column": 21,
+      "row": 111
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 111,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 84,
+      "row": 114
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/ucanaccess_backend.py",
+    "fix": null,
+    "location": {
+      "column": 21,
+      "row": 114
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 114,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 30,
+      "row": 287
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/ucanaccess_backend.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 287
+    },
+    "message": "`jaydebeapi` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+    "noqa_row": 287,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 23,
+      "row": 199
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/ucanaccess_subprocess_backend.py",
+    "fix": null,
+    "location": {
+      "column": 17,
+      "row": 199
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 199,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 519
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/backends/ucanaccess_subprocess_backend.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 519
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 519,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 15,
+      "row": 80
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/csv_converter.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 80
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 80,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 15,
+      "row": 168
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/csv_converter.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 168
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 168,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 546
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/csv_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 546
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 546,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 70,
+      "row": 58
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/dbf_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 58
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 58,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 70,
+      "row": 95
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/enhanced_mdb_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 95
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 95,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 70,
+      "row": 59
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/mdb_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 59
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 59,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 27,
+      "row": 34
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/pyspark_csv_converter.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 34
+    },
+    "message": "`pyspark` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+    "noqa_row": 34,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 98
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/string_database_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 98
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 98,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 103
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/string_database_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 103
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 103,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 112
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/string_database_converter.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 112
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 112,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 74,
+      "row": 253
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/string_database_converter.py",
+    "fix": null,
+    "location": {
+      "column": 68,
+      "row": 253
+    },
+    "message": "Function definition does not bind loop variable `column`",
+    "noqa_row": 253,
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 72,
+      "row": 243
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/xml.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 243
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 243,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 55,
+      "row": 73
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/xml_flattener.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 73
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 73,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 75,
+      "row": 144
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/xml_flattener.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 144
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 144,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 55,
+      "row": 98
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/xml_structure_analyzer.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 98
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 98,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 75,
+      "row": 182
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/converters/xml_structure_analyzer.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 182
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 182,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 64,
+      "row": 129
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/dbf_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 129
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 129,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 96,
+      "row": 288
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/dbf_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 288
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 288,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 80,
+      "row": 323
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/dbf_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 323
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 323,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 543
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/dbf_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 543
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 543,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 54,
+      "row": 149
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/mdb_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 149
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 149,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "B904",
+    "end_location": {
+      "column": 61,
+      "row": 172
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/mdb_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 172
+    },
+    "message": "Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling",
+    "noqa_row": 172,
+    "url": "https://docs.astral.sh/ruff/rules/raise-without-from-inside-except"
+  },
+  {
+    "cell": null,
+    "code": "E722",
+    "end_location": {
+      "column": 19,
+      "row": 513
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/src/pyforge_cli/readers/mdb_reader.py",
+    "fix": null,
+    "location": {
+      "column": 13,
+      "row": 513
+    },
+    "message": "Do not use bare `except`",
+    "noqa_row": 513,
+    "url": "https://docs.astral.sh/ruff/rules/bare-except"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 19,
+      "row": 16
+    },
+    "filename": "/Users/sdandey/Documents/code/pyforge-cli/tests/test_pyspark_csv_converter.py",
+    "fix": null,
+    "location": {
+      "column": 12,
+      "row": 16
+    },
+    "message": "`pyspark` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+    "noqa_row": 16,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]

@@ -43,14 +43,20 @@ install-dev: ## Install package with development dependencies
 # Code Quality
 lint: ## Run linting with ruff
 	@echo "$(BLUE)Running linter...$(RESET)"
-	$(UV) run ruff check $(SRC_DIR) $(TEST_DIR)
+	ruff check $(SRC_DIR) $(TEST_DIR)
 	@echo "$(GREEN)Linting completed!$(RESET)"
 
 format: ## Format code with black and ruff
 	@echo "$(BLUE)Formatting code...$(RESET)"
-	$(UV) run black $(SRC_DIR) $(TEST_DIR)
-	$(UV) run ruff check --fix $(SRC_DIR) $(TEST_DIR)
+	black $(SRC_DIR) $(TEST_DIR)
+	ruff check --fix $(SRC_DIR) $(TEST_DIR) || true
 	@echo "$(GREEN)Code formatted!$(RESET)"
+
+format-check: ## Check formatting and linting without auto-fix
+	@echo "$(BLUE)Checking code format and linting...$(RESET)"
+	black --check $(SRC_DIR) $(TEST_DIR)
+	ruff check $(SRC_DIR) $(TEST_DIR)
+	@echo "$(GREEN)Format check completed!$(RESET)"
 
 type-check: ## Run type checking with mypy
 	@echo "$(BLUE)Running type checker...$(RESET)"
