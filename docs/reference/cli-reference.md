@@ -2,6 +2,8 @@
 
 Complete reference for all PyForge CLI commands, options, and usage patterns.
 
+**Version 1.0.9** - Enhanced with Databricks Serverless support and Unity Catalog volume handling.
+
 ## Main Commands
 
 ### `pyforge install`
@@ -29,6 +31,9 @@ pyforge install <component> [options]
     
     # Install to custom directory
     pyforge install sample-datasets ./test-data
+    
+    # Install to Unity Catalog volume
+    pyforge install sample-datasets /Volumes/catalog/schema/volume/datasets
     
     # Install specific formats only
     pyforge install sample-datasets --formats pdf,excel,xml
@@ -80,7 +85,7 @@ pyforge install <component> [options]
 
 ### `pyforge convert`
 
-Convert files between different formats.
+Convert files between different formats with enhanced support for Databricks Serverless environments and Unity Catalog volumes.
 
 ```bash
 pyforge convert <input_file> [output_file] [options]
@@ -111,6 +116,12 @@ pyforge convert api_response.xml --flatten-strategy aggressive
 # Database conversion
 pyforge convert database.mdb output_directory/
 
+# Database with specific backend
+pyforge convert database.mdb --backend subprocess --verbose
+
+# Unity Catalog volume files
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --volume-path
+
 # CSV with auto-detection
 pyforge convert data.csv --compression gzip
 ```
@@ -133,6 +144,8 @@ pyforge convert data.csv --compression gzip
 | `--array-handling <mode>` | string | XML array handling: expand, concatenate, json_string | XML |
 | `--namespace-handling <mode>` | string | XML namespace handling: preserve, strip, prefix | XML |
 | `--preview-schema` | flag | Preview XML structure before conversion | XML |
+| `--backend <backend>` | string | Backend to use: subprocess, shell (for MDB/ACCDB) | MDB/ACCDB |
+| `--volume-path` | flag | Enable Unity Catalog volume path handling | All |
 | `--force` | flag | Overwrite existing output files | All |
 | `--verbose` | flag | Enable detailed output | All |
 
@@ -240,6 +253,9 @@ PyForge CLI recognizes these environment variables:
 | `PYFORGE_TEMP_DIR` | Temporary file directory | System temp |
 | `PYFORGE_MAX_MEMORY` | Maximum memory usage (MB) | Auto-detect |
 | `PYFORGE_COMPRESSION` | Default compression for Parquet | snappy |
+| `IS_SERVERLESS` | Databricks Serverless environment flag | false |
+| `SPARK_CONNECT_MODE_ENABLED` | Databricks Spark Connect mode | false |
+| `DATABRICKS_RUNTIME_VERSION` | Databricks runtime version | none |
 
 ## Exit Codes
 
@@ -289,6 +305,37 @@ xml:
 
 ## Advanced Usage Patterns
 
+### Databricks Serverless Usage
+
+```bash
+# Unity Catalog volume file conversion
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --volume-path --verbose
+
+# Large database with subprocess backend
+pyforge convert /Volumes/catalog/schema/volume/large.accdb \
+  --backend subprocess --volume-path --tables "customers,orders"
+
+# Batch processing in Databricks notebooks
+%sh
+for file in /Volumes/catalog/schema/volume/*.mdb; do
+    pyforge convert "$file" --backend subprocess --volume-path --force
+done
+
+# Using dbutils for file operations
+dbutils.fs.ls("/Volumes/catalog/schema/volume/")
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --volume-path
+dbutils.fs.ls("/Volumes/catalog/schema/volume/output/")
+
+# Install and use in Databricks Serverless
+%pip install /Volumes/catalog/schema/pkgs/pyforge_cli-1.0.9-py3-none-any.whl \
+  --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+dbutils.library.restartPython()
+
+# Validate installation
+pyforge --version
+pyforge convert /Volumes/catalog/schema/volume/test.mdb --backend subprocess --verbose
+```
+
 ### Batch Processing
 
 ```bash
@@ -323,6 +370,24 @@ pyforge info *.xlsx | grep "Sheets:" | wc -l
 find /data -name "*.mdb" | while read file; do
     pyforge convert "$file" && echo "Converted: $file"
 done
+
+# Databricks Unity Catalog volume processing
+find /Volumes/catalog/schema/volume -name "*.mdb" | while read file; do
+    pyforge convert "$file" --volume-path --backend subprocess
+done
+
+# Databricks notebook integration
+%sh
+# Check available MDB files
+dbutils.fs.ls("/Volumes/catalog/schema/volume/")
+
+# Convert all MDB files with proper backend
+for file in /Volumes/catalog/schema/volume/*.mdb; do
+    pyforge convert "$file" --backend subprocess --volume-path --verbose
+done
+
+# Verify outputs
+dbutils.fs.ls("/Volumes/catalog/schema/volume/output/")
 ```
 
 ### Error Handling
@@ -383,6 +448,16 @@ pyforge convert database.mdb --tables "customers,orders,products"
 
 # Custom output directory
 pyforge convert large.accdb /output/database/
+
+# Databricks Serverless with subprocess backend
+pyforge convert database.mdb --backend subprocess
+
+# Unity Catalog volume path
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --volume-path
+
+# Combined Databricks options
+pyforge convert /Volumes/catalog/schema/volume/secure.mdb \
+  --backend subprocess --volume-path --password "secret123"
 ```
 
 ### XML Processing
@@ -443,6 +518,14 @@ pyforge validate problematic_file.pdf --verbose
 
 # Test with minimal options
 pyforge convert test_file.pdf --verbose
+
+# Databricks environment debugging
+echo "IS_SERVERLESS: $IS_SERVERLESS"
+echo "SPARK_CONNECT_MODE_ENABLED: $SPARK_CONNECT_MODE_ENABLED"
+echo "DATABRICKS_RUNTIME_VERSION: $DATABRICKS_RUNTIME_VERSION"
+
+# Test MDB backend availability
+pyforge convert test.mdb --backend subprocess --verbose
 ```
 
 ### Common Issues
@@ -457,6 +540,15 @@ PYFORGE_MAX_MEMORY=1024 pyforge convert large_file.xlsx
 
 # Encoding problems
 pyforge convert file.dbf --encoding utf-8 --verbose
+
+# Databricks volume path issues
+pyforge convert /Volumes/catalog/schema/volume/file.mdb --volume-path --verbose
+
+# MDB backend selection
+pyforge convert database.mdb --backend subprocess --verbose
+
+# Unity Catalog volume permissions
+dbutils.fs.ls("/Volumes/catalog/schema/volume/")
 ```
 
 ## Performance Monitoring
@@ -721,6 +813,85 @@ pyforge mdf-tools test && \
 echo "SQL Server is ready for MDF processing"
 ```
 
+## Databricks Serverless Specific Features
+
+### Backend Selection for MDB/ACCDB Files
+
+PyForge CLI v1.0.9 supports multiple backends for MDB/ACCDB conversion:
+
+```bash
+# Default backend (auto-selected)
+pyforge convert database.mdb
+
+# Force subprocess backend (recommended for Databricks Serverless)
+pyforge convert database.mdb --backend subprocess
+
+# Force shell backend (for local environments)
+pyforge convert database.mdb --backend shell
+```
+
+**Backend Selection Logic:**
+- **Serverless Environment**: Automatically uses `subprocess` backend
+- **Local Environment**: Prefers `shell` backend, falls back to `subprocess`
+- **Manual Override**: Use `--backend` flag to force specific backend
+
+### Unity Catalog Volume Path Handling
+
+```bash
+# Enable volume path handling for Unity Catalog
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --volume-path
+
+# Without volume path flag (may fail on volumes)
+pyforge convert /Volumes/catalog/schema/volume/data.mdb  # Not recommended
+
+# Volume path with other options
+pyforge convert /Volumes/catalog/schema/volume/secure.mdb \
+  --volume-path --backend subprocess --password "secret" --verbose
+```
+
+### Installation in Databricks Serverless
+
+```python
+# Install PyForge CLI in Databricks notebook
+%pip install /Volumes/catalog/schema/pkgs/pyforge_cli-1.0.9-py3-none-any.whl \
+  --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Restart Python kernel
+dbutils.library.restartPython()
+
+# Verify installation
+%sh pyforge --version
+```
+
+### Environment Detection
+
+PyForge CLI automatically detects Databricks Serverless environment using:
+
+```bash
+# Environment variables checked
+IS_SERVERLESS=TRUE
+SPARK_CONNECT_MODE_ENABLED=1
+DATABRICKS_RUNTIME_VERSION=client.14.3.x-scala2.12
+```
+
+### Troubleshooting Databricks Issues
+
+```bash
+# Check environment detection
+echo "IS_SERVERLESS: $IS_SERVERLESS"
+echo "SPARK_CONNECT_MODE_ENABLED: $SPARK_CONNECT_MODE_ENABLED"
+
+# Test backend availability
+pyforge convert test.mdb --backend subprocess --verbose
+
+# Volume path testing
+dbutils.fs.ls("/Volumes/catalog/schema/volume/")
+pyforge convert /Volumes/catalog/schema/volume/test.mdb --volume-path --verbose
+
+# Debug Java availability
+java -version  # Should work in Databricks runtime
+```
+
 ## See Also
 
 - **[MDF Tools Installer](../converters/mdf-tools-installer.md)** - Complete MDF tools documentation
@@ -728,3 +899,4 @@ echo "SQL Server is ready for MDF processing"
 - **[Output Formats](output-formats.md)** - Output format specifications
 - **[Tutorials](../tutorials/index.md)** - Real-world usage examples
 - **[Troubleshooting](../tutorials/troubleshooting.md)** - Common issues and solutions
+- **[Databricks Integration Guide](../tutorials/databricks-integration.md)** - Comprehensive Databricks setup and usage

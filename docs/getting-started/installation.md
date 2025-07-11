@@ -73,13 +73,158 @@ pip install -e .
 ## System Requirements
 
 ### Python Version
-- **Python 3.8+** (recommended: Python 3.11+)
+- **Python 3.8+** (recommended: Python 3.10.12 for Databricks compatibility)
 - Works on Python 3.8, 3.9, 3.10, 3.11, 3.12
+- **Databricks Serverless**: Requires Python 3.10.12 for full compatibility
 
 ### Operating Systems
 - **Windows** 10/11 (x64)
 - **macOS** 10.14+ (Intel and Apple Silicon)
 - **Linux** (Ubuntu 18.04+, CentOS 7+, and other distributions)
+- **Databricks Serverless** (Python 3.10.12 runtime)
+
+### Compatibility Matrix
+
+| Environment | Python Version | PyForge CLI Version | Notes |
+|-------------|---------------|-------------------|--------|
+| Local Development | 3.8-3.12 | 1.0.9 | Full feature support |
+| Databricks Serverless V1 | 3.10.12 | 1.0.9 | Optimized dependencies |
+| Databricks Classic | 3.8-3.11 | 1.0.9 | Standard installation |
+| Production Servers | 3.10+ | 1.0.9 | Recommended for stability |
+
+## Databricks Serverless Installation
+
+!!! important "Databricks Serverless Requirements"
+    PyForge CLI version 1.0.9 includes specialized support for Databricks Serverless environments with optimized dependency management.
+
+### Prerequisites
+
+1. **Unity Catalog Volume Access**: Ensure you have access to a Unity Catalog volume for storing wheels
+2. **Databricks CLI**: Install and configure the Databricks CLI
+3. **Python Environment**: Databricks Serverless runs Python 3.10.12
+
+### Installation Steps
+
+#### Step 1: Install PyForge CLI Wheel
+
+```python
+# In a Databricks Serverless notebook cell
+%pip install pyforge-cli==1.0.9 --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+```
+
+#### Step 2: Install from Unity Catalog Volume (Alternative)
+
+If you have deployed PyForge CLI to a Unity Catalog volume:
+
+```python
+# Replace {username} with your Databricks username
+%pip install /Volumes/cortex_dev_catalog/sandbox_testing/pkgs/{username}/pyforge_cli-1.0.9-py3-none-any.whl --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+```
+
+#### Step 3: Restart Python Environment
+
+```python
+# Restart Python to ensure clean import
+dbutils.library.restartPython()
+```
+
+#### Step 4: Verify Installation
+
+```python
+# Verify PyForge CLI is installed and working
+import pyforge_cli
+print(f"PyForge CLI version: {pyforge_cli.__version__}")
+
+# Test basic functionality
+from pyforge_cli.main import cli
+print("PyForge CLI installed successfully!")
+```
+
+### Databricks Serverless Configuration
+
+#### Subprocess Backend Configuration
+
+PyForge CLI automatically configures the subprocess backend for Databricks Serverless environments:
+
+```python
+# No additional configuration needed - PyForge CLI handles this automatically
+# The subprocess backend is optimized for Databricks Serverless constraints
+```
+
+#### Memory and Resource Management
+
+```python
+# For large file processing in Databricks Serverless
+import pyforge_cli.config as config
+
+# Configure for serverless environment
+config.set_serverless_mode(True)
+config.set_memory_limit("2GB")  # Adjust based on your cluster configuration
+```
+
+### Usage in Databricks Serverless
+
+#### Converting Files
+
+```python
+# Convert files using the Python API (recommended for Databricks)
+from pyforge_cli.converters import CSVConverter
+
+# Example: Convert CSV to Parquet
+converter = CSVConverter()
+converter.convert(
+    input_file="/Volumes/catalog/schema/volume/data.csv",
+    output_file="/Volumes/catalog/schema/volume/data.parquet"
+)
+```
+
+#### Using CLI Commands
+
+```python
+# Run CLI commands programmatically
+import subprocess
+
+# Example: List supported formats
+result = subprocess.run(
+    ["python", "-m", "pyforge_cli", "formats"],
+    capture_output=True,
+    text=True
+)
+print(result.stdout)
+```
+
+### Troubleshooting Databricks Serverless
+
+#### Common Issues
+
+1. **Import Errors**: Ensure you've restarted Python after installation
+   ```python
+   dbutils.library.restartPython()
+   ```
+
+2. **Path Issues**: Always use `dbfs:/` prefix for Unity Catalog volumes
+   ```python
+   # Correct path format
+   input_path = "/Volumes/catalog/schema/volume/file.csv"
+   ```
+
+3. **Memory Issues**: For large files, process in chunks
+   ```python
+   # Configure chunk processing
+   converter.convert(input_file, output_file, chunk_size=10000)
+   ```
+
+4. **Dependency Conflicts**: Use the exact PyPI installation command
+   ```python
+   %pip install pyforge-cli==1.0.9 --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+   ```
+
+#### Required Flags for Serverless
+
+- `--no-cache-dir`: Ensures fresh installation without cached packages
+- `--quiet`: Reduces installation output verbosity
+- `--index-url https://pypi.org/simple/`: Specifies PyPI index for dependency resolution
+- `--trusted-host pypi.org`: Trusts PyPI host for secure downloads
 
 ## Platform-Specific Setup
 
@@ -181,6 +326,28 @@ pip install -e .
 
 ## Additional Dependencies
 
+### Core Dependencies (Version 1.0.9)
+
+PyForge CLI 1.0.9 includes optimized dependencies for Databricks Serverless compatibility:
+
+- **pandas==1.5.3** - Databricks Serverless V1 compatible
+- **pyarrow==8.0.0** - Exact version match for Databricks
+- **numpy==1.23.5** - Databricks Serverless V1 compatible
+- **click==8.1.3** - CLI framework
+- **rich==12.6.0** - Enhanced terminal output
+
+### Format-Specific Dependencies
+
+All format-specific dependencies are now included by default in version 1.0.9:
+
+- **PyMuPDF>=1.20.0** - PDF processing (included by default)
+- **openpyxl>=3.0.0** - Excel file support (included by default)
+- **chardet>=3.0.0** - Character encoding detection (included by default)
+- **requests>=2.25.0** - HTTP client for downloads (included by default)
+- **jaydebeapi>=1.2.3** - MDB/Access support (included by default)
+- **jpype1>=1.3.0** - Java integration for MDB files (included by default)
+- **dbfread>=2.0.0** - DBF file support (included by default)
+
 ### For MDB/Access File Support
 
 PyForge CLI requires additional tools for Microsoft Access database conversion:
@@ -249,7 +416,7 @@ pyforge validate --help
 
 Expected output:
 ```
-pyforge, version 0.2.1
+pyforge, version 1.0.9
 ```
 
 ## Troubleshooting
@@ -321,6 +488,36 @@ If you have dependency conflicts:
    pip install --upgrade pyforge-cli
    ```
 
+### Databricks Serverless Issues
+
+For Databricks Serverless specific issues:
+
+1. **Wheel not found**: Ensure the wheel is deployed to the correct Unity Catalog volume
+2. **Import errors after installation**: Always restart Python after wheel installation
+3. **Version conflicts**: Use the exact PyPI installation command with flags
+4. **Path resolution**: Use absolute paths starting with `/Volumes/`
+
+### Automated Deployment to Databricks
+
+For automated deployment to Databricks environments:
+
+```bash
+# Use the deployment script (requires Databricks CLI configured)
+python scripts/deploy_pyforge_to_databricks.py
+
+# With custom username
+python scripts/deploy_pyforge_to_databricks.py -u your_username
+
+# With custom profile
+python scripts/deploy_pyforge_to_databricks.py -p custom-profile
+```
+
+This script will:
+- Build PyForge CLI wheel (version 1.0.9)
+- Upload to Unity Catalog volume
+- Upload notebooks to Databricks workspace
+- Provide installation instructions
+
 ## Development Installation
 
 For contributing to PyForge CLI:
@@ -352,7 +549,7 @@ pip install --upgrade pyforge-cli
 To update to a specific version:
 
 ```bash
-pip install pyforge-cli==0.2.1
+pip install pyforge-cli==1.0.9
 ```
 
 ## Uninstalling

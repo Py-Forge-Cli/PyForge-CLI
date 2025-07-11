@@ -21,6 +21,7 @@ PyForge CLI provides comprehensive database conversion for Access and SQL Server
 | **Access 2007+** | `.accdb` | Modern Access database format | ✅ Full |
 | **Access Runtime** | `.mdb/.accdb` | Runtime-only databases | ✅ Full |
 | **SQL Server Master** | `.mdf` | SQL Server database files | 🚧 In Development |
+| **Databricks Serverless** | `.mdb/.accdb` | Subprocess-based processing | ✅ Full (v1.0.9+) |
 
 ## Basic Usage
 
@@ -69,6 +70,260 @@ sudo apt-get install mdbtools
 pyforge convert database.mdb
 ```
 
+### Databricks Serverless
+```bash
+# Install PyForge CLI in Databricks Serverless notebook
+%pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Convert database files from Unity Catalog volumes
+pyforge convert dbfs:/Volumes/catalog/schema/volume/database.mdb
+
+# Or use subprocess backend explicitly
+pyforge convert database.mdb --backend subprocess
+```
+
+## Databricks Serverless Support
+
+PyForge CLI v1.0.9+ provides full support for Databricks Serverless environments with specialized optimizations for cloud-native database conversion.
+
+### Subprocess Backend
+
+Databricks Serverless uses a **subprocess-based backend** for database conversion that provides:
+
+- **Isolated Processing**: Each conversion runs in a separate subprocess for better resource isolation
+- **Memory Optimization**: Optimized memory usage for Databricks Serverless compute constraints
+- **Error Isolation**: Subprocess failures don't crash the main notebook kernel
+- **Progress Tracking**: Real-time progress updates visible in notebook output
+
+### Unity Catalog Volume Support
+
+PyForge CLI automatically detects and handles Unity Catalog volume paths:
+
+```python
+# Direct volume path conversion
+pyforge convert dbfs:/Volumes/catalog/schema/volume/database.mdb
+
+# Output to specific volume location
+pyforge convert dbfs:/Volumes/catalog/schema/volume/input.mdb dbfs:/Volumes/catalog/schema/volume/output/
+
+# Batch processing from volume
+pyforge convert dbfs:/Volumes/catalog/schema/volume/*.mdb
+```
+
+### Installation and Configuration
+
+#### Step 1: Install PyForge CLI
+```python
+# Always use the complete installation command for Databricks Serverless
+%pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Restart Python to ensure clean imports
+dbutils.library.restartPython()
+```
+
+#### Step 2: Verify Installation
+```python
+# Test the installation
+import subprocess
+result = subprocess.run(['pyforge', '--version'], capture_output=True, text=True)
+print(f"PyForge CLI Version: {result.stdout.strip()}")
+```
+
+#### Step 3: Configure Backend (Optional)
+```python
+# PyForge automatically detects Databricks Serverless environment
+# Manual backend specification (if needed)
+import os
+os.environ['PYFORGE_BACKEND'] = 'subprocess'
+```
+
+### Usage Examples for Databricks Serverless
+
+#### Basic Conversion
+```python
+# Convert MDB file from Unity Catalog volume
+import subprocess
+
+# Single file conversion
+result = subprocess.run([
+    'pyforge', 'convert', 
+    'dbfs:/Volumes/catalog/schema/volume/database.mdb',
+    '--verbose'
+], capture_output=True, text=True)
+
+print("STDOUT:", result.stdout)
+if result.stderr:
+    print("STDERR:", result.stderr)
+```
+
+#### Advanced Conversion with Options
+```python
+# Convert with specific options
+result = subprocess.run([
+    'pyforge', 'convert',
+    'dbfs:/Volumes/catalog/schema/volume/company.accdb',
+    'dbfs:/Volumes/catalog/schema/volume/converted/',
+    '--tables', 'Customers,Orders,Products',
+    '--compression', 'gzip',
+    '--verbose'
+], capture_output=True, text=True)
+
+print("Conversion completed!")
+print("Output:", result.stdout)
+```
+
+#### Batch Processing
+```python
+# Process multiple database files
+import os
+import subprocess
+
+# List all MDB files in volume
+volume_path = "dbfs:/Volumes/catalog/schema/volume/"
+files_to_process = [
+    f"{volume_path}sales.mdb",
+    f"{volume_path}inventory.accdb",
+    f"{volume_path}customers.mdb"
+]
+
+for db_file in files_to_process:
+    print(f"Processing: {db_file}")
+    result = subprocess.run([
+        'pyforge', 'convert', db_file,
+        '--compression', 'gzip',
+        '--verbose'
+    ], capture_output=True, text=True)
+    
+    if result.returncode == 0:
+        print(f"✅ Successfully converted: {db_file}")
+    else:
+        print(f"❌ Failed to convert: {db_file}")
+        print(f"Error: {result.stderr}")
+```
+
+### Performance Optimization for Databricks Serverless
+
+#### Memory-Efficient Processing
+```python
+# For large databases, use chunked processing
+result = subprocess.run([
+    'pyforge', 'convert',
+    'dbfs:/Volumes/catalog/schema/volume/large_database.mdb',
+    '--compression', 'gzip',
+    '--backend', 'subprocess',
+    '--verbose'
+], capture_output=True, text=True)
+```
+
+#### Parallel Processing
+```python
+# Process multiple files in parallel using Databricks jobs
+from concurrent.futures import ThreadPoolExecutor
+import subprocess
+
+def convert_database(db_path):
+    """Convert a single database file"""
+    result = subprocess.run([
+        'pyforge', 'convert', db_path,
+        '--compression', 'gzip',
+        '--verbose'
+    ], capture_output=True, text=True)
+    return db_path, result.returncode == 0
+
+# Process files in parallel
+database_files = [
+    "dbfs:/Volumes/catalog/schema/volume/db1.mdb",
+    "dbfs:/Volumes/catalog/schema/volume/db2.accdb",
+    "dbfs:/Volumes/catalog/schema/volume/db3.mdb"
+]
+
+with ThreadPoolExecutor(max_workers=3) as executor:
+    results = list(executor.map(convert_database, database_files))
+
+for db_path, success in results:
+    status = "✅ Success" if success else "❌ Failed"
+    print(f"{status}: {db_path}")
+```
+
+### Working with Converted Data
+
+#### Load Converted Parquet Files
+```python
+# Load converted parquet files in Databricks
+import pandas as pd
+
+# Read converted table
+df = pd.read_parquet('dbfs:/Volumes/catalog/schema/volume/database/Customers.parquet')
+print(f"Loaded {len(df)} customer records")
+display(df.head())
+```
+
+#### Spark DataFrame Integration
+```python
+# Load as Spark DataFrame for large datasets
+customers_df = spark.read.parquet('dbfs:/Volumes/catalog/schema/volume/database/Customers.parquet')
+
+# Register as temporary view
+customers_df.createOrReplaceTempView('customers')
+
+# Query with SQL
+result = spark.sql("SELECT COUNT(*) as customer_count FROM customers")
+display(result)
+```
+
+### Troubleshooting Databricks Serverless
+
+#### Common Issues and Solutions
+
+**Installation Issues**:
+```python
+# If pip install fails, try with specific index
+%pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org --upgrade
+
+# Clear pip cache if needed
+%pip cache purge
+```
+
+**Path Issues**:
+```python
+# Ensure proper dbfs:// prefix for volume paths
+# ✅ Correct
+path = "dbfs:/Volumes/catalog/schema/volume/database.mdb"
+
+# ❌ Incorrect
+path = "/Volumes/catalog/schema/volume/database.mdb"
+```
+
+**Memory Issues**:
+```python
+# For large databases, process one table at a time
+result = subprocess.run([
+    'pyforge', 'convert',
+    'dbfs:/Volumes/catalog/schema/volume/large_db.mdb',
+    '--tables', 'LargeTable1',
+    '--compression', 'gzip'
+], capture_output=True, text=True)
+```
+
+**Subprocess Errors**:
+```python
+# Check subprocess backend availability
+import subprocess
+try:
+    result = subprocess.run(['pyforge', '--version'], capture_output=True, text=True)
+    print(f"PyForge available: {result.stdout.strip()}")
+except FileNotFoundError:
+    print("PyForge CLI not found. Please reinstall.")
+```
+
+### Performance Notes for Databricks Serverless
+
+- **Subprocess Overhead**: Slight performance overhead due to subprocess communication
+- **Memory Efficiency**: Optimized for Databricks Serverless memory constraints
+- **I/O Optimization**: Efficient handling of Unity Catalog volume operations
+- **Parallel Processing**: Supports concurrent conversions for multiple files
+- **Progress Tracking**: Real-time progress updates in notebook output
+
 ## Conversion Options
 
 ### Basic Conversion
@@ -105,6 +360,12 @@ pyforge convert database.mdb --force
 
 # Custom compression (default is snappy)
 pyforge convert data.accdb --compression gzip
+
+# Specify backend (auto-detected by default)
+pyforge convert database.mdb --backend subprocess
+
+# Unity Catalog volume processing
+pyforge convert dbfs:/Volumes/catalog/schema/volume/database.mdb --compression gzip
 ```
 
 ## Output Structure
@@ -313,6 +574,27 @@ for db_file in databases/*.mdb databases/*.accdb; do
 done
 ```
 
+### Databricks Serverless Processing
+
+```python
+# Convert database in Databricks Serverless notebook
+import subprocess
+
+# Single database conversion
+result = subprocess.run([
+    'pyforge', 'convert',
+    'dbfs:/Volumes/catalog/schema/volume/sales_data.mdb',
+    'dbfs:/Volumes/catalog/schema/volume/converted/',
+    '--compression', 'gzip',
+    '--verbose'
+], capture_output=True, text=True)
+
+print("Conversion Result:")
+print(result.stdout)
+if result.stderr:
+    print("Errors:", result.stderr)
+```
+
 ## Integration Examples
 
 ### Python/Pandas
@@ -416,6 +698,57 @@ customers_df.createOrReplaceTempView('customers')
 result = spark.sql("SELECT CustomerID, Balance FROM customers WHERE Balance > 1000")
 ```
 
+### Databricks Serverless Integration
+
+```python
+# Complete Databricks Serverless workflow
+import subprocess
+import pandas as pd
+
+# Step 1: Convert database
+conversion_result = subprocess.run([
+    'pyforge', 'convert',
+    'dbfs:/Volumes/catalog/schema/volume/business_data.accdb',
+    'dbfs:/Volumes/catalog/schema/volume/converted/',
+    '--compression', 'gzip',
+    '--verbose'
+], capture_output=True, text=True)
+
+if conversion_result.returncode == 0:
+    print("✅ Conversion successful!")
+    
+    # Step 2: Load converted data
+    customers_df = pd.read_parquet('dbfs:/Volumes/catalog/schema/volume/converted/business_data/Customers.parquet')
+    orders_df = pd.read_parquet('dbfs:/Volumes/catalog/schema/volume/converted/business_data/Orders.parquet')
+    
+    # Step 3: Basic analysis
+    print(f"Customers: {len(customers_df)}")
+    print(f"Orders: {len(orders_df)}")
+    
+    # Step 4: Create Spark DataFrames for large-scale processing
+    customers_spark = spark.createDataFrame(customers_df)
+    orders_spark = spark.createDataFrame(orders_df)
+    
+    # Step 5: Register as temporary views
+    customers_spark.createOrReplaceTempView('customers')
+    orders_spark.createOrReplaceTempView('orders')
+    
+    # Step 6: Run analytics
+    result = spark.sql("""
+        SELECT c.CustomerName, COUNT(o.OrderID) as OrderCount
+        FROM customers c
+        LEFT JOIN orders o ON c.CustomerID = o.CustomerID
+        GROUP BY c.CustomerName
+        ORDER BY OrderCount DESC
+        LIMIT 10
+    """)
+    
+    display(result)
+else:
+    print("❌ Conversion failed!")
+    print(conversion_result.stderr)
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -451,6 +784,40 @@ pyforge convert large.accdb --verbose
 pyforge convert large.accdb --compression gzip
 ```
 
+**Databricks Serverless Issues**:
+```python
+# Installation problems
+%pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org --upgrade
+dbutils.library.restartPython()
+
+# Path resolution issues
+# ✅ Correct - use dbfs:// prefix
+path = "dbfs:/Volumes/catalog/schema/volume/database.mdb"
+
+# ❌ Incorrect - missing dbfs:// prefix
+path = "/Volumes/catalog/schema/volume/database.mdb"
+
+# Subprocess backend issues
+import subprocess
+try:
+    result = subprocess.run(['pyforge', '--version'], capture_output=True, text=True)
+    print("PyForge available:", result.stdout.strip())
+except FileNotFoundError:
+    print("PyForge CLI not found in PATH")
+    %pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+```
+
+**Unity Catalog Volume Permission Issues**:
+```python
+# Check volume access permissions
+try:
+    dbutils.fs.ls("dbfs:/Volumes/catalog/schema/volume/")
+    print("✅ Volume access confirmed")
+except Exception as e:
+    print(f"❌ Volume access error: {e}")
+    print("Check Unity Catalog permissions and volume path")
+```
+
 ## Best Practices
 
 1. **Backup First**: Always backup original database files
@@ -460,6 +827,17 @@ pyforge convert large.accdb --compression gzip
 5. **Validate Results**: Always verify record counts and data integrity
 6. **Optimize Settings**: Use appropriate chunk sizes for your system memory
 7. **Handle Passwords**: Be prepared to enter passwords for protected databases
+
+### Databricks Serverless Best Practices
+
+8. **Use Proper Installation**: Always use the complete pip install command with index URL
+9. **Volume Path Prefix**: Always use `dbfs://` prefix for Unity Catalog volume paths
+10. **Memory Management**: Use compression for large databases to reduce memory usage
+11. **Error Handling**: Implement proper subprocess error handling in notebooks
+12. **Batch Processing**: Use parallel processing for multiple database files
+13. **Progress Monitoring**: Use `--verbose` flag to monitor conversion progress
+14. **Restart Python**: Always restart Python after installing PyForge CLI
+15. **Permission Verification**: Check Unity Catalog volume permissions before conversion
 
 ## SQL Server MDF Files
 

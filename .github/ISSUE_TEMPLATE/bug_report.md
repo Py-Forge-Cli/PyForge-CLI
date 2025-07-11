@@ -7,8 +7,9 @@ assignees: ''
 ---
 
 ## 🐛 Bug Report Overview
-**Bug Type**: [ ] Crash/Error [ ] Incorrect Output [ ] Performance [ ] CLI Interface [ ] Other: ___
+**Bug Type**: [ ] Crash/Error [ ] Incorrect Output [ ] Performance [ ] CLI Interface [ ] Databricks Integration [ ] Unity Catalog [ ] Serverless Environment [ ] Other: ___
 **Severity**: [ ] Critical [ ] High [ ] Medium [ ] Low
+**Environment**: [ ] Local [ ] Databricks Classic [ ] Databricks Serverless [ ] Unity Catalog Volume [ ] Other: ___
 
 ## 📋 Bug Resolution Workflow
 This bug report follows a **structured investigation → diagnosis → fix → validation** workflow:
@@ -44,8 +45,10 @@ This bug report follows a **structured investigation → diagnosis → fix → v
 **System Information**:
 - **OS**: [Windows 11, macOS 14.5, Ubuntu 22.04]
 - **Python**: [3.10.12]
-- **PyForge CLI**: [0.2.0 or commit hash]
+- **PyForge CLI**: [1.0.9 or commit hash]
 - **Install Method**: [pip, source, conda]
+- **Databricks Runtime**: [if applicable - e.g., 13.3 LTS, 14.3 LTS, Serverless]
+- **Unity Catalog**: [if applicable - enabled/disabled]
 
 **File Context** (if applicable):
 - **Type**: [.xlsx, .mdb, .dbf, .pdf]
@@ -93,6 +96,10 @@ pyforge convert [problem_file] --debug --verbose
 - [ ] **Dependencies**: Library version conflicts
 - [ ] **Environment**: OS/Python version specific
 - [ ] **Performance**: Memory/resource limitations
+- [ ] **Databricks Integration**: Environment detection issues
+- [ ] **Unity Catalog**: Volume path or permission issues
+- [ ] **Serverless Runtime**: Databricks Serverless V1/V2 compatibility
+- [ ] **Spark Context**: PySpark initialization or configuration
 
 ### 📋 Investigation Tasks
 **When Claude investigates, break down into these tasks:**

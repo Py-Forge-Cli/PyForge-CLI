@@ -392,6 +392,381 @@ If issues persist after trying these solutions:
 
 4. **Community Support**: [GitHub Discussions](https://github.com/Py-Forge-Cli/PyForge-CLI/discussions)
 
+## Databricks Serverless Troubleshooting
+
+### Installation Issues
+
+**Issue**: `ModuleNotFoundError: No module named 'pyforge_cli'`
+
+**Solutions**:
+```python
+# Check if wheel is properly installed
+%pip list | grep pyforge
+
+# Reinstall with proper PyPI index (required for Databricks Serverless)
+%pip install /Volumes/cortex_dev_catalog/sandbox_testing/pkgs/{username}/pyforge_cli-1.0.9-py3-none-any.whl --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Restart Python environment
+dbutils.library.restartPython()
+```
+
+**Issue**: `pip install fails with SSL/certificate errors`
+
+**Solutions**:
+```python
+# Use trusted host and proper index URL
+%pip install package-name --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# For corporate environments, check with IT for approved PyPI URLs
+```
+
+### Unity Catalog Volume Path Problems
+
+**Issue**: `FileNotFoundError: dbfs:/Volumes/... path not found`
+
+**Solutions**:
+```python
+# Check volume permissions
+%sql SHOW VOLUMES IN cortex_dev_catalog.sandbox_testing;
+
+# Verify volume exists and is accessible
+%fs ls dbfs:/Volumes/cortex_dev_catalog/sandbox_testing/
+
+# Check username in path
+import os
+username = spark.sql("SELECT current_user()").collect()[0][0]
+print(f"Current user: {username}")
+
+# Use correct path format
+wheel_path = f"/Volumes/cortex_dev_catalog/sandbox_testing/pkgs/{username}/pyforge_cli-1.0.9-py3-none-any.whl"
+```
+
+**Issue**: `Permission denied accessing Unity Catalog volume`
+
+**Solutions**:
+```python
+# Check catalog permissions
+%sql SHOW GRANTS ON CATALOG cortex_dev_catalog;
+
+# Verify schema access
+%sql SHOW GRANTS ON SCHEMA cortex_dev_catalog.sandbox_testing;
+
+# Check volume permissions
+%sql SHOW GRANTS ON VOLUME cortex_dev_catalog.sandbox_testing.pkgs;
+```
+
+### Subprocess Backend Errors
+
+**Issue**: `subprocess-backend is not available`
+
+**Solutions**:
+```python
+# Install subprocess support for Databricks Serverless
+%pip install subprocess32 --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Alternative: Use environment variable
+import os
+os.environ['PYFORGE_BACKEND'] = 'python'
+
+# Restart Python after installation
+dbutils.library.restartPython()
+```
+
+**Issue**: `Cannot run shell commands in Databricks Serverless`
+
+**Solutions**:
+```python
+# Use Python-only conversion methods
+from pyforge_cli.core.converter_registry import ConverterRegistry
+
+# Initialize registry
+registry = ConverterRegistry()
+
+# Convert using Python backend
+result = registry.convert_file(
+    input_file="sample.xlsx",
+    output_file="output.py",
+    backend="python"
+)
+```
+
+### Memory and Performance Issues
+
+**Issue**: `Memory allocation failed` or `Out of memory`
+
+**Solutions**:
+```python
+# Monitor memory usage
+import psutil
+print(f"Available memory: {psutil.virtual_memory().available / (1024**3):.2f} GB")
+
+# Process files in smaller chunks
+import pandas as pd
+
+def process_large_file(file_path, chunk_size=10000):
+    chunks = []
+    for chunk in pd.read_csv(file_path, chunksize=chunk_size):
+        processed_chunk = chunk.head(1000)  # Process smaller subset
+        chunks.append(processed_chunk)
+    return pd.concat(chunks, ignore_index=True)
+
+# Use memory-efficient options
+pyforge_options = {
+    'memory_limit': '1GB',
+    'chunk_size': 5000,
+    'optimize_memory': True
+}
+```
+
+**Issue**: `Spark job fails with large files`
+
+**Solutions**:
+```python
+# Configure Spark for large file processing
+spark.conf.set("spark.sql.adaptive.enabled", "true")
+spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
+spark.conf.set("spark.sql.adaptive.advisoryPartitionSizeInBytes", "128MB")
+
+# Use Spark-native operations when possible
+df = spark.read.option("header", "true").csv(file_path)
+df.write.mode("overwrite").parquet(output_path)
+```
+
+### Common Error Messages and Fixes
+
+**Issue**: `ImportError: cannot import name 'pyforge_cli'`
+
+**Solutions**:
+```python
+# Check Python path
+import sys
+print(sys.path)
+
+# Verify installation location
+import subprocess
+result = subprocess.run([sys.executable, "-m", "pip", "show", "pyforge-cli"], 
+                       capture_output=True, text=True)
+print(result.stdout)
+
+# Reinstall if needed
+%pip install pyforge-cli --force-reinstall --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+```
+
+**Issue**: `ConverterRegistry not found`
+
+**Solutions**:
+```python
+# Import the correct module
+from pyforge_cli.core.converter_registry import ConverterRegistry
+
+# Initialize registry
+registry = ConverterRegistry()
+
+# Check available converters
+print(registry.get_supported_formats())
+```
+
+**Issue**: `pyspark.sql.utils.AnalysisException: Path does not exist`
+
+**Solutions**:
+```python
+# Check if file exists in DBFS
+%fs ls dbfs:/path/to/file
+
+# Use proper DBFS path format
+dbfs_path = "dbfs:/Volumes/catalog/schema/volume/file.csv"
+
+# Or use /dbfs/ mount point
+mount_path = "/dbfs/Volumes/catalog/schema/volume/file.csv"
+
+# Verify file accessibility
+import os
+if os.path.exists(mount_path):
+    print("File exists and accessible")
+else:
+    print("File not found or not accessible")
+```
+
+### Diagnostic Commands for Databricks
+
+**Environment Diagnostics**:
+```python
+# Check Databricks environment
+print(f"Databricks Runtime: {spark.conf.get('spark.databricks.clusterUsageTags.sparkVersion')}")
+print(f"Scala Version: {spark.version}")
+print(f"Python Version: {sys.version}")
+
+# Check cluster configuration
+print(f"Driver node type: {spark.conf.get('spark.databricks.clusterUsageTags.driverNodeTypeId')}")
+print(f"Worker node type: {spark.conf.get('spark.databricks.clusterUsageTags.workerNodeTypeId')}")
+
+# Check available memory
+import psutil
+memory = psutil.virtual_memory()
+print(f"Total memory: {memory.total / (1024**3):.2f} GB")
+print(f"Available memory: {memory.available / (1024**3):.2f} GB")
+```
+
+**PyForge Diagnostics**:
+```python
+# Check PyForge installation
+try:
+    import pyforge_cli
+    print(f"PyForge CLI version: {pyforge_cli.__version__}")
+except ImportError as e:
+    print(f"PyForge CLI not installed: {e}")
+
+# Check converter registry
+try:
+    from pyforge_cli.core.converter_registry import ConverterRegistry
+    registry = ConverterRegistry()
+    print(f"Available converters: {registry.get_supported_formats()}")
+except Exception as e:
+    print(f"Converter registry error: {e}")
+
+# Check backend support
+try:
+    from pyforge_cli.core.backend_detector import BackendDetector
+    detector = BackendDetector()
+    print(f"Available backends: {detector.get_available_backends()}")
+except Exception as e:
+    print(f"Backend detection error: {e}")
+```
+
+**Volume and Path Diagnostics**:
+```python
+# Check volume access
+try:
+    %fs ls dbfs:/Volumes/cortex_dev_catalog/sandbox_testing/pkgs/
+    print("Volume accessible")
+except Exception as e:
+    print(f"Volume access error: {e}")
+
+# Check current user
+current_user = spark.sql("SELECT current_user()").collect()[0][0]
+print(f"Current user: {current_user}")
+
+# Check catalog permissions
+try:
+    catalogs = spark.sql("SHOW CATALOGS").collect()
+    print(f"Available catalogs: {[row.catalog for row in catalogs]}")
+except Exception as e:
+    print(f"Catalog access error: {e}")
+```
+
+### Best Practices for Databricks Serverless
+
+1. **Dependency Management**:
+   ```python
+   # Always use proper PyPI index for installations
+   %pip install package-name --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+   
+   # Restart Python after installations
+   dbutils.library.restartPython()
+   ```
+
+2. **File Path Handling**:
+   ```python
+   # Use Unity Catalog volumes for file storage
+   volume_path = "dbfs:/Volumes/catalog/schema/volume/file.ext"
+   
+   # Use /dbfs/ mount for local file operations
+   local_path = "/dbfs/Volumes/catalog/schema/volume/file.ext"
+   ```
+
+3. **Memory Management**:
+   ```python
+   # Monitor memory usage
+   import psutil
+   memory_info = psutil.virtual_memory()
+   
+   # Process files in chunks for large datasets
+   chunk_size = 10000
+   for chunk in pd.read_csv(file_path, chunksize=chunk_size):
+       process_chunk(chunk)
+   ```
+
+4. **Error Handling**:
+   ```python
+   # Wrap operations in try-except blocks
+   try:
+       result = pyforge_convert(input_file, output_file)
+   except ImportError as e:
+       print(f"Module import error: {e}")
+   except FileNotFoundError as e:
+       print(f"File not found: {e}")
+   except Exception as e:
+       print(f"Conversion error: {e}")
+   ```
+
+5. **Performance Optimization**:
+   ```python
+   # Use Spark-native operations when possible
+   df = spark.read.option("header", "true").csv(input_path)
+   df.write.mode("overwrite").parquet(output_path)
+   
+   # Configure Spark for optimal performance
+   spark.conf.set("spark.sql.adaptive.enabled", "true")
+   spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")
+   ```
+
+### Version-Specific Fixes (v1.0.9+)
+
+**Fixed Issues in v1.0.9**:
+- Improved dependency management for Databricks Serverless
+- Better error handling for Unity Catalog volumes
+- Enhanced subprocess backend detection
+- Fixed converter registry initialization issues
+
+**New Features in v1.0.9**:
+- Automatic backend detection for Databricks environments
+- Improved memory management for large files
+- Better error messages for common issues
+- Enhanced logging for troubleshooting
+
+**Migration from Earlier Versions**:
+```python
+# Uninstall old version
+%pip uninstall pyforge-cli -y
+
+# Install latest version
+%pip install /Volumes/cortex_dev_catalog/sandbox_testing/pkgs/{username}/pyforge_cli-1.0.9-py3-none-any.whl --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+
+# Restart Python
+dbutils.library.restartPython()
+
+# Verify installation
+import pyforge_cli
+print(f"PyForge CLI version: {pyforge_cli.__version__}")
+```
+
+### Getting Support for Databricks Issues
+
+If Databricks-specific issues persist:
+
+1. **Collect Databricks Diagnostic Information**:
+   ```python
+   # Runtime information
+   print(f"Runtime: {spark.conf.get('spark.databricks.clusterUsageTags.sparkVersion')}")
+   print(f"Cluster ID: {spark.conf.get('spark.databricks.clusterUsageTags.clusterId')}")
+   
+   # User and permissions
+   print(f"Current user: {spark.sql('SELECT current_user()').collect()[0][0]}")
+   
+   # Volume access
+   try:
+       %fs ls dbfs:/Volumes/cortex_dev_catalog/sandbox_testing/
+       print("Volume accessible")
+   except Exception as e:
+       print(f"Volume error: {e}")
+   ```
+
+2. **Check Databricks Community Forums**: [Databricks Community](https://community.databricks.com/)
+
+3. **Consult Databricks Documentation**: [Unity Catalog Documentation](https://docs.databricks.com/data-governance/unity-catalog/index.html)
+
+4. **Report PyForge-specific Issues**: Include Databricks runtime and environment details
+
 ## Getting Help
 
 - Check [CLI Reference](../reference/cli-reference.md)

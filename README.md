@@ -33,13 +33,55 @@
 - **Excel to Parquet Conversion**: Convert Excel files (.xlsx) to Parquet format with multi-sheet support
 - **XML to Parquet Conversion**: Intelligent XML flattening with automatic structure detection and configurable strategies
 - **Database File Conversion**: Convert Microsoft Access (.mdb/.accdb), DBF, and SQL Server MDF files to Parquet
+- **Databricks Serverless Support**: Enhanced MDB conversion with subprocess backend for JAR isolation
+- **Unity Catalog Volume Path Support**: Native support for dbfs:/ volume paths in Databricks environments
 - **MDF Tools Installer**: Automated setup of Docker and SQL Server Express for MDF file processing
 - **CSV to Parquet Conversion**: Smart delimiter detection and encoding handling
 - **Rich CLI Interface**: Beautiful terminal output with progress bars and tables
 - **Intelligent Processing**: Automatic encoding detection, structure analysis, and column matching
 - **Extensible Architecture**: Plugin-based system for adding new format converters
+- **Enhanced Error Handling**: Proper exception chaining and improved error reporting
 - **Metadata Extraction**: Get detailed information about your files
 - **Cross-platform**: Works on Windows, macOS, and Linux
+
+## Databricks Serverless Support
+
+PyForge CLI now provides enhanced support for Databricks Serverless environments, specifically optimized for MDB file conversion in serverless compute contexts.
+
+### Key Features
+
+- **Subprocess Backend**: Isolated JAR execution prevents ClassLoader conflicts in serverless environments
+- **Unity Catalog Volume Paths**: Native support for `dbfs:/Volumes/catalog/schema/volume/` paths
+- **Serverless Optimization**: Designed for Databricks Serverless V1 compatibility
+- **Enhanced Error Handling**: Proper exception chaining and improved error reporting
+
+### Usage in Databricks Serverless
+
+```python
+# Install PyForge CLI in Databricks notebook
+%pip install pyforge-cli --no-cache-dir --quiet --index-url https://pypi.org/simple/ --trusted-host pypi.org
+dbutils.library.restartPython()
+
+# Convert MDB files with Unity Catalog volume paths
+import subprocess
+result = subprocess.run([
+    'pyforge', 'convert', 
+    'dbfs:/Volumes/catalog/schema/volume/database.mdb',
+    '--output', 'dbfs:/Volumes/catalog/schema/volume/output/',
+    '--backend', 'subprocess'
+], capture_output=True, text=True)
+
+# Check conversion results
+print(result.stdout)
+if result.stderr:
+    print("Errors:", result.stderr)
+```
+
+### Configuration Options
+
+- **Backend Selection**: Use `--backend subprocess` for maximum isolation
+- **Volume Path Support**: Automatic detection and handling of Unity Catalog paths
+- **Error Reporting**: Enhanced error messages with proper exception chaining
 
 ## Installation
 
@@ -302,6 +344,19 @@ pyforge convert legacy.dbf --encoding cp1252
 for file in *.dbf; do pyforge convert "$file"; done
 ```
 
+### Databricks Serverless Support
+
+```bash
+# Convert MDB files in Databricks Serverless environments
+pyforge convert dbfs:/Volumes/catalog/schema/volume/database.mdb
+
+# Use subprocess backend for JAR isolation
+pyforge convert database.mdb --backend subprocess
+
+# Convert with Unity Catalog volume paths
+pyforge convert /Volumes/catalog/schema/volume/data.mdb --output dbfs:/Volumes/catalog/schema/volume/output/
+```
+
 ### CSV Conversion Examples
 
 ```bash
@@ -549,7 +604,17 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 1.0.8 (Current Release)
+### 1.0.9 (Current Release)
+
+- ✅ **Databricks Serverless Support**: Enhanced MDB conversion with subprocess backend for JAR isolation
+- ✅ **Unity Catalog Volume Path Support**: Native support for dbfs:/ volume paths in Databricks environments
+- ✅ **Code Quality Improvements**: Resolved 35+ linting issues and improved code maintainability
+- ✅ **Enhanced Error Handling**: Proper exception chaining and improved error reporting
+- ✅ **Subprocess Backend**: New backend option for improved isolation in serverless environments
+- ✅ **Path Handling Improvements**: Better handling of Unity Catalog volume paths
+- ✅ **Documentation Updates**: Updated guides for Databricks Serverless usage
+
+### 1.0.8
 
 - ✅ **Complete Testing Infrastructure Overhaul**: Fixed 13 major issues across infrastructure and notebooks
 - ✅ **Sample Datasets Installation**: Fixed with intelligent fallback versioning system
@@ -627,7 +692,7 @@ PyForge CLI uses automated versioning with setuptools-scm:
 pip install -i https://test.pypi.org/simple/ pyforge-cli
 
 # Install specific development version  
-pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.8.dev5
+pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.9.dev5
 ```
 
 ### CI/CD Pipeline
@@ -636,12 +701,12 @@ pip install -i https://test.pypi.org/simple/ pyforge-cli==1.0.8.dev5
 - **Release**: Create a Git tag to trigger deployment to PyPI Production
 - **Testing**: Use `pyforge-cli` from test.pypi.org for validation before release
 
-### Recent Updates (v1.0.8)
+### Recent Updates (v1.0.9)
 
-**Complete Testing Infrastructure Overhaul** - Fixed 13 major issues across PyForge CLI infrastructure and testing notebooks:
+**Databricks Serverless Support & Code Quality Improvements** - Enhanced MDB conversion and resolved 35+ code quality issues:
 
-- ✅ **Infrastructure Fixes**: Sample datasets installation, missing dependencies, convert command API
-- ✅ **Testing Framework**: Comprehensive testing suite with 402 lines of test code  
-- ✅ **Notebook Support**: Full local and Databricks notebook functionality
-- ✅ **Error Handling**: Smart file selection, directory creation, PDF skip logic
-- ✅ **Documentation**: Complete developer guides and deployment processes
+- ✅ **Databricks Serverless**: Enhanced MDB conversion with subprocess backend for JAR isolation
+- ✅ **Unity Catalog Support**: Native support for dbfs:/ volume paths in Databricks environments  
+- ✅ **Code Quality**: Resolved 35+ linting issues and improved code maintainability
+- ✅ **Error Handling**: Proper exception chaining and improved error reporting
+- ✅ **Path Handling**: Better handling of Unity Catalog volume paths and serverless environments

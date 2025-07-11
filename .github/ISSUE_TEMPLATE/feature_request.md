@@ -10,7 +10,8 @@ assignees: ''
 <!-- Quick summary of what you want to build -->
 
 **Feature Name**: [Short descriptive name]
-**Type**: [ ] New Command [ ] Enhancement [ ] Integration [ ] Performance [ ] Other: ___
+**Type**: [ ] New Command [ ] Enhancement [ ] Integration [ ] Performance [ ] Databricks Feature [ ] Unity Catalog [ ] Serverless Support [ ] Other: ___
+**PyForge Version**: [1.0.9]
 
 ## 📋 Implementation Workflow
 This feature request follows the **PRD → Tasks → Implementation** workflow:
@@ -61,6 +62,11 @@ pyforge [new-command] [arguments] [options]
 pyforge convert --batch data/*.xlsx --format parquet
 pyforge merge file1.csv file2.csv --output combined.parquet
 pyforge validate dataset.parquet --rules strict
+
+# Databricks integration examples
+pyforge convert --databricks-volume /Volumes/catalog/schema/volume/
+pyforge convert --spark-config spark.sql.adaptive.enabled=true
+pyforge convert --unity-catalog-table catalog.schema.table
 ```
 
 ### 📁 Input/Output Specifications
@@ -74,6 +80,8 @@ pyforge validate dataset.parquet --rules strict
 - **Dependencies**: [new libraries or tools needed]
 - **Integration Points**: [how it connects to existing code]
 - **Data Flow**: [how data moves through the system]
+- **Databricks Integration**: [if applicable - environment detection, Spark context, Unity Catalog]
+- **Runtime Compatibility**: [Classic vs Serverless requirements]
 
 ### 🧪 Testing Strategy
 - **Unit Tests**: [what needs unit testing]

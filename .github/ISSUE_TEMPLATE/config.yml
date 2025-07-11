@@ -12,6 +12,12 @@ contact_links:
   - name: 🔧 CLI Reference
     url: https://py-forge-cli.github.io/PyForge-CLI/reference/cli-reference/
     about: Complete reference for all CLI commands and options
+  - name: 🔥 Databricks Integration
+    url: https://py-forge-cli.github.io/PyForge-CLI/databricks/
+    about: Comprehensive guide for using PyForge CLI in Databricks environments
+  - name: 🛠️ Databricks Troubleshooting
+    url: https://py-forge-cli.github.io/PyForge-CLI/databricks/troubleshooting/
+    about: Troubleshoot common issues with Databricks, Unity Catalog, and Serverless runtimes
   - name: 📋 PRD → Tasks Workflow Guide
     url: https://py-forge-cli.github.io/PyForge-CLI/contributing/prd-workflow/
     about: Learn about our structured PRD → Tasks → Implementation workflow for complex features
