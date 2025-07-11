@@ -24,6 +24,9 @@ recursive-include tests/fixtures *
 # Include source package
 recursive-include src *.py
 
+# Include JAR files for UCanAccess
+recursive-include src/pyforge_cli/data/jars *.jar
+
 # Include documentation
 recursive-include docs *.md
 recursive-include docs *.rst

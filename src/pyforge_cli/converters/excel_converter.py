@@ -3,13 +3,13 @@ Excel to Parquet converter implementation for PyForge.
 Supports multi-sheet Excel files with intelligent column signature detection.
 """
 
-import os
 import logging
-from typing import List, Dict, Any, Optional, Tuple
-from pathlib import Path
-from datetime import datetime, date
-from decimal import Decimal, getcontext
+import os
 from collections import defaultdict
+from datetime import date, datetime
+from decimal import Decimal, getcontext
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import openpyxl
@@ -184,7 +184,7 @@ class ExcelConverter(BaseConverter):
             return False
 
         if not input_path.suffix.lower() == ".xlsx":
-            console.print(f"[red]❌ Only .xlsx files are supported[/red]")
+            console.print("[red]❌ Only .xlsx files are supported[/red]")
             return False
 
         try:
@@ -361,7 +361,7 @@ class ExcelConverter(BaseConverter):
             console.print(
                 f"⚠️  {result.unique_table_structures} different table structures detected"
             )
-            for i, (signature, sheet_names) in enumerate(
+            for i, (_signature, sheet_names) in enumerate(
                 result.signature_groups.items(), 1
             ):
                 console.print(f"   Structure {i}: {sheet_names}")
@@ -419,7 +419,7 @@ class ExcelConverter(BaseConverter):
             ):
                 # Combine sheets with matching signatures
                 for (
-                    signature,
+                    _signature,
                     sheet_names,
                 ) in self.analysis_result.signature_groups.items():
                     if len(sheet_names) > 1:
@@ -617,4 +617,3 @@ class ExcelConverter(BaseConverter):
     def get_output_format(self) -> str:
         """Return the output format."""
         return "parquet"
-
