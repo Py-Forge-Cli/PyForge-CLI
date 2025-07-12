@@ -84,16 +84,41 @@ pyforge convert database.mdb --backend subprocess
 
 ## Databricks Serverless Support
 
-PyForge CLI v1.0.9+ provides full support for Databricks Serverless environments with specialized optimizations for cloud-native database conversion.
+PyForge CLI v1.0.9+ provides full support for Databricks Serverless environments with specialized handling for different file formats:
 
-### Subprocess Backend
+- **MDB/ACCDB Files**: Require subprocess due to Java SDK dependencies
+- **CSV, XML, Excel, DBF Files**: Can use standard `%sh` magic commands
 
-Databricks Serverless uses a **subprocess-based backend** for database conversion that provides:
+### Important: MDB/ACCDB Files Require Subprocess
 
+!!! warning "MDB/ACCDB Specific Requirement"
+    Due to Java SDK dependencies, **MDB/ACCDB files must be converted using subprocess commands** instead of the `%sh` magic command in Databricks Serverless environments.
+    
+    **✅ MDB/ACCDB Files (Subprocess Required):**
+    ```python
+    import subprocess
+    result = subprocess.run(['pyforge', 'convert', 'database.mdb'], capture_output=True, text=True)
+    ```
+    
+    **✅ Other Formats (Shell Magic Works):**
+    ```python
+    %sh pyforge convert data.csv output.parquet
+    %sh pyforge convert report.xlsx output/
+    %sh pyforge convert records.dbf output.parquet
+    %sh pyforge convert data.xml output.parquet
+    ```
+
+### Subprocess Backend for MDB/ACCDB
+
+MDB/ACCDB files use a **subprocess-based backend** due to Java SDK dependencies:
+
+- **Java SDK Requirement**: MDB/ACCDB conversion requires Java components that must run in subprocess
 - **Isolated Processing**: Each conversion runs in a separate subprocess for better resource isolation
 - **Memory Optimization**: Optimized memory usage for Databricks Serverless compute constraints
 - **Error Isolation**: Subprocess failures don't crash the main notebook kernel
 - **Progress Tracking**: Real-time progress updates visible in notebook output
+
+**Note**: Other formats (CSV, XML, Excel, DBF) don't have this requirement and can use `%sh` commands directly.
 
 ### Unity Catalog Volume Support
 
@@ -831,13 +856,14 @@ except Exception as e:
 ### Databricks Serverless Best Practices
 
 8. **Use Proper Installation**: Always use the complete pip install command with index URL
-9. **Volume Path Prefix**: Always use `dbfs://` prefix for Unity Catalog volume paths
-10. **Memory Management**: Use compression for large databases to reduce memory usage
-11. **Error Handling**: Implement proper subprocess error handling in notebooks
-12. **Batch Processing**: Use parallel processing for multiple database files
-13. **Progress Monitoring**: Use `--verbose` flag to monitor conversion progress
-14. **Restart Python**: Always restart Python after installing PyForge CLI
-15. **Permission Verification**: Check Unity Catalog volume permissions before conversion
+9. **Volume Path Prefix**: Use `dbfs://` prefix for Python code, `/dbfs/` prefix for shell commands
+10. **File Format Commands**: Use subprocess for MDB/ACCDB, `%sh` for CSV/XML/Excel/DBF
+11. **Memory Management**: Use compression for large databases to reduce memory usage
+12. **Error Handling**: Implement proper subprocess error handling for MDB/ACCDB files
+13. **Batch Processing**: Use parallel processing for multiple database files
+14. **Progress Monitoring**: Use `--verbose` flag to monitor conversion progress
+15. **Restart Python**: Always restart Python after installing PyForge CLI
+16. **Permission Verification**: Check Unity Catalog volume permissions before conversion
 
 ## SQL Server MDF Files
 

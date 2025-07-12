@@ -130,6 +130,7 @@ nav:
     - MDF Tools Installer: converters/mdf-tools-installer.md
   - Databricks Integration:
     - Overview: databricks/index.md
+    - Serverless Guide: databricks-serverless-guide.md
     - Environment Detection: databricks/environment-detection.md
     - Serverless Support: databricks/serverless-support.md
     - Unity Catalog Volumes: databricks/unity-catalog-volumes.md

@@ -174,6 +174,14 @@ Choose your path based on your experience level:
 
     [:octicons-arrow-right-24: Browse Tutorials](tutorials/index.md)
 
+-   :material-microsoft: **Databricks Guide**
+
+    ---
+
+    Complete guide with interactive notebook
+
+    [:octicons-arrow-right-24: Databricks Guide](databricks-serverless-guide.md) | [📓 Download Notebook](https://github.com/Py-Forge-Cli/PyForge-CLI/blob/main/notebooks/testing/functional/10-databricks-serverless-user-guide.ipynb)
+
 -   :material-api: **API Reference**
 
     ---
@@ -193,15 +201,31 @@ Choose your path based on your experience level:
 
 ## What's New
 
-### Version 0.5.0 (Latest)
+### Version 1.0.9 (Latest) 🚀
+- 🎯 **Databricks Serverless Support**: Complete file conversion support in Databricks Serverless environments
+- ✅ **Subprocess Backend**: Specialized backend for MDB/ACCDB files due to Java SDK dependencies
+- ✅ **Unity Catalog Integration**: Native support for `/Volumes/` paths with automatic file handling
+- ✅ **Shell Command Support**: CSV, XML, Excel, and DBF files can use standard `%sh` magic commands
+- ✅ **Enhanced Error Handling**: Proper exception chaining for better debugging
+- ✅ **Smart Backend Selection**: Automatic detection and selection based on environment
+- ✅ **Performance Improvements**: Memory-efficient processing and optimized conversions
+- ✅ **Interactive Notebook**: Ready-to-use Jupyter notebook for Databricks Serverless
+
+### Version 1.0.8
+- ✅ **Complete Testing Infrastructure Overhaul**: Fixed 13 major issues across infrastructure
+- ✅ **Sample Datasets Installation**: Fixed with intelligent fallback versioning system
+- ✅ **Missing Dependencies**: Added PyMuPDF, chardet, requests to resolve import errors
+- ✅ **Convert Command Fix**: Resolved TypeError in ConverterRegistry API
+- ✅ **Comprehensive Testing Framework**: Created systematic testing with 402 lines of test code
+- ✅ **Notebook Organization**: Restructured with proper unit/integration/functional hierarchy
+
+### Version 0.5.0
 - 🎉 **Sample Datasets Collection**: 23 curated test datasets across all supported formats
 - ✅ **Automated Installation**: `pyforge install sample-datasets` command with GitHub Releases integration
 - ✅ **Format Filtering**: Install specific formats with `--formats pdf,excel,xml`
 - ✅ **Size Categories**: Small (<100MB), Medium (100MB-1GB), Large (>1GB) datasets
 - ✅ **Progress Tracking**: Rich terminal UI with download progress and checksums
 - ✅ **Dataset Management**: List releases, show installed datasets, and uninstall options
-- ✅ **Quality Assurance**: 95.7% success rate with comprehensive error handling
-- ✅ **Documentation Integration**: Complete dataset guide and CLI reference updates
 
 ### Version 0.4.0
 - 🚀 **MDF Tools Installer**: Complete SQL Server infrastructure for MDF file processing
