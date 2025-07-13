@@ -3,11 +3,14 @@ Enhanced MDB (Microsoft Access) to Parquet converter with dual-backend support.
 Uses UCanAccess + pyodbc fallback for maximum compatibility and table coverage.
 """
 
-import logging
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from ..detectors.database_detector import DatabaseType, detect_database_file
 from ..readers.dual_backend_mdb_reader import DualBackendMDBReader
@@ -78,7 +81,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
 
             # Log which backend was selected
             backend_name = dual_reader.get_active_backend()
-            self.logger.info(f"[OK] Connected using {backend_name} backend")
+            self.logger.info(f"✓ Connected using {backend_name} backend")
 
             # Store connection info for later use
             conn_info = dual_reader.get_connection_info()
@@ -110,7 +113,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             space_tables = [t for t in tables if " " in t]
             if space_tables:
                 self.logger.info(
-                    f"[OK] {len(space_tables)} space-named tables accessible: {space_tables}"
+                    f"✓ {len(space_tables)} space-named tables accessible: {space_tables}"
                 )
 
             return tables
@@ -208,6 +211,65 @@ class EnhancedMDBConverter(StringDatabaseConverter):
         except Exception as e:
             self.logger.warning(f"Error closing enhanced MDB connection: {e}")
 
+    def _is_volume_path(self, path: Path) -> bool:
+        """Check if a path is a Databricks Unity Catalog volume path."""
+        return str(path).startswith("/Volumes/")
+
+    def _write_parquet_safe(
+        self, df: pd.DataFrame, output_file: Path, **options: Any
+    ) -> None:
+        """Write DataFrame to Parquet, handling volume paths safely."""
+        try:
+            # Ensure all columns are strings (consistent with StringDatabaseConverter)
+            string_df = df.copy()
+            for col in string_df.columns:
+                string_df[col] = string_df[col].astype(str)
+
+            if self._is_volume_path(output_file):
+                # Write to temporary file first, then copy to volume
+                with tempfile.NamedTemporaryFile(
+                    suffix=".parquet", delete=False
+                ) as tmp_file:
+                    tmp_path = Path(tmp_file.name)
+
+                    # Create PyArrow schema with all string columns
+                    schema_fields = [(col, pa.string()) for col in string_df.columns]
+                    schema = pa.schema(schema_fields)
+
+                    # Convert to PyArrow table and write
+                    table = pa.Table.from_pandas(string_df, schema=schema)
+                    pq.write_table(
+                        table,
+                        tmp_path,
+                        compression=options.get("compression", "snappy"),
+                        write_statistics=True,
+                        use_dictionary=True,
+                    )
+
+                    # Copy to final destination
+                    shutil.copy2(str(tmp_path), str(output_file))
+                    tmp_path.unlink()  # Clean up temp file
+
+            else:
+                # Direct write for non-volume paths
+                # Create PyArrow schema with all string columns
+                schema_fields = [(col, pa.string()) for col in string_df.columns]
+                schema = pa.schema(schema_fields)
+
+                # Convert to PyArrow table and write
+                table = pa.Table.from_pandas(string_df, schema=schema)
+                pq.write_table(
+                    table,
+                    output_file,
+                    compression=options.get("compression", "snappy"),
+                    write_statistics=True,
+                    use_dictionary=True,
+                )
+
+        except Exception as e:
+            self.logger.error(f"Failed to write Parquet file: {e}")
+            raise
+
     def _convert_tables_to_parquet(
         self, connection, table_info_list: List[dict], output_path: Path, **options: Any
     ) -> bool:
@@ -263,8 +325,8 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                         safe_filename = self._sanitize_filename(f"{table_name}.parquet")
                         output_file = output_path / safe_filename
 
-                        # Write to Parquet
-                        df.to_parquet(output_file, index=False)
+                        # Write to Parquet using safe method
+                        self._write_parquet_safe(df, output_file, **options)
 
                         progress.advance(task)
 
@@ -295,57 +357,19 @@ class EnhancedMDBConverter(StringDatabaseConverter):
     def _generate_conversion_report(
         self, table_info_list: List[dict], output_path: Path
     ):
-        """Generate Excel conversion report."""
+        """Generate conversion report (skip for now to avoid Excel issues)."""
         try:
-            from datetime import datetime
+            # Skip report generation for now
+            self.logger.info(
+                "Skipping report generation to avoid Excel/CSV issues on volumes"
+            )
+            self.logger.info("Conversion completed successfully:")
 
-            import pandas as pd
-
-            # Create report DataFrame
-            report_data = []
-            for table_info in table_info_list:
-                report_data.append(
-                    {
-                        "Table Name": table_info["name"],
-                        "Record Count": table_info["record_count"],
-                        "Column Count": table_info["column_count"],
-                        "Status": "Converted Successfully",
-                        "Output File": f"{self._sanitize_filename(table_info['name'])}.parquet",
-                    }
-                )
-
-            df_report = pd.DataFrame(report_data)
-
-            # Create report filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            db_name = output_path.name
-            report_file = output_path / f"{db_name}_conversion_report_{timestamp}.xlsx"
-
-            # Write Excel report
-            with pd.ExcelWriter(report_file) as writer:
-                df_report.to_excel(writer, sheet_name="Conversion Summary", index=False)
-
-                # Add column details sheet if available
-                if table_info_list and "columns" in table_info_list[0]:
-                    column_data = []
-                    for table_info in table_info_list:
-                        for col in table_info.get("columns", []):
-                            column_data.append(
-                                {
-                                    "Table": table_info["name"],
-                                    "Column": col.get("name", ""),
-                                    "Data Type": col.get("type", ""),
-                                    "Nullable": col.get("nullable", True),
-                                }
-                            )
-
-                    if column_data:
-                        df_columns = pd.DataFrame(column_data)
-                        df_columns.to_excel(
-                            writer, sheet_name="Column Details", index=False
-                        )
-
-            self.logger.info(f"Conversion report saved to: {report_file}")
+            # Log summary instead
+            total_records = sum(info["record_count"] for info in table_info_list)
+            self.logger.info(f"  • Tables converted: {len(table_info_list)}")
+            self.logger.info(f"  • Total records: {total_records:,}")
+            self.logger.info(f"  • Output path: {output_path}")
 
         except Exception as e:
             self.logger.warning(f"Failed to generate conversion report: {e}")
@@ -409,60 +433,66 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             self.password = options.get("password")
 
             # Stage 1: File Analysis with Backend Detection
-            console.print("[ANALYZE] Stage 1: Analyzing the file...")
+            console.print("🔍 Stage 1: Analyzing the file...")
 
             # Detect file and available backends
             db_info = detect_database_file(input_path)
-            console.print(f"[OK] File format: {db_info.file_type.name}")
+            console.print(f"✓ File format: {db_info.file_type.name}")
             file_size_mb = input_path.stat().st_size / (1024 * 1024)
-            console.print(f"[OK] File size: {file_size_mb:.1f} MB")
+            console.print(f"✓ File size: {file_size_mb:.1f} MB")
             console.print(
-                f"[OK] Password protected: {'Yes' if options.get('password') else 'No'}"
+                f"✓ Password protected: {'Yes' if options.get('password') else 'No'}"
             )
 
             # Check available backends
             from ..backends.pyodbc_backend import PyODBCBackend
             from ..backends.ucanaccess_backend import UCanAccessBackend
+            from ..backends.ucanaccess_subprocess_backend import (
+                UCanAccessSubprocessBackend,
+            )
 
             ucanaccess = UCanAccessBackend()
+            ucanaccess_subprocess = UCanAccessSubprocessBackend()
             pyodbc_backend = PyODBCBackend()
 
             available_backends = []
             if ucanaccess.is_available():
                 available_backends.append("UCanAccess (cross-platform)")
+            if ucanaccess_subprocess.is_available():
+                available_backends.append(
+                    "UCanAccess-Subprocess (Databricks Serverless)"
+                )
             if pyodbc_backend.is_available():
                 available_backends.append("pyodbc (Windows native)")
 
             if available_backends:
-                console.print(
-                    f"[OK] Available backends: {', '.join(available_backends)}"
-                )
+                console.print(f"✓ Available backends: {', '.join(available_backends)}")
             else:
-                console.print("[FAIL] No database backends available!")
+                console.print("❌ No database backends available!")
                 return False
 
             # Stage 2: Database Connection
-            console.print("\n[CLIPBOARD] Stage 2: Connecting to database...")
+            console.print("\n📋 Stage 2: Connecting to database...")
 
             console.print("  Establishing connection...")
             connection = self._connect_to_database(input_path)
             backend_name = connection.get_active_backend()
-            console.print(f"[OK] Connected using {backend_name}")
+            console.print(f"✓ Connected using {backend_name}")
 
             # Stage 3: Table Discovery
-            console.print("\n[CHART] Stage 3: Discovering tables...")
+            console.print("\n📊 Stage 3: Discovering tables...")
 
             console.print("  Scanning database structure...")
             tables = self._list_tables(connection)
 
             if not tables:
-                console.print("[FAIL] No readable tables found")
+                console.print("❌ No readable tables found")
                 return False
 
-            console.print(f"[OK] Found {len(tables)} user tables")
+            console.print(f"✓ Found {len(tables)} user tables")
 
             # Stage 4: Metadata Extraction
-            console.print("\n[GRAPH] Stage 4: Extracting table metadata...")
+            console.print("\n📈 Stage 4: Extracting table metadata...")
 
             table_info_list = []
             with Progress(
@@ -497,7 +527,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
                         progress.advance(task)
 
             # Stage 5: Table Overview Display
-            console.print("\n[GRAPH] Stage 5: Table Overview:")
+            console.print("\n📈 Stage 5: Table Overview:")
 
             # Create enhanced table display
             table_display = Table(
@@ -548,14 +578,14 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             # Highlight improvements over pandas-access
             if space_tables > 0:
                 console.print(
-                    f"\n[ENHANCE] Enhancement: {space_tables} space-named tables accessible with {backend_name}"
+                    f"\n✨ Enhancement: {space_tables} space-named tables accessible with {backend_name}"
                 )
                 console.print(
                     "   (These were previously inaccessible with pandas-access)"
                 )
 
             # Stage 6: Table Conversion
-            console.print("\n[CONVERT] Stage 6: Converting tables to Parquet...")
+            console.print("\n🔄 Stage 6: Converting tables to Parquet...")
 
             # Perform conversion using parent class method
             success = self._convert_tables_to_parquet(
@@ -564,7 +594,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
 
             if success:
                 console.print(
-                    f"\n[OK] Conversion completed successfully using {backend_name}!"
+                    f"\n✅ Conversion completed successfully using {backend_name}!"
                 )
                 console.print(f"• Tables processed: {accessible_tables}/{len(tables)}")
                 console.print(f"• Records converted: {total_records:,}")
@@ -575,7 +605,7 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             return success
 
         except Exception as e:
-            console.print(f"\n[FAIL] Conversion failed: {e}")
+            console.print(f"\n❌ Conversion failed: {e}")
             self.logger.error(f"Enhanced MDB conversion error: {e}", exc_info=True)
             return False
 
@@ -584,118 +614,9 @@ class EnhancedMDBConverter(StringDatabaseConverter):
             if hasattr(self, "dual_reader") and self.dual_reader:
                 self._close_connection(self.dual_reader)
 
-    def get_metadata(self, input_path: Path) -> Optional[Dict[str, Any]]:
-        """
-        Extract metadata from MDB/ACCDB file using dual-backend approach.
-
-        Args:
-            input_path: Path to MDB/ACCDB file
-
-        Returns:
-            Dictionary containing file metadata or None if extraction fails
-        """
-        try:
-            # Get basic file info
-            file_stats = input_path.stat()
-            metadata = {
-                "file_name": input_path.name,
-                "file_size": file_stats.st_size,
-                "file_format": "Microsoft Access Database (Enhanced)",
-                "file_extension": input_path.suffix,
-                "modified_date": pd.Timestamp.fromtimestamp(
-                    file_stats.st_mtime
-                ).isoformat(),
-                "created_date": pd.Timestamp.fromtimestamp(
-                    file_stats.st_ctime
-                ).isoformat(),
-            }
-
-            # Detect database type and version
-            db_info = detect_database_file(input_path)
-
-            if db_info.file_type not in [DatabaseType.MDB, DatabaseType.ACCDB]:
-                return metadata  # Return basic metadata only
-
-            metadata["database_type"] = db_info.file_type.value.upper()
-            metadata["database_version"] = db_info.version or "Unknown"
-            metadata["is_encrypted"] = getattr(db_info, "is_encrypted", False)
-
-            # Try to get table information using dual-backend reader
-            try:
-                dual_reader = DualBackendMDBReader()
-
-                # Attempt connection
-                connection_success = dual_reader.connect(
-                    input_path, password=self.password
-                )
-
-                if connection_success:
-                    # Get backend info
-                    metadata["backend_used"] = dual_reader.get_active_backend()
-
-                    # List tables
-                    table_names = dual_reader.list_tables()
-
-                    if table_names:
-                        metadata["table_count"] = len(table_names)
-                        metadata["table_names"] = table_names
-
-                        # Get table details
-                        table_info = {}
-                        total_rows = 0
-                        total_columns = 0
-
-                        for table_name in table_names:
-                            try:
-                                # Get basic table info
-                                info = dual_reader.get_table_info(table_name)
-
-                                if info:
-                                    table_info[table_name] = {
-                                        "row_count": info.row_count,
-                                        "column_count": (
-                                            len(info.columns) if info.columns else 0
-                                        ),
-                                        "columns": (
-                                            [col.name for col in info.columns]
-                                            if info.columns
-                                            else []
-                                        ),
-                                    }
-                                    total_rows += info.row_count
-                                    total_columns += (
-                                        len(info.columns) if info.columns else 0
-                                    )
-                                else:
-                                    table_info[table_name] = {
-                                        "error": "Could not read table info"
-                                    }
-                            except Exception as e:
-                                table_info[table_name] = {"error": str(e)}
-
-                        metadata["table_details"] = table_info
-                        metadata["total_rows"] = total_rows
-                        metadata["total_columns"] = total_columns
-                    else:
-                        metadata["table_count"] = 0
-                        metadata["error"] = "No tables found"
-
-                    # Disconnect
-                    dual_reader.close()
-                else:
-                    metadata["error"] = "Connection failed"
-                    if getattr(db_info, "is_encrypted", False):
-                        metadata["error"] = "Database is password protected"
-
-            except Exception as e:
-                # If we can't connect, just include basic metadata
-                metadata["error"] = f"Could not read database structure: {str(e)}"
-
-            return metadata
-
-        except Exception as e:
-            logging.error(f"Failed to extract Enhanced MDB metadata: {e}")
-            return None
+    def convert(self, input_path: Path, output_path: Path, **options: Any) -> bool:
+        """Standard convert method - delegates to progress version"""
+        return self.convert_with_progress(input_path, output_path, **options)
 
     def __del__(self):
         """Destructor with automatic connection cleanup."""
